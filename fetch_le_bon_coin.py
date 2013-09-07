@@ -27,8 +27,11 @@ def insert_to_db(pubs):
   from pyes import ES
   conn = ES('127.0.0.1:9200') # Use HTTP
   
-  #for pub in pubs: conn.index(pub['object'], "test-index", "test-type", id = pub['id'])
   for pub in pubs: conn.update("test-index", "test-type", pub['id'], document=pub['object'], upsert=pub['object'])
+
+def open_search_url_for_location(location):
+  import urllib2
+  return urllib2.urlopen("http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=1&ret=1&location=" + location)
 
 if __name__ == '__main__':
   import argparse
@@ -36,6 +39,5 @@ if __name__ == '__main__':
   parser.add_argument('location', help='location to search pubs for')
   args = parser.parse_args()
 
-  import urllib2
-  page = urllib2.urlopen("http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=1&ret=1&location=" + args.location)
-  insert_to_db(parse_le_bon_coin(page))
+  
+  insert_to_db(parse_le_bon_coin(open_search_url_for_location(args.location)))
