@@ -36,7 +36,7 @@ function handle_pubs(query, filter) {
   
   // generates the elastic.js query and executes the search
   ejs.Request({indices: e_index, types: e_type})
-    .query(query).filter(filter).doSearch(displayPubs)
+    .query(query).size(1000).filter(filter).doSearch(displayPubs)
   
   function vote() {
     var like = $(this).hasClass('btn-success')
