@@ -14,7 +14,7 @@ def parse_le_bon_coin(page):
       continue
 
     pubs.append(
-      { 'id': re.search("(?<=ventes_immobilieres/)[0-9]+", href).group(0),
+      { 'id': '1-' + re.search("(?<=ventes_immobilieres/)[0-9]+", href).group(0),
         'object': 
           { 'url': href, 
             'img': img.attrs[u'src'],
@@ -31,7 +31,7 @@ def insert_to_db(pubs):
 
 def open_search_url_for_location(location):
   import urllib2
-  return urllib2.urlopen("http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=1&ret=1&location=" + location)
+  return urllib2.urlopen("http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=0&ret=1&location=" + location)
 
 if __name__ == '__main__':
   import argparse
