@@ -14,13 +14,21 @@ def parse_le_bon_coin(page):
       continue
 
     pubs.append(
-          { 'id': re.search("(?<=ventes_immobilieres/)[0-9]+", href).group(0), 
-            'url': href, 
+      { 'id': re.search("(?<=ventes_immobilieres/)[0-9]+", href).group(0),
+        'object': 
+          { 'url': href, 
             'img': img.attrs[u'src'],
             'placement': placement.get_text().replace('\n', '').replace(' ', ''),
-            'price': price.get_text().strip()})
+            'price': price.get_text().strip()}})
   
   return pubs
+
+def insert_to_db(pubs):
+  from pyes import ES
+  conn = ES('127.0.0.1:9200') # Use HTTP
+  
+  #for pub in pubs: conn.index(pub['object'], "test-index", "test-type", id = pub['id'])
+  for pub in pubs: conn.update("test-index", "test-type", pub['id'], document=pub['object'], upsert=pub['object'])
 
 if __name__ == '__main__':
   import argparse
@@ -30,5 +38,4 @@ if __name__ == '__main__':
 
   import urllib2
   page = urllib2.urlopen("http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=1&ret=1&location=" + args.location)
-  print page.url
-  print parse_le_bon_coin(page)
+  insert_to_db(parse_le_bon_coin(page))
