@@ -20,7 +20,7 @@ function handle_pubs(query, filter) {
       $('<td>').append(value._source.price),
       $('<td>').append($('<a href="' + value._source.url + '">')
         .append('<img src="' + value._source.img + '" ' +
-                     'width="160px"/>')),
+                     'width="200px"/>')),
       $('<td>').append(
         $('<button type="button" class="btn btn-success">Bien</button>'),
         $('<button type="button" class="btn btn-danger">Bof</button>')
