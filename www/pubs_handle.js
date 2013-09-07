@@ -16,7 +16,8 @@ function handle_pubs(query, filter) {
     viewport.empty()
     $.each(results.hits.hits, function(index, value) {
     var line = $('<tr>').append(
-      $('<td>').append(value._source.placement),
+      $('<td>').append($('<a href="' + value._source.url + '">')
+        .append(value._source.placement)),
       $('<td>').append(value._source.price),
       $('<td>').append($('<a href="' + value._source.url + '">')
         .append('<img src="' + value._source.img + '" ' +
