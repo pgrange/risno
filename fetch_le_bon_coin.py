@@ -31,7 +31,7 @@ def insert_to_db(pubs):
 
 def open_search_url_for_location(location):
   import urllib2
-  return urllib2.urlopen("http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=0&ret=1&location=" + location)
+  return urllib2.urlopen("http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=0&ret=1&pe=8&location=" + location)
 
 if __name__ == '__main__':
   import argparse
