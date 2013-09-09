@@ -1,3 +1,4 @@
+import urllib2
 def parse_le_bon_coin(page):
   import re
   from bs4 import BeautifulSoup
@@ -11,7 +12,8 @@ def parse_le_bon_coin(page):
     price = div.find('span', 'mea2').get_text().replace('\n', '').replace('\r', '').replace(' ', '')
 
     pubs.append(
-      { 'id': '2-' + re.search("(?<=/annonces/achat/maison/).*/([0-9]+).htm", href).group(1),
+      { #'id': '2-' + re.search("(?<=/annonces/achat/maison/).*/([0-9]+).htm", href).group(1),
+        'id': image_to_id(img),
         'object': 
           { 'url': href, 
             'img': img,
@@ -26,8 +28,11 @@ def insert_to_db(pubs):
   
   for pub in pubs: conn.update("test-index", "test-type", pub['id'], document=pub['object'], upsert=pub['object'])
 
+def image_to_id(image_url):
+   import hashlib
+   return hashlib.md5(urllib2.urlopen(image_url).read()).digest()
+
 def open_search_url_for_location():
-  import urllib2
   return urllib2.urlopen("http://www.seloger.com/recherche.htm?pxbtw=NaN/NaN&surfacebtw=NaN/NaN&idtt=2&nb_pieces=all&idtypebien=2,12&bilance=all&bilanegs=all&=&nb_chambres=all&tri=d_dt_crea&ci=330029,330042,330077,330197,330202,330251,330260,330336,330436,330498,330501,400032,400134,400156,400200,400227,400287,400295,400332&idqfix=1&BCLANNpg=1")
 
 if __name__ == '__main__':

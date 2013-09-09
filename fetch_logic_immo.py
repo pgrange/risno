@@ -1,3 +1,5 @@
+import urllib2
+
 logic_crap = {
   '33114': ('le-barp', '16559_2'),
   '33125': ('toutes-communes', '1525_98'),
@@ -25,7 +27,8 @@ def parse_logic_immo(page):
     placement = div.find('p', 'v7_li-ad-loc').get_text().strip()
 
     pubs.append(
-      { 'id': '2-' + re.search("(?<=detail-vente-)[^.]+", url).group(0),
+      { #'id': '2-' + re.search("(?<=detail-vente-)[^.]+", url).group(0),
+        'id': image_to_id(img),
         'object': 
           { 'url': url, 
             'img': img,
@@ -40,8 +43,11 @@ def insert_to_db(pubs):
   
   for pub in pubs: conn.update("test-index", "test-type", pub['id'], document=pub['object'], upsert=pub['object'])
 
+def image_to_id(image_url):
+   import hashlib
+   return hashlib.md5(urllib2.urlopen(image_url).read()).digest()
+
 def open_search_url_for_location(location):
-  import urllib2
   crap = logic_crap[location]
   if not crap: raise Exception("I do not know this location sorry: " + location)
   return urllib2.urlopen("http://www.logic-immo.com/vente-immobilier-" 
