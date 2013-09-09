@@ -46,7 +46,7 @@ def open_search_url_for_location(location):
   if not crap: raise Exception("I do not know this location sorry: " + location)
   return urllib2.urlopen("http://www.logic-immo.com/vente-immobilier-" 
     + crap[0] + "-" + location + "," + crap[1] 
-    + "-420e000000-0,0-0,0-0,0-00-00-000000000000-00-0-0-3-0-0-1.html")
+    + "-420e000000-0,200000-0,0-0,0-00-00-000000000000-00-0-0-3-0-0-1.html")
 
 if __name__ == '__main__':
   import argparse
