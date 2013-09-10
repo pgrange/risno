@@ -30,7 +30,7 @@ def insert_to_db(pubs):
 
 def image_to_id(image_url):
    import hashlib
-   return hashlib.md5(urllib2.urlopen(image_url).read()).digest()
+   return hashlib.md5(urllib2.urlopen(image_url).read()).hexdigest()
 
 def open_search_url_for_location():
   return urllib2.urlopen("http://www.seloger.com/recherche.htm?pxbtw=NaN/NaN&surfacebtw=NaN/NaN&idtt=2&nb_pieces=all&idtypebien=2,12&bilance=all&bilanegs=all&=&nb_chambres=all&tri=d_dt_crea&ci=330029,330042,330077,330197,330202,330251,330260,330336,330436,330498,330501,400032,400134,400156,400200,400227,400287,400295,400332&idqfix=1&BCLANNpg=1")

@@ -45,7 +45,7 @@ def insert_to_db(pubs):
 
 def image_to_id(image_url):
    import hashlib
-   return hashlib.md5(urllib2.urlopen(image_url).read()).digest()
+   return hashlib.md5(urllib2.urlopen(image_url).read()).hexdigest()
 
 def open_search_url_for_location(location):
   crap = logic_crap[location]

@@ -8,12 +8,13 @@ def parse_le_bon_coin(page):
   pubs = []
   for a in soup.find_all('a', href=re.compile("^http://www.leboncoin.fr/ventes_immobilieres/[0-9]+")):
     href = a.attrs[u'href']
-    img = a.find('img').attrs[u'src']
+    img = a.find('img')
     placement = a.find(class_="placement")
     price = a.find(class_="price")
 
     if (not href or not img or not placement or not price):
       continue
+    img = img.attrs[u'src']
 
     pubs.append(
       { #'id': '1-' + re.search("(?<=ventes_immobilieres/)[0-9]+", href).group(0),
@@ -28,7 +29,7 @@ def parse_le_bon_coin(page):
 
 def image_to_id(image_url):
    import hashlib
-   return hashlib.md5(urllib2.urlopen(image_url).read()).digest()
+   return hashlib.md5(urllib2.urlopen(image_url).read()).hexdigest()
 
 def insert_to_db(pubs):
   from pyes import ES
