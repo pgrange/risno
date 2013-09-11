@@ -6,4 +6,10 @@ do
   python fetch_logic_immo.py $location
 done
 
+for location in 33830 33380 33160 33980 33480 33680 33138 33680 33740 33950 33970 33510
+do
+  python fetch_le_bon_coin.py $location
+  python fetch_logic_immo.py $location
+done
+
 python fetch_se_loger.py

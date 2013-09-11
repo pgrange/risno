@@ -12,6 +12,17 @@ logic_crap = {
   '40210': ('toutes-communes', '1892_98'),
   '40410': ('toutes-communes', '1910_98'),
   '40460': ('sanguinet', '30974_2'),
+  '33830': ('toutes-communes', '1581_98'),
+  '33380': ('toutes-communes', '1548_98'),
+  '33160': ('toutes-communes', '1531_98'),
+  '33980': ('audenge', '1556_2'),
+  '33480': ('toutes-communes', '1557_98'),
+  '33680': ('toutes-communes', '1572_98'),
+  '33138': ('lanton', '16199_2'),
+  '33740': ('ares', '1079_2'),
+  '33950': ('toutes-communes', '1588_98'),
+  '33970': ('cap-ferret', '36653_2'),
+  '33510': ('andernos-les-bains', '726_2')
 }
 
 def parse_logic_immo(page):
