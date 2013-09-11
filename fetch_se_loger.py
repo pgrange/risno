@@ -1,12 +1,14 @@
 import urllib2
-def parse_le_bon_coin(page):
+def parse_se_loger(page):
   import re
   from bs4 import BeautifulSoup
   soup = BeautifulSoup(page)
   
   pubs = []
   for div in soup.find_all('div', "ann_ann"):
-    href = div.find('a', href=re.compile("http://www.seloger.com/annonces/achat/")).attrs[u'href']
+    href = div.find('a', href=re.compile("http://www.seloger.com/annonces/achat/"))
+    if (not href): continue
+    href = href.attrs[u'href']
     img = div.find('img').attrs[u'src']
     placement = div.find('div', 'rech_ville').find('strong').get_text().replace('\n', '').replace('\r', ' ').replace(' ', '')
     price = div.find('span', 'mea2').get_text().replace('\n', '').replace('\r', '').replace(' ', '')
@@ -37,4 +39,4 @@ def open_search_url_for_location():
 
 if __name__ == '__main__':
   
-  insert_to_db(parse_le_bon_coin(open_search_url_for_location()))
+  insert_to_db(parse_se_loger(open_search_url_for_location()))
