@@ -25,18 +25,23 @@ def parse_se_loger(page):
   return pubs
 
 def insert_to_db(pubs):
-  from pyes import ES
-  conn = ES('127.0.0.1:9200') # Use HTTP
-  
-  for pub in pubs: conn.update("test-index", "test-type", pub['id'], document=pub['object'], upsert=pub['object'])
+#  from pyes import ES
+#  conn = ES('127.0.0.1:9200') # Use HTTP
+#  
+#  for pub in pubs: conn.update("test-index", "test-type", pub['id'], document=pub['object'], upsert=pub['object'])
+  print pubs
 
 def image_to_id(image_url):
    import hashlib
    return hashlib.md5(urllib2.urlopen(image_url).read()).hexdigest()
 
-def open_search_url_for_location():
-  return urllib2.urlopen("http://www.seloger.com/recherche.htm?pxbtw=NaN/NaN&surfacebtw=NaN/NaN&idtt=2&nb_pieces=all&idtypebien=2,12&bilance=all&bilanegs=all&=&nb_chambres=all&tri=d_dt_crea&ci=330029,330042,330077,330197,330202,330251,330260,330336,330436,330498,330501,400032,400134,400156,400200,400227,400287,400295,400332&idqfix=1&BCLANNpg=1")
+def open_search_url_for_location(location):
+  return urllib2.urlopen("http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,12&pxmax=200000&tri=d_dt_crea&cp=" + location)
 
 if __name__ == '__main__':
-  
-  insert_to_db(parse_se_loger(open_search_url_for_location()))
+  import argparse
+  parser = argparse.ArgumentParser(description='Parse le bon coin results')
+  parser.add_argument('location', help='location to search pubs for')
+  args = parser.parse_args()
+
+  insert_to_db(parse_se_loger(open_search_url_for_location(args.location)))
