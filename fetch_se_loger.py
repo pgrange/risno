@@ -10,6 +10,7 @@ def parse_se_loger(page):
     if (not href): continue
     href = href.attrs[u'href']
     img = div.find('img').attrs[u'src']
+    if (img.startswith('/')): img = "http://www.seloger.com" + img
     placement = div.find('div', 'rech_ville').find('strong').get_text().replace('\n', '').replace('\r', ' ').replace(' ', '')
     price = div.find('span', 'mea2').get_text().replace('\n', '').replace('\r', '').replace(' ', '')
 
