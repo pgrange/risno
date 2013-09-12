@@ -25,11 +25,10 @@ def parse_se_loger(page):
   return pubs
 
 def insert_to_db(pubs):
-#  from pyes import ES
-#  conn = ES('127.0.0.1:9200') # Use HTTP
-#  
-#  for pub in pubs: conn.update("test-index", "test-type", pub['id'], document=pub['object'], upsert=pub['object'])
-  print pubs
+  from pyes import ES
+  conn = ES('127.0.0.1:9200') # Use HTTP
+  
+  for pub in pubs: conn.update("test-index", "test-type", pub['id'], document=pub['object'], upsert=pub['object'])
 
 def image_to_id(image_url):
    import hashlib
