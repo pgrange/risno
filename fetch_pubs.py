@@ -68,7 +68,7 @@ class LogicImmo:
   def search_url(self, location):
     if not self.logic_crap.has_key(location): raise Exception("I do not know this location sorry: " + location)
     crap = self.logic_crap[location]
-    return "http://www.logic-immo.com/vente-immobilier-" + crap[0] + "-" + location + "," + crap[1] + "-420e000000-0,200000-0,0-0,0-00-00-000000000000-00-0-0-3-0-0-1.html"
+    return "http://www.logic-immo.com/vente-immobilier-" + crap[0] + "-" + location + "," + crap[1] + "-4f2f000000-0,200000-0,0-0,0-00-00-000000000000-00-0-0-3-0-0-1.html"
 
 class LeBonCoin:
   
@@ -101,7 +101,7 @@ class LeBonCoin:
     return pubs
 
   def search_url(self, location): 
-    return "http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=0&ret=1&pe=8&location=" + location
+    return "http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=0&ret=1&ret=5&pe=8&location=" + location
 
 class ParuVendu:
 
@@ -165,7 +165,7 @@ class SeLoger:
     return pubs
 
   def search_url(self, location):
-    return "http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,12&pxmax=200000&tri=d_dt_crea&cp=" + location
+    return "http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,10,12,11,9,13,14&pxmax=200000&tri=d_dt_crea&cp=" + location
  
 if __name__ == '__main__':
   import argparse
