@@ -1,6 +1,5 @@
 # -*- coding: iso-8859-15 -*-
 
-import sys
 import hashlib
 import urllib2
 import re
@@ -169,7 +168,10 @@ class SeLoger:
     return "http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,10,12,11,9,13,14&pxmax=200000&tri=d_dt_crea&cp=" + location
  
 if __name__ == '__main__':
+  import sys
   import argparse
+  from colorama import Fore, Back, Style
+
   parser = argparse.ArgumentParser(description='récupère les annonces pour le site et le code postal précisé')
   parser.add_argument('--le-bon-coin', const=True, action='store_const', help='recherche sur le bon coin')
   parser.add_argument('--logic-immo',  const=True, action='store_const', help='recherche sur logic immo')
@@ -192,6 +194,6 @@ if __name__ == '__main__':
         url = site.search_url(location)
         pubs = site.parse(urllib2.urlopen(url))
         insert_to_db(pubs)
-        print 'OK' + fetch_info
+        print Fore.GREEN + 'OK' + Fore.RESET + fetch_info
       except:
-        print 'KO' + fetch_info + ' ' + str(sys.exc_info()[0])
+        print Fore.RED + 'KO' + Fore.RESET + fetch_info + ' ' + str(sys.exc_info()[0])
