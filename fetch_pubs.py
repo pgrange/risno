@@ -1,5 +1,6 @@
 # -*- coding: iso-8859-15 -*-
 
+import sys
 import hashlib
 import urllib2
 import re
@@ -186,8 +187,11 @@ if __name__ == '__main__':
   
   for site in sites:
     for location in args.locations:
-      print 'fetch ' + site.name + ' / ' + location
-      url = site.search_url(location)
-      pubs = site.parse(urllib2.urlopen(url))
-      insert_to_db(pubs)
-
+      try:
+        fetch_info = ' ' + location + ' ' + site.name
+        url = site.search_url(location)
+        pubs = site.parse(urllib2.urlopen(url))
+        insert_to_db(pubs)
+        print 'OK' + fetch_info
+      except:
+        print 'KO' + fetch_info + ' ' + str(sys.exc_info()[0])
