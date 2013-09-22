@@ -6,6 +6,15 @@ import re
 
 from bs4 import BeautifulSoup
 
+log_context = ""
+def log(status, message = ""):
+  from colorama import Fore, Back, Style
+  if status == "OK": color = Fore.GREEN
+  elif status == "KO": color = Fore.RED
+  else: color = Fore.YELLOW
+ 
+  print color + status + " " + Fore.BLUE + log_context + Fore.RESET + " " + message
+
 def insert_to_db(pubs):
   from pyes import ES
   conn = ES('127.0.0.1:9200') # Use HTTP
@@ -13,7 +22,11 @@ def insert_to_db(pubs):
   for pub in pubs: conn.update("test-index", "test-type", pub['id'], document=pub['object'], upsert=pub['object'])
 
 def image_to_id(image_url):
-   return hashlib.md5(urllib2.urlopen(image_url).read()).hexdigest()
+   try:
+     return str(hashlib.md5(urllib2.urlopen(image_url).read()).hexdigest())
+   except urllib2.URLError as err:
+     log("WA", "Unable to generate id from image, generating from image url instead: " + err.reason)
+     return "default-" + str(hashlib.md5(image_url))
 
 class LogicImmo:
   
@@ -168,9 +181,8 @@ class SeLoger:
     return "http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,10,12,11,9,13,14&pxmax=200000&tri=d_dt_crea&cp=" + location
  
 if __name__ == '__main__':
-  import sys
+  import traceback
   import argparse
-  from colorama import Fore, Back, Style
 
   parser = argparse.ArgumentParser(description='récupère les annonces pour le site et le code postal précisé')
   parser.add_argument('--le-bon-coin', const=True, action='store_const', help='recherche sur le bon coin')
@@ -190,11 +202,10 @@ if __name__ == '__main__':
   for site in sites:
     for location in args.locations:
       try:
-        fetch_info = ' ' + location + ' ' + site.name
+        log_context = location + ' ' + site.name
         url = site.search_url(location)
         pubs = site.parse(urllib2.urlopen(url))
         insert_to_db(pubs)
-        print Fore.GREEN + 'OK' + Fore.RESET + fetch_info
+        log("OK")
       except:
-        e = sys.exc_info()[0]
-        print Fore.RED + 'KO' + Fore.RESET + fetch_info + str(e)
+        log("KO", traceback.format_exc().splitlines()[-1])
