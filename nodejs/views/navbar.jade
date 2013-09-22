@@ -1,0 +1,21 @@
+- var new_class = ""
+- var like_class = ""
+- var dislike_class = ""
+case active
+ when "new"
+  - new_class = "active" 
+ when "like"
+  - like_class = "active"
+ when "dislike"
+  - dislike_class = "active"
+
+.navbar
+ .navbar-inner
+  a.brand(href="#") Annonces
+  ul.nav
+   li(class=new_class)
+    a(href="/") Nouveautés
+   li(class=like_class)
+    a(href="/like") Bien
+   li(class=dislike_class)
+    a(href="/dislike") Bof

@@ -1,0 +1,18 @@
+!!! 5
+
+include head
+include navbar
+table.table.table-hover
+ tbody
+  each pub in pubs
+   tr.pub(id=pub.id, class=pub.opinion)
+    td
+     a(href=pub.url)= pub.placement
+    td= pub.price
+    td
+     a(href=pub.url)
+      img(src=pub.img)
+    td
+     button.btn.btn-success Bien
+     button.btn.btn-danger Bof
+include foot

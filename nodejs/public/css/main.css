@@ -1,0 +1,6 @@
+tr.like .btn-success {
+  visibility: hidden;
+}
+tr.dislike .btn-danger {
+  visibility: hidden;
+}
