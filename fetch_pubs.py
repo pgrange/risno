@@ -165,6 +165,7 @@ class SeLoger:
       if (img.startswith('/')): img = "http://www.seloger.com" + img
       placement = div.find('div', 'rech_ville').find('strong').get_text().replace('\n', '').replace('\r', ' ').replace(' ', '')
       price = div.find('span', 'mea2').get_text().replace('\n', '').replace('\r', '').replace(' ', '')
+      details = div.find("div", "rech_desc_right_photo").get_text().replace('\n', '').replace('\r', '')
   
       pubs.append(
         { #'id': '2-' + re.search("(?<=/annonces/achat/maison/).*/([0-9]+).htm", href).group(1),
@@ -173,7 +174,8 @@ class SeLoger:
             { 'url': href, 
               'img': img,
               'placement': placement,
-              'price': price}})
+              'price': price,
+              'details': details}})
     
     return pubs
 
