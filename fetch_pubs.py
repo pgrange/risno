@@ -196,4 +196,5 @@ if __name__ == '__main__':
         insert_to_db(pubs)
         print Fore.GREEN + 'OK' + Fore.RESET + fetch_info
       except:
-        print Fore.RED + 'KO' + Fore.RESET + fetch_info + ' ' + str(sys.exc_info()[0])
+        e = sys.exc_info()[0]
+        print Fore.RED + 'KO' + Fore.RESET + fetch_info + str(e)
