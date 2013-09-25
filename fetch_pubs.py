@@ -18,6 +18,9 @@ def log(status, message = ""):
 def insert_to_db(pubs):
   from pyes import ES
   conn = ES('127.0.0.1:9200') # Use HTTP
+
+  if len(pubs) == 0:
+    log("WA", "no pub, we may have been blacklisted")
   
   for pub in pubs: conn.update("test-index", "test-type", pub['id'], document=pub['object'], upsert=pub['object'])
 
@@ -67,7 +70,6 @@ class LogicImmo:
       img = div.find('img').attrs[u'src']
       placement = div.find('p', 'offer-loc').get_text().strip()
       details = div.find('p', 'offer-text').get_text().strip()
-      print 'X' + details
   
       pubs.append(
         { #'id': '2-' + re.search("(?<=detail-vente-)[^.]+", url).group(0),
