@@ -7,7 +7,9 @@ table.table.table-hover
   each pub in pubs
    tr.pub(id=pub.id, class=pub.opinion)
     td
-     a(href=pub.url)= pub.placement
+     div
+      a(href=pub.url)= pub.placement
+     div= pub.details
     td= pub.price
     td
      a(href=pub.url)
