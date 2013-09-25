@@ -61,11 +61,13 @@ class LogicImmo:
     soup = BeautifulSoup(page)
     
     pubs = []
-    for div in soup.find_all('div', 'v7_li-ad-global'):
-      price = div.find('p', 'v7_li-ad-price').get_text().strip()
+    for div in soup.find_all('div', 'offer-block'):
+      price = div.find('p', 'offer-price').get_text().strip()
       url = div.find('a', href=re.compile("^http://www.logic-immo.com/detail-vente-")).attrs[u'href']
       img = div.find('img').attrs[u'src']
-      placement = div.find('p', 'v7_li-ad-loc').get_text().strip()
+      placement = div.find('p', 'offer-loc').get_text().strip()
+      details = div.find('p', 'offer-text').get_text().strip()
+      print 'X' + details
   
       pubs.append(
         { #'id': '2-' + re.search("(?<=detail-vente-)[^.]+", url).group(0),
@@ -74,7 +76,9 @@ class LogicImmo:
             { 'url': url, 
               'img': img,
               'placement': placement,
-              'price': price}})
+              'price': price,
+              'details': details
+            }})
     
     return pubs
 
@@ -97,6 +101,7 @@ class LeBonCoin:
       img = a.find('img')
       placement = a.find(class_="placement")
       price = a.find(class_="price")
+      details = a.find('div', "title").get_text().replace('\n', '').replace('\r', '').replace('  ', ' ')
 
       if (not href or not img or not placement or not price):
         continue
@@ -109,7 +114,9 @@ class LeBonCoin:
             { 'url': href, 
               'img': img,
               'placement': placement.get_text().replace('\n', '').replace(' ', ''),
-              'price': price.get_text().strip()}})
+              'price': price.get_text().strip(),
+              'details': details
+            }})
     
     return pubs
 
@@ -133,6 +140,7 @@ class ParuVendu:
 
       placement = div.find('cite')
       price = div.find('span', "price")
+      details = div.find('span', "desc").get_text().replace('\n', '').replace('\r', '')
 
       pubs.append(
         { #'id': '1-' + re.search("(?<=ventes_immobilieres/)[0-9]+", href).group(0),
@@ -141,7 +149,9 @@ class ParuVendu:
             { 'url': href, 
               'img': img,
               'placement': placement.get_text().replace('\n', '').replace('\t', '').replace('\r', '').replace(' ', ''),
-              'price': price.get_text().strip()}})
+              'price': price.get_text().strip(),
+              'details': details
+            }})
     
     return pubs
 
@@ -206,8 +216,10 @@ if __name__ == '__main__':
       try:
         log_context = location + ' ' + site.name
         url = site.search_url(location)
-        pubs = site.parse(urllib2.urlopen(url))
+        page = urllib2.urlopen(url)
+        pubs = site.parse(page)
         insert_to_db(pubs)
         log("OK")
       except:
-        log("KO", traceback.format_exc().splitlines()[-1])
+        #log("KO", traceback.format_exc().splitlines()[-1])
+        log("KO", traceback.format_exc())
