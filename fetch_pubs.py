@@ -134,7 +134,7 @@ class ParuVendu:
     soup = BeautifulSoup(page)
     
     pubs = []
-    for div in soup.find_all('div', 'lazyload_bloc annonce'):
+    for div in soup.find_all('div', 'annonce'):
       href = "http://www.paruvendu.fr" + div.find('a').attrs[u'href']
       img = div.find('span', 'img').find('img')
       if img.has_attr('src'): img = img.attrs['src']
