@@ -4,3 +4,7 @@ tr.like .btn-success {
 tr.dislike .btn-danger {
   visibility: hidden;
 }
+
+img.pub {
+  height: 240px;
+}
