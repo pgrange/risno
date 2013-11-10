@@ -28,7 +28,7 @@ def image_to_id(image_url):
    try:
      return str(hashlib.md5(urllib2.urlopen(image_url).read()).hexdigest())
    except urllib2.URLError as err:
-     log("WA", "Unable to generate id from image, generating from image url instead: " + err.reason)
+     log("WA", "Unable to generate id from image, generating from image url instead: " + str(err.reason))
      return "default-" + hashlib.md5(image_url).hexdigest()
 
 class LogicImmo:
