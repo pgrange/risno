@@ -4,7 +4,9 @@ from bs4 import BeautifulSoup
 
 class SiteHelper:
   def __init__(self):
+    self.pub_class = 'pub'
     self.price_class = 'price'
+    self.description_class = 'description'
 
   def _parse_price(self, pub):
     return int(
@@ -13,12 +15,44 @@ class SiteHelper:
       )[0].replace(' ', '')
     )
 
+  def _parse_description(self, pub):
+    description = pub.find(class_=self.description_class)
+    s_description = description.get_text() \
+      .replace('\n', ' ') \
+      .replace('\r', ' ') \
+      .strip()
+    s_description = re.sub("\s+", " ", s_description)
+    if len(s_description) > 200:
+      s_description = s_description[:200] + "..."
+    return s_description
+
+  def _parse_url(self, pub):
+    # the whole pub is encapsulated in a link
+    # as for le bon coin, for instance
+    parent = pub.parent
+    if parent.name == 'a':
+      return pub.parent['href']
+
+    # the pub link is contained inside the pub.
+    # in almost all cases, it is the first link
+    # with a non empty href
+    pub_url = pub.find('a', href=lambda(x): x != None)['href']
+    if pub_url.startswith('http://'):
+      return pub_url
+    else:
+      return 'http://' + self.site + pub_url
+
+    # if none of the above cases matches for your 
+    # case, redefine this method in your subclass
+
   def parse(self, page):
     soup = BeautifulSoup(page)
     pubs = []
     for pub in soup.find_all(class_ = self.pub_class):
       pubs.append({
-        'price': self._parse_price(pub)
+        'price': self._parse_price(pub),
+        'description': self._parse_description(pub),
+        'url': self._parse_url(pub),
       })
 
     return pubs
@@ -28,6 +62,7 @@ class LeBonCoin(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
     self.pub_class = 'lbc'
+    self.description_class = 'title'
 
   def url(self, location):
     return 'http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=0&ret=1&ret=5&pe=8&location=' + str(location)
@@ -35,7 +70,9 @@ class LeBonCoin(SiteHelper):
 class ParuVendu(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
+    self.site = 'www.paruvendu.fr'
     self.pub_class = 'annonce'
+    self.description_class = 'desc'
 
   def url(self, location):
     return 'http://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&tbPen=1&tbRem=1&tbVia=1&tbImm=1&tbPar=1&tbAut=1&px1=200000&pa=FR&lo=' + str(location)
@@ -45,6 +82,7 @@ class SeLoger(SiteHelper):
     SiteHelper.__init__(self)
     self.pub_class = 'ann_ann'
     self.price_class = 'rech_box_prix'
+    self.description_class = 'rech_desc_right_photo'
 
   def url(self, location):
     return 'http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,10,12,11,9,13,14&pxmax=200000&tri=d_dt_crea&cp=' + str(location)
@@ -54,6 +92,7 @@ class AVendreALouer(SiteHelper):
     SiteHelper.__init__(self)
     self.pub_class = 'resultat'
     self.price_class = 'prix'
+    self.description_class = 'descriptif'
 
   def url(self, location):
     return 'http://www.avendrealouer.fr/annonces-immobilieres/vente/appartement+maison/' + str(location) + '+cp/max-300000-euros'
@@ -62,6 +101,7 @@ class LogicImmo(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
     self.pub_class = 'offer-block'
+    self.description_class = 'offer-desc'
     self.logic_crap = {
       '33114': ('le-barp', '16559_2'),
       '33125': ('toutes-communes', '1525_98'),

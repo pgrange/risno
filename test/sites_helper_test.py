@@ -1,23 +1,12 @@
+# -*- coding: utf-8 -*-
 import unittest
 
 import sites_helper
 
-import os
-_dir_ = os.path.dirname(__file__)
-_le_bon_coin_test_page_ = os.path.join(_dir_, 'le_bon_coin_test_page.html')
-_paru_vendu_test_page_  = os.path.join(_dir_, 'paru_vendu_test_page.html')
-_logic_immo_test_page_  = os.path.join(_dir_, 'logic_immo_test_page.html')
-_se_loger_test_page_    = os.path.join(_dir_, 'se_loger_test_page.html')
-_a_vendre_a_louer_test_page_ = os.path.join(_dir_, 'a_vendre_a_louer_test_page.html')
-
-_le_bon_coin_33400_url = 'http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=0&ret=1&ret=5&pe=8&location=33400'
-_paru_vendu_33400_url  = 'http://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&tbPen=1&tbRem=1&tbVia=1&tbImm=1&tbPar=1&tbAut=1&px1=200000&pa=FR&lo=33400'
-_logic_immo_33400_url  = 'http://www.logic-immo.com/vente-immobilier-talence-33400,32468_2-4f2f000000-0,200000-0,0-0,0-00-00-000000000000-00-0-0-3-0-0-1.html'
-_se_loger_33400_url    = 'http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,10,12,11,9,13,14&pxmax=200000&tri=d_dt_crea&cp=33400'
-_a_vendre_a_louer_33400_url = 'http://www.avendrealouer.fr/annonces-immobilieres/vente/appartement+maison/33400+cp/max-300000-euros'
-
-
 class TestSitesHelper(unittest.TestCase):
+
+  def setUp(self):
+    self.maxDiff = None
 
   def test_sites_url(self):
     self.assertEquals(sites_helper.LeBonCoin().url(33400), 
@@ -45,6 +34,28 @@ class TestSitesHelper(unittest.TestCase):
     self.assertEquals(149000, self._parse_se_loger()[0]['price'])
     self.assertEquals(178500, self._parse_a_vendre_a_louer()[0]['price'])
 
+  def test_parse_site_extract_description(self):
+    self.assertEquals(_le_bon_coin_test_description_, 
+      self._parse_le_bon_coin()[0]['description'])
+    self.assertEquals(_paru_vendu_test_description_, 
+      self._parse_paru_vendu()[0]['description'])
+    self.assertEquals(_logic_immo_test_description_, 
+      self._parse_logic_immo()[0]['description'])
+    self.assertEquals(_se_loger_test_description_, 
+      self._parse_se_loger()[0]['description'])
+    self.assertEquals(_a_vendre_a_louer_test_description, 
+      self._parse_a_vendre_a_louer()[0]['description'])
+
+  def test_parse_site_extract_url(self):
+    self.assertEquals(u'http://www.leboncoin.fr/ventes_immobilieres/570168457.htm?ca=2_s', self._parse_le_bon_coin()[0]['url'])
+    self.assertEquals(u'http://www.paruvendu.fr/immobilier/vente/maison/talence-33400/1188107770A1KIVHMN000', self._parse_paru_vendu()[0]['url'])
+    self.assertEquals(u'http://www.logic-immo.com/detail-vente-76c1da9a-d5bc-3d28-ee27-6731eb81bd88.htm', self._parse_logic_immo()[0]['url'])
+    self.assertEquals(u'http://www.seloger.com/annonces/achat/maison/talence-33/83022761.htm?cp=33400&idtt=2&idtypebien=10,11,12,13,14,2,9&pxmax=200000&tri=d_dt_crea', self._parse_se_loger()[0]['url'])
+    self.assertEquals(u'http://www.avendrealouer.fr/annonces-immobilieres/48/vente+appartement+5-pieces+talence+33/detail+pro-13056540/', self._parse_a_vendre_a_louer()[0]['url'])
+
+  def test_parse_site_extract_img(self):
+    pass
+
   def _parse_le_bon_coin(self):
     return self._parse(sites_helper.LeBonCoin(), _le_bon_coin_test_page_)
 
@@ -66,6 +77,26 @@ class TestSitesHelper(unittest.TestCase):
     page.close()
 
     return result
+
+import os
+_dir_ = os.path.dirname(__file__)
+_le_bon_coin_test_page_ = os.path.join(_dir_, 'le_bon_coin_test_page.html')
+_paru_vendu_test_page_  = os.path.join(_dir_, 'paru_vendu_test_page.html')
+_logic_immo_test_page_  = os.path.join(_dir_, 'logic_immo_test_page.html')
+_se_loger_test_page_    = os.path.join(_dir_, 'se_loger_test_page.html')
+_a_vendre_a_louer_test_page_ = os.path.join(_dir_, 'a_vendre_a_louer_test_page.html')
+
+_le_bon_coin_33400_url = 'http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=0&ret=1&ret=5&pe=8&location=33400'
+_paru_vendu_33400_url  = 'http://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&tbPen=1&tbRem=1&tbVia=1&tbImm=1&tbPar=1&tbAut=1&px1=200000&pa=FR&lo=33400'
+_logic_immo_33400_url  = 'http://www.logic-immo.com/vente-immobilier-talence-33400,32468_2-4f2f000000-0,200000-0,0-0,0-00-00-000000000000-00-0-0-3-0-0-1.html'
+_se_loger_33400_url    = 'http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,10,12,11,9,13,14&pxmax=200000&tri=d_dt_crea&cp=33400'
+_a_vendre_a_louer_33400_url = 'http://www.avendrealouer.fr/annonces-immobilieres/vente/appartement+maison/33400+cp/max-300000-euros'
+
+_le_bon_coin_test_description_ = u'Maison 3 pièces 64m2'
+_paru_vendu_test_description_  = u'Vente - Maison - 55 m² environ - 2 pièces Talence (33400) Maison en pierre de 2 pièces principalesMaison en pierre de plain pied... voir l\'annonce'
+_logic_immo_test_description_ = u'TALENCE (33400) Achat maison Talence - Talence proche bagatelle atelier d\'environ 50m² à restaurer. SQUARE HABITAT T\xe9l. 0556041899 R\xe9f. annonce : 107950-1231'
+_se_loger_test_description_ = u'33400 Talence (Gironde) Proximité: Boulevards TALENCE Proche Boulevard - Maison T4 à rénover de 79m² dont 71m² carrez comprenant 3 chambres et une terrasse de 15m². Elle est idéalement placée à 2 pas ...'
+_a_vendre_a_louer_test_description = u'Se situant à Talence, appartement T5 de 84m2, agréable à vivre, proche des commodités, comporte 3 chambres bien tenues, u...'
 
 if __name__ == '__main__':
   unittest.main()
