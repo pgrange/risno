@@ -86,6 +86,7 @@ class LeBonCoin(SiteHelper):
 
   def __init__(self):
     SiteHelper.__init__(self)
+    self.name = 'le-bon-coin'
     self.pub_class = 'lbc'
     self.price_class = 'price'
     self.description_class = 'title'
@@ -98,6 +99,8 @@ class LeBonCoin(SiteHelper):
     s_date = self._text(pub.find(class_ = "date"))
     if s_date.startswith('Hier'):
       return date.today() - timedelta(days=1)
+    elif s_date.startswith('Aujourd'):
+      return date.today()
     else:
       d = datetime.strptime(s_date, '%d %b %H:%M')
       return date(date.today().year, d.month, d.day)
@@ -108,6 +111,7 @@ class LeBonCoin(SiteHelper):
 class ParuVendu(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
+    self.name = 'paru-vendu'
     self.site = 'www.paruvendu.fr'
     self.pub_class = 'annonce'
     self.price_class = 'price'
@@ -122,6 +126,7 @@ class ParuVendu(SiteHelper):
 class SeLoger(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
+    self.name = 'se-loger'
     self.pub_class = 'ann_ann'
     self.price_class = 'rech_box_prix'
     self.description_class = 'rech_desc_right_photo'
@@ -136,6 +141,7 @@ class SeLoger(SiteHelper):
 class AVendreALouer(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
+    self.name = 'a-vendre-a-louer'
     self.pub_class = 'resultat'
     self.price_class = 'prix'
     self.description_class = 'descriptif'
@@ -150,6 +156,7 @@ class AVendreALouer(SiteHelper):
 class LogicImmo(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
+    self.name = 'logic-immo'
     self.pub_class = 'offer-block'
     self.price_class = 'price'
     self.description_class = 'offer-desc'

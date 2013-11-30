@@ -88,6 +88,8 @@ class TestSitesHelper(unittest.TestCase):
     from datetime import timedelta
     self.assertEquals(date.today()-timedelta(1), 
                       self._parse_le_bon_coin()[0]['date'])
+    self.assertEquals(date.today(), 
+                      self._parse_le_bon_coin()[1]['date'])
     self.assertEquals(date(2013, 11, 13), 
                       self._parse_le_bon_coin()[2]['date'])
     #self.assertEquals(None, 
