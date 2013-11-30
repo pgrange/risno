@@ -118,7 +118,8 @@ class ParuVendu(SiteHelper):
     self.description_class = 'desc'
 
   def _parse_img(self, pub):
-    return pub.find('img', original=lambda(x): x != None)['original']
+    img = pub.find('img', original=lambda(x): x != None)
+    if img: return img['original']
 
   def url(self, location):
     return 'http://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&tbPen=1&tbRem=1&tbVia=1&tbImm=1&tbPar=1&tbAut=1&px1=200000&pa=FR&lo=' + str(location)
