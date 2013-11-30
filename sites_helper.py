@@ -4,27 +4,29 @@ from bs4 import BeautifulSoup
 
 class SiteHelper:
   def __init__(self):
-    self.pub_class = 'pub'
-    self.price_class = 'price'
-    self.description_class = 'description'
+    self.pub_class = None
+    self.price_class = None
+    self.description_class = None
+    self.location_class = None
 
+  def _text(self, tag):
+    text = tag.get_text() 
+    return re.sub("\s+", " ", text).strip()
+ 
   def _parse_price(self, pub):
     return int(
       re.findall('[0-9]+ *[0-9]*', 
-        pub.find(class_=self.price_class).get_text().encode('ascii', 'ignore')
+        pub.find(class_=self.price_class).\
+          get_text().encode('ascii', 'ignore')
       )[0].replace(' ', '')
     )
 
   def _parse_description(self, pub):
-    description = pub.find(class_=self.description_class)
-    s_description = description.get_text() \
-      .replace('\n', ' ') \
-      .replace('\r', ' ') \
-      .strip()
-    s_description = re.sub("\s+", " ", s_description)
-    if len(s_description) > 200:
-      s_description = s_description[:200] + "..."
-    return s_description
+    description = \
+      self._text(pub.find(class_=self.description_class))
+
+    if len(description) > 200: return description[:200] + "..."
+    else:                      return description
 
   def _parse_url(self, pub):
     # the whole pub is encapsulated in a link
@@ -45,6 +47,26 @@ class SiteHelper:
     # if none of the above cases matches for your 
     # case, redefine this method in your subclass
 
+  def _parse_img(self, pub):
+    img = pub.find('img')
+    if img: return img['src']
+
+  def _parse_location(self, pub):
+    if self.location_class:
+      return self._text(pub.find(class_ = self.location_class))
+
+  def _parse_date(self, date):
+    pass
+
+  def url(self, location):
+    """
+    Define this method to return the appropriate url
+    to get pubs for a given location for this site.
+
+    The pubs should be ordered by publication date.
+    """
+    pass
+
   def parse(self, page):
     soup = BeautifulSoup(page)
     pubs = []
@@ -53,6 +75,9 @@ class SiteHelper:
         'price': self._parse_price(pub),
         'description': self._parse_description(pub),
         'url': self._parse_url(pub),
+        'img': self._parse_img(pub),
+        'location': self._parse_location(pub),
+        'date': self._parse_date(pub),
       })
 
     return pubs
@@ -62,7 +87,20 @@ class LeBonCoin(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
     self.pub_class = 'lbc'
+    self.price_class = 'price'
     self.description_class = 'title'
+    self.location_class = 'placement'
+
+  def _parse_date(self, pub):
+    from datetime import timedelta
+    from datetime import date
+    from datetime import datetime
+    s_date = self._text(pub.find(class_ = "date"))
+    if s_date.startswith('Hier'):
+      return date.today() - timedelta(days=1)
+    else:
+      d = datetime.strptime(s_date, '%d %b %H:%M')
+      return date(date.today().year, d.month, d.day)
 
   def url(self, location):
     return 'http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=0&ret=1&ret=5&pe=8&location=' + str(location)
@@ -72,7 +110,11 @@ class ParuVendu(SiteHelper):
     SiteHelper.__init__(self)
     self.site = 'www.paruvendu.fr'
     self.pub_class = 'annonce'
+    self.price_class = 'price'
     self.description_class = 'desc'
+
+  def _parse_img(self, pub):
+    return pub.find('img', original=lambda(x): x != None)['original']
 
   def url(self, location):
     return 'http://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&tbPen=1&tbRem=1&tbVia=1&tbImm=1&tbPar=1&tbAut=1&px1=200000&pa=FR&lo=' + str(location)
@@ -83,6 +125,10 @@ class SeLoger(SiteHelper):
     self.pub_class = 'ann_ann'
     self.price_class = 'rech_box_prix'
     self.description_class = 'rech_desc_right_photo'
+    self.location_class = 'rech_ville'
+
+  def _parse_location(self, pub):
+    return self._text(pub.find(class_ = self.location_class))
 
   def url(self, location):
     return 'http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,10,12,11,9,13,14&pxmax=200000&tri=d_dt_crea&cp=' + str(location)
@@ -93,6 +139,10 @@ class AVendreALouer(SiteHelper):
     self.pub_class = 'resultat'
     self.price_class = 'prix'
     self.description_class = 'descriptif'
+    self.location_class = "annonce_url"
+
+  def _parse_location(self, pub):
+    return self._text(pub.find(class_ = self.location_class))
 
   def url(self, location):
     return 'http://www.avendrealouer.fr/annonces-immobilieres/vente/appartement+maison/' + str(location) + '+cp/max-300000-euros'
@@ -101,7 +151,9 @@ class LogicImmo(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
     self.pub_class = 'offer-block'
+    self.price_class = 'price'
     self.description_class = 'offer-desc'
+    self.location_class = 'offer-loc'
     self.logic_crap = {
       '33114': ('le-barp', '16559_2'),
       '33125': ('toutes-communes', '1525_98'),
@@ -127,6 +179,9 @@ class LogicImmo(SiteHelper):
       '33510': ('andernos-les-bains', '726_2'),
       '33400': ('talence', '32468_2')
     }
+
+  def _parse_location(self, pub):
+    return self._text(pub.find(class_ = self.location_class))
 
   def url(self, location):
     location = str(location)

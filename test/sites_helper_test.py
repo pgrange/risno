@@ -36,25 +36,70 @@ class TestSitesHelper(unittest.TestCase):
 
   def test_parse_site_extract_description(self):
     self.assertEquals(_le_bon_coin_test_description_, 
-      self._parse_le_bon_coin()[0]['description'])
+                      self._parse_le_bon_coin()[0]['description'])
     self.assertEquals(_paru_vendu_test_description_, 
-      self._parse_paru_vendu()[0]['description'])
+                      self._parse_paru_vendu()[0]['description'])
     self.assertEquals(_logic_immo_test_description_, 
-      self._parse_logic_immo()[0]['description'])
+                      self._parse_logic_immo()[0]['description'])
     self.assertEquals(_se_loger_test_description_, 
-      self._parse_se_loger()[0]['description'])
+                      self._parse_se_loger()[0]['description'])
     self.assertEquals(_a_vendre_a_louer_test_description, 
-      self._parse_a_vendre_a_louer()[0]['description'])
+                      self._parse_a_vendre_a_louer()[0]['description'])
 
   def test_parse_site_extract_url(self):
-    self.assertEquals(u'http://www.leboncoin.fr/ventes_immobilieres/570168457.htm?ca=2_s', self._parse_le_bon_coin()[0]['url'])
-    self.assertEquals(u'http://www.paruvendu.fr/immobilier/vente/maison/talence-33400/1188107770A1KIVHMN000', self._parse_paru_vendu()[0]['url'])
-    self.assertEquals(u'http://www.logic-immo.com/detail-vente-76c1da9a-d5bc-3d28-ee27-6731eb81bd88.htm', self._parse_logic_immo()[0]['url'])
-    self.assertEquals(u'http://www.seloger.com/annonces/achat/maison/talence-33/83022761.htm?cp=33400&idtt=2&idtypebien=10,11,12,13,14,2,9&pxmax=200000&tri=d_dt_crea', self._parse_se_loger()[0]['url'])
-    self.assertEquals(u'http://www.avendrealouer.fr/annonces-immobilieres/48/vente+appartement+5-pieces+talence+33/detail+pro-13056540/', self._parse_a_vendre_a_louer()[0]['url'])
+    self.assertEquals(_le_bon_coin_test_url, 
+                      self._parse_le_bon_coin()[0]['url'])
+    self.assertEquals(_paru_vendu_test_url, 
+                      self._parse_paru_vendu()[0]['url'])
+    self.assertEquals(_logic_immo_test_url, 
+                      self._parse_logic_immo()[0]['url'])
+    self.assertEquals(_se_loger_test_url, 
+                      self._parse_se_loger()[0]['url'])
+    self.assertEquals(_a_vendre_a_louer_test_url, 
+                      self._parse_a_vendre_a_louer()[0]['url'])
 
   def test_parse_site_extract_img(self):
-    pass
+    self.assertEquals(_le_bon_coin_test_img, 
+                      self._parse_le_bon_coin()[0]['img'])
+    self.assertEquals(_paru_vendu_test_img, 
+                      self._parse_paru_vendu()[0]['img'])
+    self.assertEquals(_logic_immo_test_img, 
+                      self._parse_logic_immo()[0]['img'])
+    self.assertEquals(_se_loger_test_img, 
+                      self._parse_se_loger()[0]['img'])
+    self.assertEquals(_a_vendre_a_louer_test_img, 
+                      self._parse_a_vendre_a_louer()[0]['img'])
+
+  def test_parse_site_extract_location(self):
+    self.assertEquals(_le_bon_coin_test_location, 
+                      self._parse_le_bon_coin()[0]['location'])
+    #unable to extract location from paru-vendu
+    self.assertEquals(None, 
+                      self._parse_paru_vendu()[0]['location'])
+    self.assertEquals(_logic_immo_test_location, 
+                      self._parse_logic_immo()[0]['location'])
+    self.assertEquals(_se_loger_test_location, 
+                      self._parse_se_loger()[0]['location'])
+    self.assertEquals(_a_vendre_a_louer_test_location, 
+                      self._parse_a_vendre_a_louer()[0]['location'])
+
+  def test_parse_site_extract_date(self):
+    from datetime import date
+    from datetime import timedelta
+    self.assertEquals(date.today()-timedelta(1), 
+                      self._parse_le_bon_coin()[0]['date'])
+    self.assertEquals(date(2013, 11, 13), 
+                      self._parse_le_bon_coin()[2]['date'])
+    #self.assertEquals(None, 
+    #                  self._parse_paru_vendu()[0]['location'])
+    #self.assertEquals(_logic_immo_test_location, 
+    #                  self._parse_logic_immo()[0]['location'])
+    #self.assertEquals(_se_loger_test_location, 
+    #                  self._parse_se_loger()[0]['location'])
+    #self.assertEquals(_a_vendre_a_louer_test_location, 
+    #                  self._parse_a_vendre_a_louer()[0]['location'])
+
+
 
   def _parse_le_bon_coin(self):
     return self._parse(sites_helper.LeBonCoin(), _le_bon_coin_test_page_)
@@ -97,6 +142,23 @@ _paru_vendu_test_description_  = u'Vente - Maison - 55 m² environ - 2 pièces T
 _logic_immo_test_description_ = u'TALENCE (33400) Achat maison Talence - Talence proche bagatelle atelier d\'environ 50m² à restaurer. SQUARE HABITAT T\xe9l. 0556041899 R\xe9f. annonce : 107950-1231'
 _se_loger_test_description_ = u'33400 Talence (Gironde) Proximité: Boulevards TALENCE Proche Boulevard - Maison T4 à rénover de 79m² dont 71m² carrez comprenant 3 chambres et une terrasse de 15m². Elle est idéalement placée à 2 pas ...'
 _a_vendre_a_louer_test_description = u'Se situant à Talence, appartement T5 de 84m2, agréable à vivre, proche des commodités, comporte 3 chambres bien tenues, u...'
+
+_le_bon_coin_test_url = u'http://www.leboncoin.fr/ventes_immobilieres/570168457.htm?ca=2_s'
+_paru_vendu_test_url = u'http://www.paruvendu.fr/immobilier/vente/maison/talence-33400/1188107770A1KIVHMN000'
+_logic_immo_test_url =u'http://www.logic-immo.com/detail-vente-76c1da9a-d5bc-3d28-ee27-6731eb81bd88.htm' 
+_se_loger_test_url =u'http://www.seloger.com/annonces/achat/maison/talence-33/83022761.htm?cp=33400&idtt=2&idtypebien=10,11,12,13,14,2,9&pxmax=200000&tri=d_dt_crea' 
+_a_vendre_a_louer_test_url ='http://www.avendrealouer.fr/annonces-immobilieres/48/vente+appartement+5-pieces+talence+33/detail+pro-13056540/' 
+
+_le_bon_coin_test_img = u'http://193.164.197.40/thumbs/247/247316102112100.jpg' 
+_paru_vendu_test_img = u'http://media.paruvendu.fr/media_ext/9927/21/20/th/th_992721200800_1.jpg' 
+_logic_immo_test_img = u'http://mmf.logic-immo.com/mmf/ads/photo-prop-182x136/76c/c/c543e6fa-1231-4c1c-98a4-0158c1a7dcc4.jpg' 
+_se_loger_test_img = u'/z/produits/sl/sv6_gen/images/ssPhoto.gif' 
+_a_vendre_a_louer_test_img = u'http://img1.avendrealouer.fr/photos_pro/12554/proa13056540.jpg?lastmodified='
+
+_le_bon_coin_test_location = u'Talence / Gironde'
+_logic_immo_test_location = u'TALENCE (33400)'
+_se_loger_test_location = u'33400 Talence (Gironde) Proximité: Boulevards'
+_a_vendre_a_louer_test_location = u'Vente Appartement 5 pièces 84 m² 33400 TALENCE'
 
 if __name__ == '__main__':
   unittest.main()
