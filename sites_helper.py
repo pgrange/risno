@@ -1,4 +1,5 @@
 import re
+import urllib2
 
 from bs4 import BeautifulSoup
 
@@ -58,6 +59,10 @@ class SiteHelper:
   def _parse_date(self, date):
     pass
 
+  def fetch_page(self, location):
+    s_url = self.url(location)
+    return urllib2.urlopen(s_url)
+    
   def url(self, location):
     """
     Define this method to return the appropriate url
@@ -201,3 +206,30 @@ class LogicImmo(SiteHelper):
       + location + "," \
       + self.logic_crap[location][1] \
       + "-4f2f000000-0,200000-0,0-0,0-00-00-000000000000-00-0-0-3-0-0-1.html"
+
+from cookielib import CookieJar
+class PagesJaunes(SiteHelper):
+  def __init__(self):
+    SiteHelper.__init__(self)
+    self.name = 'pages-jaunes'
+    self.pub_class = 'visitCardContent'
+    self.price_class = 'price'
+    self.description_class = 'dataCard'
+    self.location_class = 'location'
+
+  def _parse_url(self, pub):
+    pj_crap = pub.find('a', 'idTag_PARTAGER')['data-pjonglet']
+    return "http://www.pagesjaunes.fr/verticales/immo/afficherFicheDetaillee.do" + re.findall('.*(\?idAnnonce=.*)\'', pj_crap)[0]
+    
+
+  def url(self, location):
+    return 'http://www.pagesjaunes.fr/verticales/immo/rechercher.do?transactionSimple=achat&ou=' + str(location)
+
+  def fetch_page(self, location):
+    #they did it again http://ploum.net/ploum-en-j2ee/
+    cj = CookieJar()
+    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
+    s_url = self.url(location)
+    opener.open(s_url)
+    return opener.open('http://www.pagesjaunes.fr/verticales/immo/trierListeReponses.do?valeurTriImmo=DATE_PUBLICATION')
+

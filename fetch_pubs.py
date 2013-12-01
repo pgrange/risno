@@ -41,8 +41,9 @@ def parse(page, helper):
     [{'id':  image_to_id(o['img']), 'object': o} 
      for o in helper.parse(page) if o['img'] != None]
 
-def url(location, helper):
-  return helper.url(location)
+def fetch_page(location, helper):
+  return helper.fetch_page(location)
+
 
 if __name__ == '__main__':
   import traceback
@@ -76,8 +77,7 @@ if __name__ == '__main__':
     for location in args.locations:
       try:
         log_context = location + ' ' + site.name
-        s_url = url(location, site)
-        page = urllib2.urlopen(s_url)
+        page = fetch_page(location, site)
         pubs = parse(page, site)
 	if len(pubs) == 0:
 	  log("WA", "no pub, we may have been blacklisted")
