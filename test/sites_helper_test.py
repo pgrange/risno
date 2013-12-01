@@ -74,7 +74,7 @@ class TestSitesHelper(unittest.TestCase):
     self.assertEquals(_logic_immo_test_img, 
                       self._parse_logic_immo()[0]['img'])
     self.assertEquals(_se_loger_test_img, 
-                      self._parse_se_loger()[0]['img'])
+                      self._parse_se_loger()[2]['img'])
     self.assertEquals(_a_vendre_a_louer_test_img, 
                       self._parse_a_vendre_a_louer()[0]['img'])
     self.assertEquals(_pages_jaunes_test_img, 
@@ -166,7 +166,7 @@ _pages_jaunes_test_url = u'http://www.pagesjaunes.fr/verticales/immo/afficherFic
 _le_bon_coin_test_img = u'http://193.164.197.40/thumbs/247/247316102112100.jpg' 
 _paru_vendu_test_img = u'http://media.paruvendu.fr/media_ext/9927/21/20/th/th_992721200800_1.jpg' 
 _logic_immo_test_img = u'http://mmf.logic-immo.com/mmf/ads/photo-prop-182x136/76c/c/c543e6fa-1231-4c1c-98a4-0158c1a7dcc4.jpg' 
-_se_loger_test_img = u'/z/produits/sl/sv6_gen/images/ssPhoto.gif' 
+_se_loger_test_img = u'http://d.visuels.poliris.com/carre/d/b/5/8/db5834f7-54c9.jpg' 
 _a_vendre_a_louer_test_img = u'http://img1.avendrealouer.fr/photos_pro/12554/proa13056540.jpg?lastmodified='
 _pages_jaunes_test_img = u'http://media1.annoncesjaunes.fr/images/annonces/immo//20130123/2d7ff5b1-1165-e211-86f2-5cf3fc6a23ca_af621e43-f1f2-44e3-9e5c-e161f1e12c86/'
 
