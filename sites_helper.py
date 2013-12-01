@@ -50,7 +50,10 @@ class SiteHelper:
 
   def _parse_img(self, pub):
     img = pub.find('img')
-    if img: return img['src']
+    if img and img['src'].startswith('http'):
+      # ignore unexisting images or
+      # images we can't find
+      return img['src']
 
   def _parse_location(self, pub):
     if self.location_class:
