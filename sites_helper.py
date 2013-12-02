@@ -236,3 +236,45 @@ class PagesJaunes(SiteHelper):
     opener.open(s_url)
     return opener.open('http://www.pagesjaunes.fr/verticales/immo/trierListeReponses.do?valeurTriImmo=DATE_PUBLICATION')
 
+class ImmoStreet(SiteHelper):
+  def __init__(self):
+    SiteHelper.__init__(self)
+    self.name = 'immo-street'
+    self.site = 'www.immostreet.fr'
+    self.pub_class = 'item'
+    self.price_class = 'price_item'
+    self.description_class = 'title_item'
+    
+    self.immo_street_crap = {
+      '33114': 'place_id=4815975',
+      '33125': 'place_id=4816379&place_id=4816147&place_id=4816197&place_id=4816477',
+      '33650': 'place_id=4816219&place_id=4816442&place_id=4816416&place_id=4816023&place_id=4816397',
+      '33720': 'place_id=4816272&place_id=4815976&place_id=4816171&place_id=4816065&place_id=481615&place_id=4816493&place_id=4816022&place_id=4816395&place_id=4816142',
+      '33730': 'place_id=4816252&place_id=4816281&place_id=4816488&place_id=4816478&place_id=4815972&place_id=4816274',
+      '33770': '',
+      '33830': '',
+      '40160': '',
+      '40210': '',
+      '40410': '',
+      '40460': '',
+      '33830': '',
+      '33380': '',
+      '33160': '',
+      '33980': '',
+      '33480': '',
+      '33680': '',
+      '33138': '',
+      '33740': '',
+      '33950': '',
+      '33970': '',
+      '33510': '',
+      '33400': 'place_id=4816463'
+    }
+
+  def url(self, location):
+    location = str(location)
+    if not self.immo_street_crap.has_key(location): 
+      raise Exception("I do not know this location sorry: " + location)
+
+    return "http://www.immostreet.fr/Listing/Search?search_type=3&" \
+      + self.immo_street_crap[location]
