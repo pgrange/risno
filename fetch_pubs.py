@@ -57,6 +57,8 @@ if __name__ == '__main__':
   parser.add_argument('--paru-vendu',  const=True, action='store_const', help='recherche sur paru vendu')
   parser.add_argument('--avendre-alouer',  const=True, action='store_const', help='recherche sur à vendre à louer')
   parser.add_argument('--pages-jaunes',  const=True, action='store_const', help='recherche sur pages jaunes')
+  parser.add_argument('--immo-street',  const=True, action='store_const', help='recherche sur immo street')
+
   parser.add_argument('locations', nargs=argparse.REMAINDER, help='code postaux où recherche les annones')
   args = parser.parse_args()
   
@@ -68,6 +70,7 @@ if __name__ == '__main__':
   from sites_helper import SeLoger
   from sites_helper import AVendreALouer
   from sites_helper import PagesJaunes
+  from sites_helper import ImmoStreet
   
   if args.logic_immo: sites.append(LogicImmo())
   if args.le_bon_coin: sites.append(LeBonCoin())
@@ -75,6 +78,7 @@ if __name__ == '__main__':
   if args.se_loger: sites.append(SeLoger())
   if args.avendre_alouer: sites.append(AVendreALouer())
   if args.pages_jaunes: sites.append(PagesJaunes())
+  if args.immo_street: sites.append(ImmoStreet())
   
   for site in sites:
     for location in args.locations:
