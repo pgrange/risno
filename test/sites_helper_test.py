@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 import unittest
 
+from datetime import date
+from datetime import timedelta
+
 import sites_helper
 
 class TestSitesHelper(unittest.TestCase):
@@ -109,24 +112,29 @@ class TestSitesHelper(unittest.TestCase):
                       self._parse_immo_street()[0]['location'])
 
   def test_parse_site_extract_date(self):
-    from datetime import date
-    from datetime import timedelta
     self.assertEquals(date.today()-timedelta(1), 
                       self._parse_le_bon_coin()[0]['date'])
     self.assertEquals(date.today(), 
                       self._parse_le_bon_coin()[1]['date'])
     self.assertEquals(date(2013, 11, 13), 
+                      self._parse_le_bon_coin()[3]['date'])
+    self.assertEquals(date(2013, 12, 13), 
                       self._parse_le_bon_coin()[2]['date'])
-    #self.assertEquals(None, 
-    #                  self._parse_paru_vendu()[0]['location'])
-    #self.assertEquals(_logic_immo_test_location, 
-    #                  self._parse_logic_immo()[0]['location'])
-    #self.assertEquals(_se_loger_test_location, 
-    #                  self._parse_se_loger()[0]['location'])
-    #self.assertEquals(_a_vendre_a_louer_test_location, 
-    #                  self._parse_a_vendre_a_louer()[0]['location'])
 
-
+    self.assertEquals(date.today(), 
+                      self._parse_paru_vendu()[0]['date'])
+    self.assertEquals(date(2013, 10, 8), 
+                      self._parse_paru_vendu()[1]['date'])
+    self.assertEquals(date(2013, 11, 13), 
+                      self._parse_logic_immo()[0]['date'])
+    self.assertEquals(date(2013, 11, 16), 
+                      self._parse_se_loger()[0]['date'])
+    self.assertEquals(date(2013, 7, 19), 
+                      self._parse_a_vendre_a_louer()[0]['date'])
+    self.assertEquals(date(2013, 10, 10), 
+                      self._parse_pages_jaunes()[0]['date'])
+    self.assertEquals(date(2013, 9, 17),
+                      self._parse_immo_street()[0]['date'])
 
   def _parse_le_bon_coin(self):
     return _parsed_le_bon_coin

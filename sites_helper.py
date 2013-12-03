@@ -1,6 +1,12 @@
 import re
 import urllib2
 
+import locale
+
+from datetime import timedelta
+from datetime import date
+from datetime import datetime
+ 
 from bs4 import BeautifulSoup
 
 class SiteHelper:
@@ -9,6 +15,9 @@ class SiteHelper:
     self.price_class = None
     self.description_class = None
     self.location_class = None
+    self.date_class = None
+    self.date_format = '%d/%m/%Y'
+    self.date_regex = '[0-9]{2}/[0-9]{2}/[0-9]{4}'
 
   def _text(self, tag):
     text = tag.get_text() 
@@ -59,8 +68,15 @@ class SiteHelper:
     if self.location_class:
       return self._text(pub.find(class_ = self.location_class))
 
-  def _parse_date(self, date):
-    pass
+  def _parse_date(self, pub):
+    s_date = self._text(pub.find(class_ = self.date_class))
+    if s_date.startswith('Hier'):
+      return date.today() - timedelta(days=1)
+    elif s_date.startswith('Aujourd'):
+      return date.today()
+    else:
+      s_date = re.findall(self.date_regex, s_date)[0].encode('utf8', 'ignore')
+      return datetime.strptime(s_date, self.date_format).date()
 
   def fetch_page(self, location):
     s_url = self.url(location)
@@ -99,19 +115,36 @@ class LeBonCoin(SiteHelper):
     self.price_class = 'price'
     self.description_class = 'title'
     self.location_class = 'placement'
+    self.date_class = 'date'
+    self.date_format = '%d %b %H:%M'
+    self.date_regex = '.*'
 
   def _parse_date(self, pub):
-    from datetime import timedelta
-    from datetime import date
-    from datetime import datetime
-    s_date = self._text(pub.find(class_ = "date"))
+    s_date = self._text(pub.find(class_ = self.date_class))
     if s_date.startswith('Hier'):
       return date.today() - timedelta(days=1)
     elif s_date.startswith('Aujourd'):
       return date.today()
     else:
-      d = datetime.strptime(s_date, '%d %b %H:%M')
-      return date(date.today().year, d.month, d.day)
+      s_date = re.findall(self.date_regex, s_date)[0].encode('utf8', 'ignore')
+      
+      # it seems like le bon coin is using a custom
+      # date localisation/conversion scheme :(
+      # so filtering before parsing
+      s_date = re.sub(u'd\xc3c([^.]|$)', u'd\xc3c.', s_date)
+      s_date = re.sub(u'nov([^.]|$)', u'nov. ', s_date)
+      s_date = re.sub(u'oct([^.]|$)', u'oct. ', s_date)
+
+      old_locale = locale.getlocale(locale.LC_TIME)
+      locale.setlocale(locale.LC_TIME, "fr_FR.utf8")
+      d = datetime.strptime(s_date, self.date_format).date()
+      locale.setlocale(locale.LC_TIME, old_locale)
+
+      if d.year == 1900:
+        # no year specified in pub, using current year
+        return date(d.today().year, d.month, d.day)
+      else:
+        return d
 
   def url(self, location):
     return 'http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=0&ret=1&ret=5&pe=8&location=' + str(location)
@@ -124,6 +157,7 @@ class ParuVendu(SiteHelper):
     self.pub_class = 'annonce'
     self.price_class = 'price'
     self.description_class = 'desc'
+    self.date_class = 'date'
 
   def _parse_img(self, pub):
     img = pub.find('img', original=lambda(x): x != None)
@@ -140,6 +174,7 @@ class SeLoger(SiteHelper):
     self.price_class = 'rech_box_prix'
     self.description_class = 'rech_desc_right_photo'
     self.location_class = 'rech_ville'
+    self.date_class = 'rech_majref'
 
   def _parse_location(self, pub):
     return self._text(pub.find(class_ = self.location_class))
@@ -155,6 +190,7 @@ class AVendreALouer(SiteHelper):
     self.price_class = 'prix'
     self.description_class = 'descriptif'
     self.location_class = "annonce_url"
+    self.date_class = 'parution'
 
   def _parse_location(self, pub):
     return self._text(pub.find(class_ = self.location_class))
@@ -170,6 +206,8 @@ class LogicImmo(SiteHelper):
     self.price_class = 'price'
     self.description_class = 'offer-desc'
     self.location_class = 'offer-loc'
+    self.date_class = 'offer-updatedate'
+
     self.logic_crap = {
       '33114': ('le-barp', '16559_2'),
       '33125': ('toutes-communes', '1525_98'),
@@ -219,12 +257,12 @@ class PagesJaunes(SiteHelper):
     self.price_class = 'price'
     self.description_class = 'dataCard'
     self.location_class = 'location'
+    self.date_class = 'update'
 
   def _parse_url(self, pub):
     pj_crap = pub.find('a', 'idTag_PARTAGER')['data-pjonglet']
     return "http://www.pagesjaunes.fr/verticales/immo/afficherFicheDetaillee.do" + re.findall('.*(\?idAnnonce=.*)\'', pj_crap)[0]
     
-
   def url(self, location):
     return 'http://www.pagesjaunes.fr/verticales/immo/rechercher.do?transactionSimple=achat&ou=' + str(location)
 
@@ -244,6 +282,7 @@ class ImmoStreet(SiteHelper):
     self.pub_class = 'item'
     self.price_class = 'price_item'
     self.description_class = 'title_item'
+    self.date_class = 'ref_item'
     
     self.immo_street_crap = {
       '33114': 'place_id=4815975',
