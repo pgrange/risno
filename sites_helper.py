@@ -12,6 +12,7 @@ from bs4 import BeautifulSoup
 class SiteHelper:
   def __init__(self):
     self.pub_class = None
+    self.pub_tag = None
     self.price_class = None
     self.description_class = None
     self.location_class = None
@@ -69,6 +70,8 @@ class SiteHelper:
       return self._text(pub.find(class_ = self.location_class))
 
   def _parse_date(self, pub):
+    if self.date_class == None:
+      return
     s_date = self._text(pub.find(class_ = self.date_class))
     if s_date.startswith('Hier'):
       return date.today() - timedelta(days=1)
@@ -108,7 +111,7 @@ class SiteHelper:
   def parse(self, page):
     soup = BeautifulSoup(page)
     pubs = []
-    for pub in soup.find_all(class_ = self.pub_class):
+    for pub in soup.find_all(self.pub_tag, class_ = self.pub_class):
       pubs.append({
         'price': self._parse_price(pub),
         'description': self._parse_description(pub),
@@ -184,11 +187,13 @@ class SeLoger(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
     self.name = 'se-loger'
-    self.pub_class = 'ann_ann'
-    self.price_class = 'rech_box_prix'
-    self.description_class = 'rech_desc_right_photo'
-    self.location_class = 'rech_ville'
-    self.date_class = 'rech_majref'
+    self.pub_class = 'annonce'
+    self.pub_tag = 'article'
+    self.price_class = 'annonce__agence__prix'
+    self.description_class = 'annone__description__small'
+    self.location_class = 'annone__detail__localisation'
+    #no date displayed know :(
+    #self.date_class = 'rech_majref'
 
   def _parse_location(self, pub):
     return self._text(pub.find(class_ = self.location_class))

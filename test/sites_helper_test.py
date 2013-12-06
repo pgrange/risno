@@ -31,7 +31,7 @@ class TestSitesHelper(unittest.TestCase):
     self.assertEquals(11, len(self._parse_le_bon_coin()))
     self.assertEquals(3, len(self._parse_paru_vendu()))
     self.assertEquals(9, len(self._parse_logic_immo()))
-    self.assertEquals(7, len(self._parse_se_loger()))
+    self.assertEquals(8, len(self._parse_se_loger()))
     self.assertEquals(12, len(self._parse_a_vendre_a_louer()))
     self.assertEquals(10, len(self._parse_pages_jaunes()))
     self.assertEquals(10, len(self._parse_immo_street()))
@@ -40,7 +40,7 @@ class TestSitesHelper(unittest.TestCase):
     self.assertEquals(155850, self._parse_le_bon_coin()[0]['price'])
     self.assertEquals(187000, self._parse_paru_vendu()[0]['price'])
     self.assertEquals(96500, self._parse_logic_immo()[0]['price'])
-    self.assertEquals(149000, self._parse_se_loger()[0]['price'])
+    self.assertEquals(187000, self._parse_se_loger()[0]['price'])
     self.assertEquals(178500, self._parse_a_vendre_a_louer()[0]['price'])
     self.assertEquals(59000, self._parse_pages_jaunes()[0]['price'])
     self.assertEquals(125000, self._parse_immo_street()[0]['price'])
@@ -85,7 +85,7 @@ class TestSitesHelper(unittest.TestCase):
     self.assertEquals(_logic_immo_test_img, 
                       self._parse_logic_immo()[0]['img'])
     self.assertEquals(_se_loger_test_img, 
-                      self._parse_se_loger()[2]['img'])
+                      self._parse_se_loger()[0]['img'])
     self.assertEquals(_a_vendre_a_louer_test_img, 
                       self._parse_a_vendre_a_louer()[0]['img'])
     self.assertEquals(_pages_jaunes_test_img, 
@@ -130,8 +130,10 @@ class TestSitesHelper(unittest.TestCase):
 
     self.assertEquals(date(2013, 11, 13), 
                       self._parse_logic_immo()[0]['date'])
-    self.assertEquals(date(2013, 11, 16), 
+    # no date on this site
+    self.assertEquals(None,
                       self._parse_se_loger()[0]['date'])
+
     self.assertEquals(date(2013, 7, 19), 
                       self._parse_a_vendre_a_louer()[0]['date'])
     self.assertEquals(date(2013, 10, 10), 
@@ -181,7 +183,7 @@ _immo_street_33400_url = u'http://www.immostreet.fr/Listing/Search?search_type=3
 _le_bon_coin_test_description_ = u'Maison 3 pièces 64m2'
 _paru_vendu_test_description_  = u'Vente - Maison - 55 m² environ - 2 pièces Talence (33400) Maison en pierre de 2 pièces principalesMaison en pierre de plain pied... voir l\'annonce'
 _logic_immo_test_description_ = u'TALENCE (33400) Achat maison Talence - Talence proche bagatelle atelier d\'environ 50m² à restaurer. SQUARE HABITAT T\xe9l. 0556041899 R\xe9f. annonce : 107950-1231'
-_se_loger_test_description_ = u'33400 Talence (Gironde) Proximité: Boulevards TALENCE Proche Boulevard - Maison T4 à rénover de 79m² dont 71m² carrez comprenant 3 chambres et une terrasse de 15m². Elle est idéalement placée à 2 pas ...'
+_se_loger_test_description_ = u"Talence M\xe9doquine Maison en pierre \xe0 r\xe9nover de plain-pied d'environ 55 m\xb2 avec jardin bien expos\xe9. Secteur calme, proche de toutes..."
 _a_vendre_a_louer_test_description = u'Se situant à Talence, appartement T5 de 84m2, agréable à vivre, proche des commodités, comporte 3 chambres bien tenues, u...'
 _pages_jaunes_test_description = u"Dans Bordeaux, Barriere de Toulouse Axe tr\u010ds passant. Grande vitrine. Parking Proche des commerces de proximit\xe9 Bail 3.6.9 tous commerces Local \u0155 visiter Mise \xe0 jour le 10/10/2013 Partager Voir l'anno..."
 _immo_street_test_description = u'Vente - Appartement 5 pièces - 83 m2 - Talence'
@@ -189,7 +191,7 @@ _immo_street_test_description = u'Vente - Appartement 5 pièces - 83 m2 - Talenc
 _le_bon_coin_test_url = u'http://www.leboncoin.fr/ventes_immobilieres/570168457.htm?ca=2_s'
 _paru_vendu_test_url = u'http://www.paruvendu.fr/immobilier/vente/maison/talence-33400/1188107770A1KIVHMN000'
 _logic_immo_test_url =u'http://www.logic-immo.com/detail-vente-76c1da9a-d5bc-3d28-ee27-6731eb81bd88.htm' 
-_se_loger_test_url =u'http://www.seloger.com/annonces/achat/maison/talence-33/83022761.htm?cp=33400&idtt=2&idtypebien=10,11,12,13,14,2,9&pxmax=200000&tri=d_dt_crea' 
+_se_loger_test_url =u'http://www.seloger.com/annonces/achat/maison/talence-33/medoquine-haut-brion/84241325.htm?cp=33400&idtt=2&idtypebien=10,11,12,13,14,2,9&pxmax=200000&tri=d_dt_crea&bd=Li_LienAnn_1' 
 _a_vendre_a_louer_test_url ='http://www.avendrealouer.fr/annonces-immobilieres/48/vente+appartement+5-pieces+talence+33/detail+pro-13056540/' 
 _pages_jaunes_test_url = u'http://www.pagesjaunes.fr/verticales/immo/afficherFicheDetaillee.do?idAnnonce=2d7ff5b1-1165-e211-86f2-5cf3fc6a23ca' 
 _immo_street_test_url = u'http://www.immostreet.fr/france/talence-4816463/vente/appartement/appartement-5-pieces-80809999?searchString=c2VjdGlvbk5hbWU9JnNlYXJjaF90eXBlPTMsNSwxMCwxMiZwbGFjZV9pZD00ODE2NDYzJnN1cHBvcnRfaWQ9MTEmaXNfZW5hYmxlZD1UcnVlJnNvcnQ9MiZwYWdlPTA1&current=1&nbResults=140&page_precedent=1' 
@@ -197,14 +199,14 @@ _immo_street_test_url = u'http://www.immostreet.fr/france/talence-4816463/vente/
 _le_bon_coin_test_img = u'http://193.164.197.40/thumbs/247/247316102112100.jpg' 
 _paru_vendu_test_img = u'http://media.paruvendu.fr/media_ext/9927/21/20/th/th_992721200800_1.jpg' 
 _logic_immo_test_img = u'http://mmf.logic-immo.com/mmf/ads/photo-prop-182x136/76c/c/c543e6fa-1231-4c1c-98a4-0158c1a7dcc4.jpg' 
-_se_loger_test_img = u'http://d.visuels.poliris.com/carre/d/b/5/8/db5834f7-54c9.jpg' 
+_se_loger_test_img = u'http://6.visuels.poliris.com/c175/6/b/0/8/6b08bf96-3bf0.jpg' 
 _a_vendre_a_louer_test_img = u'http://img1.avendrealouer.fr/photos_pro/12554/proa13056540.jpg?lastmodified='
 _pages_jaunes_test_img = u'http://media1.annoncesjaunes.fr/images/annonces/immo//20130123/2d7ff5b1-1165-e211-86f2-5cf3fc6a23ca_af621e43-f1f2-44e3-9e5c-e161f1e12c86/'
 _immo_street_test_img = u'http://7.visuels.poliris.com/c175/7/4/0/f/740f7d3b-5fc2.jpg'
 
 _le_bon_coin_test_location = u'Talence / Gironde'
 _logic_immo_test_location = u'TALENCE (33400)'
-_se_loger_test_location = u'33400 Talence (Gironde) Proximité: Boulevards'
+_se_loger_test_location = u'Talence 33400 (Gironde)'
 _a_vendre_a_louer_test_location = u'Vente Appartement 5 pièces 84 m² 33400 TALENCE'
 _pages_jaunes_test_location = u'Talence (33)'
 
