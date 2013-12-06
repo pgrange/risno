@@ -121,10 +121,13 @@ class TestSitesHelper(unittest.TestCase):
     self.assertEquals(date(2013, 12, 13), 
                       self._parse_le_bon_coin()[2]['date'])
 
-    self.assertEquals(date.today(), 
+    self.assertEquals(date.today() - timedelta(7), 
                       self._parse_paru_vendu()[0]['date'])
     self.assertEquals(date(2013, 10, 8), 
                       self._parse_paru_vendu()[1]['date'])
+    self.assertEquals(date.today()-timedelta(2), 
+                      self._parse_paru_vendu()[2]['date'])
+
     self.assertEquals(date(2013, 11, 13), 
                       self._parse_logic_immo()[0]['date'])
     self.assertEquals(date(2013, 11, 16), 

@@ -74,7 +74,21 @@ class SiteHelper:
       return date.today() - timedelta(days=1)
     elif s_date.startswith('Aujourd'):
       return date.today()
+    if s_date.startswith('Il y a 2 jours'):
+      return date.today() - timedelta(days=2)
+    if s_date.startswith('Il y a 3 jours'):
+      return date.today() - timedelta(days=3)
+    if s_date.startswith('Il y a 4 jours'):
+      return date.today() - timedelta(days=4)
+    if s_date.startswith('Il y a 5 jours'):
+      return date.today() - timedelta(days=5)
+    if s_date.startswith('Il y a 6 jours'):
+      return date.today() - timedelta(days=6)
+    if s_date.startswith('Il y a une semaine'):
+      return date.today() - timedelta(days=7)
     else:
+      if len(re.findall(self.date_regex, s_date)) == 0:
+        print s_date
       s_date = re.findall(self.date_regex, s_date)[0].encode('utf8', 'ignore')
       return datetime.strptime(s_date, self.date_format).date()
 
