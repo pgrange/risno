@@ -145,7 +145,7 @@ class LeBonCoin(SiteHelper):
       # it seems like le bon coin is using a custom
       # date localisation/conversion scheme :(
       # so filtering before parsing
-      s_date = re.sub(u'd\xc3c([^.]|$)', u'd\xc3c.', s_date)
+      s_date = re.sub(u'c([^.a-z]|$)', u'c. '.encode('utf8'), s_date)
       s_date = re.sub(u'nov([^.]|$)', u'nov. ', s_date)
       s_date = re.sub(u'oct([^.]|$)', u'oct. ', s_date)
 
