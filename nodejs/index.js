@@ -8,9 +8,10 @@ app.use(express.bodyParser());
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.get('/', function(req, res) {
+  var filter = ejs.MissingFilter("opinion")
   get_pubs(function(results) {
     render(res, results, "new")
-  }, ejs.QueryStringQuery('*'), ejs.MissingFilter("opinion"))
+  }, ejs.QueryStringQuery('*'), filter)
 })
 app.get('/like', function(req, res) {
   get_pubs(function(results) {
@@ -44,8 +45,8 @@ app.post('/pub/:id', function(req, res) {
 //elastic part
 var nc = require('elastic.js/elastic-node-client')
 ejs.client = nc.NodeClient('localhost', 9200);
-var e_index = 'test-index';
-var e_type = 'test-type';
+var e_index = 'immo';
+var e_type = 'immo';
 function get_pubs(handle_results, query, filter) {
   if (! query) query = ejs.QueryStringQuery('*')
   if (! filter) filter = ejs.TypeFilter(e_type)
