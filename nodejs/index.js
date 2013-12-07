@@ -7,8 +7,13 @@ var app = express()
 app.use(express.bodyParser());
 app.use(express.static(path.join(__dirname, 'public')))
 
+function price_filter(req) {
+  return ejs.NumericRangeFilter("price").lte(parseInt(req.param('max_price')))
+}
+
 app.get('/', function(req, res) {
   var filter = ejs.MissingFilter("opinion")
+  filter = ejs.AndFilter([filter, price_filter(req)])
   get_pubs(function(results) {
     render(res, results, "new")
   }, ejs.QueryStringQuery('*'), filter)
@@ -16,12 +21,12 @@ app.get('/', function(req, res) {
 app.get('/like', function(req, res) {
   get_pubs(function(results) {
     render(res, results, "like")
-  }, ejs.TermQuery('opinion', 'like'))
+  }, ejs.TermQuery('opinion', 'like'), price_filter(req))
 })
 app.get('/dislike', function(req, res) {
   get_pubs(function(results) {
     render(res, results, "dislike")
-  }, ejs.TermQuery('opinion', 'dislike'))
+  }, ejs.TermQuery('opinion', 'dislike'), price_filter(req))
 })
 app.post('/pub/:id', function(req, res) {
   var id = req.param('id')

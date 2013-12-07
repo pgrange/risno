@@ -1,7 +1,20 @@
 !!! 5
 
+- var action = "/"
+case active
+ when "new"
+  - action = "/"
+ when "like"
+  - action = "/like"
+ when "dislike"
+  - action = "/dislike"
+
 include head
 include navbar
+div
+ form(action=action, method="get")
+  input.form-control(type="text", name="max_price", placeholder="prix max")
+  button.btn.btn-default(type="submit") filtrer
 table.table.table-hover
  tbody
   each pub in pubs
