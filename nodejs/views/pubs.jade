@@ -11,10 +11,6 @@ case active
 
 include head
 include navbar
-div
- form(action=action, method="get")
-  input.form-control(type="text", name="max_price", placeholder="prix max")
-  button.btn.btn-default(type="submit") filtrer
 table.table.table-hover
  tbody
   each pub in pubs
@@ -23,11 +19,12 @@ table.table.table-hover
      div
       a(href=pub.url)= pub.location
      div= pub.description
+     div(style="width: 500px; word-wrap: break-word")= pub.cities
     td= pub.price
     td
      a(href=pub.url)
       img.pub(src=pub.img)
     td
-     button.btn.btn-success Bien
-     button.btn.btn-danger Bof
+     button.btn.btn-success.btn-vote Bien
+     button.btn.btn-danger.btn-vote Bof
 include foot

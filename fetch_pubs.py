@@ -7,6 +7,9 @@ import random
 
 from bs4 import BeautifulSoup
 
+from pyes import ES
+conn = ES('127.0.0.1:9200') # Use HTTP
+
 log_context = ""
 def log(status, message = ""):
   from colorama import Fore, Back, Style
@@ -17,10 +20,8 @@ def log(status, message = ""):
   print color + status + " " + Fore.BLUE + log_context + Fore.RESET + " " + message
 
 def insert_to_db(pubs):
-  from pyes import ES
-  conn = ES('127.0.0.1:9200') # Use HTTP
-
-  for pub in pubs: conn.update("immo", "immo", pub['id'], document=pub['object'], upsert=pub['object'])
+  for pub in pubs: 
+    conn.update("immo", "immo", pub['id'], document=pub['object'], upsert=pub['object'])
 
 def show_pubs(pubs):
   for pub in pubs:

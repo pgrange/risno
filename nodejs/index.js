@@ -12,21 +12,52 @@ function price_filter(req) {
 }
 
 app.get('/', function(req, res) {
-  var filter = ejs.MissingFilter("opinion")
-  filter = ejs.AndFilter([filter, price_filter(req)])
-  get_pubs(function(results) {
-    render(res, results, "new")
-  }, ejs.QueryStringQuery('*'), filter)
+  with_criteria(req, function(filter) {
+    get_pubs(function(results) {
+      render(res, results, "new")
+    }, ejs.QueryStringQuery('*'), filter)
+  }, ejs.MissingFilter("opinion"))
 })
 app.get('/like', function(req, res) {
-  get_pubs(function(results) {
-    render(res, results, "like")
-  }, ejs.TermQuery('opinion', 'like'), price_filter(req))
+  with_criteria(req, function(filter) {
+    get_pubs(function(results) {
+      render(res, results, "like")
+    }, ejs.TermQuery('opinion', 'like'), filter)
+  })
 })
 app.get('/dislike', function(req, res) {
-  get_pubs(function(results) {
-    render(res, results, "dislike")
-  }, ejs.TermQuery('opinion', 'dislike'), price_filter(req))
+  with_criteria(req, function(filter) {
+    get_pubs(function(results) {
+      render(res, results, "dislike")
+    }, ejs.TermQuery('opinion', 'dislike'), filter)
+  })
+})
+app.get('/criteria', function(req, res) {
+  get_criteria(function(criteria) {
+    render_criteria(res, criteria)
+  })
+})
+app.post('/criteria', function(req, res) {
+  criteria = {
+    max_price: parseInt(req.param('max_price')),
+    term: [].concat(req.param('term'))
+  }
+  for(var i = 0; i < criteria.term.length; i++) {
+    term = criteria.term[i]
+    if (term == '') {
+      criteria.term.splice(i, 1)
+      i--
+    } else
+      criteria.term[i] = term
+  }
+  console.log(criteria)
+  doc = ejs.Document("immo", "criteria", "criteria")
+  doc.source(criteria).upsert(criteria)
+  doc.doUpdate(function() {
+    res.redirect("/criteria")
+  }, function() {
+    console.log("KATASTROPH")
+  })
 })
 app.post('/pub/:id', function(req, res) {
   var id = req.param('id')
@@ -58,7 +89,7 @@ function get_pubs(handle_results, query, filter) {
   
   // generates the elastic.js query and executes the search
   ejs.Request({indices: e_index, types: e_type})
-    .query(query).size(1000).filter(filter).doSearch(handle_results)
+    .query(query).size(100).filter(filter).doSearch(handle_results)
 }
 
 function vote(id, opinion, handle_update) {
@@ -69,6 +100,7 @@ function vote(id, opinion, handle_update) {
 
 function extract_pubs(results) {
   var pubs = []
+  console.log("nb results: " + results.hits.total)
   for(var i = 0; i < results.hits.hits.length; i++) {
     pubs[i] = results.hits.hits[i]._source
     pubs[i].id = results.hits.hits[i]._id
@@ -80,6 +112,47 @@ function render(res, results, active) {
     var pubs = extract_pubs(results)
     res.render('pubs.jade', {pubs: pubs, active: active})
 }
+
+function get_criteria(handle_results) {
+  doc = ejs.Document(e_index, "criteria", "criteria")
+  doc.doGet(function(result) {
+    handle_results(result._source)
+  }, function() {
+    console.log("KATASTROPH")
+  })
+}
+
+function with_criteria(req, handle, filter) {
+  if (req.param('raw')) {
+    handle(filter)
+    return
+  }
+  if (! filter) filter = ejs.TypeFilter(e_type)
+  filter = ejs.AndFilter(filter)
+  get_criteria(function(criteria) {
+    if (criteria) {
+      filter.filters(ejs.NumericRangeFilter("price").lte(criteria.max_price))
+      filter.filters(or_term_filter(criteria.term))
+    }
+    handle(filter)
+  })
+}
+
+function or_term_filter(terms) {
+  var filters = []
+  for(var i = 0; i < terms.length; i++) {
+    var term = terms[i].replace(' ', '')
+    filters.push(ejs.QueryFilter(ejs.MatchQuery('location', term)))
+    filters.push(ejs.QueryFilter(ejs.MatchQuery('description', term)))
+  }
+  return ejs.OrFilter(filters)
+}
+
+function render_criteria(res, criteria) {
+  res.render('criteria.jade', {criteria: criteria, active: 'criteria'})
+}
+
+
 
 app.listen(12043)
 console.log("Server started")

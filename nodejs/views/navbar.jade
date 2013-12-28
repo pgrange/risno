@@ -1,6 +1,7 @@
 - var new_class = ""
 - var like_class = ""
 - var dislike_class = ""
+- var criteria_class = ""
 case active
  when "new"
   - new_class = "active" 
@@ -8,11 +9,15 @@ case active
   - like_class = "active"
  when "dislike"
   - dislike_class = "active"
+ when "criteria"
+  - criteria_class = "active"
 
 .navbar
  .navbar-inner
   a.brand(href="#") Annonces
   ul.nav
+   li(class=criteria_class)
+    a(href="/criteria") Critères
    li(class=new_class)
     a(href="/") Nouveautés
    li(class=like_class)

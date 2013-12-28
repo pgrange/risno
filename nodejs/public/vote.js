@@ -1,5 +1,5 @@
 function init_vote() {
-  $(".btn").click(vote)
+  $(".btn-vote").click(vote)
   
   function vote() {
     var opinion = $(this).hasClass('btn-success') 
