@@ -1,39 +1,33 @@
 function init_criteria() {
-  $('body').on('focusin', ".term:last", new_keyword)
-  activate_auto_completion()
-  
-  function new_keyword() {
-    var new_keyword = $('<div><input class="term form-control" type="text" name="term" placeholder="mot clé"/></div>')
-    $(this).after(new_keyword)
-    activate_auto_completion()
-  }
-
-  function activate_auto_completion() {
-    $('.term').attr("autocomplete", "off")
-    $('.term').typeahead({source: fetch_cities_completion})
-  }
-
-  function fetch_cities_completion(prefix, completions_handler) {
-    //TODO indirection through node application
-    $.ajax("http://localhost:9200/cities/_suggest", 
-           {type: "POST",
-            data: JSON.stringify({
-             city: { text: prefix,
-              completion: {
-               field: "name_suggest",
-               size: 1000,
-              }
-             }
-           })})
-    .done(function(suggestions) {
-           var options = suggestions.city[0].options
-           var formatted_options = []
-           for(var i = 0; i < options.length; i++) {
-             formatted_options.push(ucFirstAllWords(options[i].text))
-           }
-           completions_handler(formatted_options)
-          })
-  }
+  $('#cities').select2({
+    placeholder: "Indiquez une ville",
+    allowClear: true,
+    multiple: true,
+    ajax: {
+      url: "/suggest",
+      dataType: "json",
+      data: function(term, page) {
+        return {prefix: term}
+      },
+      results: function(data, page) {
+        result = []
+        for(var i = 0; i < data.length; i++) {
+          result.push({
+            id: data[i].payload,
+            text: format_city_from_id(data[i].payload)})
+        }
+        return {results: result}
+      }
+    },
+    initSelection : function (element, callback) {
+      var data = [];
+      var value = element.val()
+      $(value.split(",")).each(function () {
+          data.push({id: this, text: format_city_from_id(this)});
+      });
+      callback(data);
+    }
+  })
 }
 function ucFirstAllWords( str )
 {
@@ -44,4 +38,14 @@ function ucFirstAllWords( str )
         pieces[i] = j + pieces[i].substr(1).toLowerCase();
     }
     return pieces.join(" ");
+}
+function format_city_from_id(id) {
+  var zip = id.replace(/fr_([0-9]+)_.*/, '$1')
+  var name = id.replace(/fr_[0-9]+_/, '').replace(/_/g, ' ')
+  return ucFirstAllWords(name) + ' (' + zip + ')'
+}
+
+function postpone( fun )
+{
+  window.setTimeout(fun,0);
 }

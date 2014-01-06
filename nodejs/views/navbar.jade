@@ -12,10 +12,17 @@ case active
  when "criteria"
   - criteria_class = "active"
 
-.navbar
- .navbar-inner
-  a.brand(href="#") Annonces
-  ul.nav
+nav.navbar.navbar-default(role="navigation")
+ .navbar-header
+  button.navbar-toggle(type="button", data-toggle="collapse", data-target="#navbar")
+   span.sr-only Toggle navigation
+   span.icon-bar
+   span.icon-bar
+   span.icon-bar
+  a.navbar-brand(href="#") Annonces
+
+ .collapse.navbar-collapse(id="navbar")
+  ul.nav.navbar-nav
    li(class=criteria_class)
     a(href="/criteria") Critères
    li(class=new_class)

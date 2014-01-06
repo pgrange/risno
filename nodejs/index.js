@@ -40,15 +40,17 @@ app.get('/criteria', function(req, res) {
 app.post('/criteria', function(req, res) {
   criteria = {
     max_price: parseInt(req.param('max_price')),
-    term: [].concat(req.param('term'))
+    cities: req.param('cities').split(',')
   }
-  for(var i = 0; i < criteria.term.length; i++) {
-    term = criteria.term[i]
-    if (term == '') {
-      criteria.term.splice(i, 1)
+  for(var i = 0; i < criteria.cities.length; i++) {
+    city = criteria.cities[i]
+    if (city == '') {
+      criteria.cities.splice(i, 1)
       i--
-    } else
-      criteria.term[i] = term
+    } else {
+      //FIXME useless ?
+      criteria.cities[i] = city
+    }
   }
   console.log(criteria)
   doc = ejs.Document("immo", "criteria", "criteria")
@@ -75,8 +77,47 @@ app.post('/pub/:id', function(req, res) {
     })
   }
 })
+app.get('/suggest', function(req, res) {
+  var prefix = req.param('prefix')
+  client.suggest({
+    index: "cities",
+    body: {
+      city: {
+        text: prefix,
+        completion: {
+          field: "name_suggest",
+          size: 1000
+        }
+      }
+    }
+  }, function(error, response) {
+    res.send(response.city[0].options)
+  })
+})
 
+app.get('/suggest/:prefix', function(req, res) {
+  var prefix = req.param('prefix')
+  client.suggest({
+    index: "cities",
+    body: {
+      city: {
+        text: prefix,
+        completion: {
+          field: "name_suggest",
+          size: 1000
+        }
+      }
+    }
+  }, function(error, response) {
+    res.send(response.city[0].options)
+  })
+})
 
+//new elasticsearch client part
+var elasticsearch = require('elasticsearch');
+var client = new elasticsearch.Client({
+  host: 'localhost:9200'
+});
 
 //elastic part
 var nc = require('elastic.js/elastic-node-client')
@@ -132,18 +173,17 @@ function with_criteria(req, handle, filter) {
   get_criteria(function(criteria) {
     if (criteria) {
       filter.filters(ejs.NumericRangeFilter("price").lte(criteria.max_price))
-      filter.filters(or_term_filter(criteria.term))
+      filter.filters(cities_filter(criteria.cities))
     }
     handle(filter)
   })
 }
 
-function or_term_filter(terms) {
+function cities_filter(cities) {
   var filters = []
-  for(var i = 0; i < terms.length; i++) {
-    var term = terms[i].replace(' ', '')
-    filters.push(ejs.QueryFilter(ejs.MatchQuery('location', term)))
-    filters.push(ejs.QueryFilter(ejs.MatchQuery('description', term)))
+  for(var i = 0; i < cities.length; i++) {
+    var city = cities[i].replace(' ', '')
+    filters.push(ejs.QueryFilter(ejs.MatchQuery('cities', city)))
   }
   return ejs.OrFilter(filters)
 }

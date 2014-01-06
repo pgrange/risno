@@ -4,21 +4,19 @@ if criteria && criteria.max_price > 0
   max_price = criteria.max_price
 else
   max_price = ""
-if criteria
-  terms = criteria.term
+if criteria && criteria.cities
+  cities = criteria.cities
 else
-  terms = []
+  cities = []
 
 include head
 include navbar
 form(action="/criteria", method="post")
  div
-  input.form-control(type="text", name="max_price", placeholder="prix max", value=max_price)
- each term in terms
-  div
-   input.term.form-control(type="text", name="term", placeholder="mot clé", value=term)
- div
-  input.term.form-control(type="text", name="term", placeholder="mot clé", value=term)
+  .input-group
+   span.input-group-addon &euro;
+   input.form-control(type="text", name="max_price", placeholder="prix max", value=max_price)
+ input(type="hidden", id="cities", name="cities", value=cities)
  div
   button.btn.btn-default(type="submit") enregistrer
 include foot
