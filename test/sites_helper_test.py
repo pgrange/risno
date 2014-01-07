@@ -116,9 +116,9 @@ class TestSitesHelper(unittest.TestCase):
                       self._parse_le_bon_coin()[0]['date'])
     self.assertEquals(date.today(), 
                       self._parse_le_bon_coin()[1]['date'])
-    self.assertEquals(date(2013, 11, 13), 
+    self.assertEquals(date(date.today().year, 11, 13), 
                       self._parse_le_bon_coin()[3]['date'])
-    self.assertEquals(date(2013, 12, 13), 
+    self.assertEquals(date(date.today().year, 12, 13), 
                       self._parse_le_bon_coin()[2]['date'])
 
     self.assertEquals(date.today() - timedelta(7), 
