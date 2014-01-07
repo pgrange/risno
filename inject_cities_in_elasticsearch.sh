@@ -16,7 +16,16 @@ function csv2bulk() {
 
     cat << EOF
 {"index":{"_index":"cities","_type":"city","_id":"${id}"}}
-{"name":"${name}","zipcode":"${zip}","name_suggest":{"input":"${name}","payload":"${id}"},"city_boost":${city_boost}}
+{"name":"${name}",\
+ "zipcode":"${zip}",\
+ "city_boost":${city_boost},\
+ "name_suggest":{\
+  "input":["${name}",\
+           "${zip}",\
+           "${name} ${zip}",\
+           "${zip} ${name}"],\
+  "output": "${name} (${zip})",\
+  "payload":"${id}"}}
 EOF
   done
 }

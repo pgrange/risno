@@ -14,7 +14,7 @@ function init_criteria() {
         for(var i = 0; i < data.length; i++) {
           result.push({
             id: data[i].payload,
-            text: format_city_from_id(data[i].payload)})
+            text: ucFirstAllWords(data[i].text)})
         }
         return {results: result}
       }
