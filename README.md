@@ -50,7 +50,7 @@ You are now ready to fetch pubs from several sites by running :
 
 Install [NodeJS](http://nodejs.org/):
 
-    $ apt-get install node
+    $ apt-get install nodejs
 
 Start the node web server. To do that, go inside nodejs subdirectory and run :
 
