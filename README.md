@@ -7,6 +7,8 @@ real-estate search engine
 
 Hardly ! Not still mature enough to be used ealily. But if you still want to try something, read on.
 
+Copy *risnorc_sample* into a file named *risnorc*, and edit values. 
+
 ## Elasticsearch
 
 risno use an elasticsearch database running in a docker container. If you have [Docker](http://www.docker.io) installed,

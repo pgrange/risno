@@ -1,6 +1,0 @@
-#
-# Risno configuration
-#
-
-RISNO_DIR="/opt/risno"
-POSTAL_CODE="33120 33260 33380 40460 40600 40160 40200 40170 40210"
