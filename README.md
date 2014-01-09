@@ -7,9 +7,11 @@ real-estate search engine
 
 Hardly ! Not still mature enough to be used ealily. But if you still want to try something, read on.
 
+Copy *risnorc_sample* into a file named *risnorc*, and edit values. 
+
 ## Elasticsearch
 
-risno use an elasticsearch database running in a docker container. If you have [Docker]http://www.docker.io/() installed,
+risno use an elasticsearch database running in a docker container. If you have [Docker](http://www.docker.io) installed,
 take a look at start_elastic.sh and make the appropriate changes so that it will store its data in a secure adapted directory.
 Then run :
 
@@ -48,9 +50,13 @@ You are now ready to fetch pubs from several sites by running :
 
 ## Consult pubs
 
-Install [NodeJS](http://nodejs.org/):
+Install [NodeJS](http://nodejs.org/) and [Npm](https://npmjs.org/) :
 
-    $ apt-get install nodejs
+    $ apt-get install nodejs npm
+
+Install dependencies :
+
+    $ cd nodejs && npm install
 
 Start the node web server. To do that, go inside nodejs subdirectory and run :
 
