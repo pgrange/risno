@@ -42,8 +42,8 @@ def parse(page, helper):
     [{'id':  image_to_id(o['img']), 'object': o} 
      for o in helper.parse(page) if o['img'] != None]
 
-def fetch_page(location, helper):
-  return helper.fetch_page(location)
+def fetch_page(location, helper, num_page):
+  return helper.fetch_page_for_region(location, num_page)
 
 
 if __name__ == '__main__':
@@ -60,7 +60,8 @@ if __name__ == '__main__':
   parser.add_argument('--pages-jaunes',  const=True, action='store_const', help='recherche sur pages jaunes')
   parser.add_argument('--immo-street',  const=True, action='store_const', help='recherche sur immo street')
 
-  parser.add_argument('locations', nargs=argparse.REMAINDER, help='code postaux où recherche les annones')
+  parser.add_argument('--max-pages', action='store', help="ne récupère pas plus de <max-pages> pages sur chaque site, quoiqu'il arrive. Par défaut 200", type=int, default=200)
+
   args = parser.parse_args()
   
   sites = []
@@ -81,16 +82,29 @@ if __name__ == '__main__':
   if args.pages_jaunes: sites.append(PagesJaunes())
   if args.immo_street: sites.append(ImmoStreet())
   
-  for site in sites:
-    for location in args.locations:
-      try:
-        log_context = location + ' ' + site.name
-        page = fetch_page(location, site)
-        pubs = parse(page, site)
-	if len(pubs) == 0:
-	  log("WA", "no pub, we may have been blacklisted")
-        if args.test: show_pubs(pubs)
-        else: insert_to_db(pubs)
-        log("OK")
-      except:
-        log("KO", traceback.format_exc())
+  num_page = 1
+  while (len(sites) > 0 and num_page <= args.max_pages):
+    site_i = 0
+    while site_i < len(sites):
+      site = sites[site_i]
+      for location in ['aquitaine']:
+        try:
+          log_context = location + '/' + str(num_page) + ' ' + site.name
+          page = fetch_page(location, site, num_page)
+          pubs = parse(page, site)
+          if len(pubs) == 0:
+            if (num_page == 0):
+              log("WA", "no pub, we may have been blacklisted")
+            else:
+              log('OK', 'all pages fetched, removing site from list')
+              sites.remove(site) 
+              site_i = site_i - 1
+          if args.test: show_pubs(pubs)
+          else: insert_to_db(pubs)
+          log("OK")
+        except:
+          log("KO", traceback.format_exc())
+
+      site_i = site_i + 1
+
+    num_page = num_page + 1
