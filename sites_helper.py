@@ -266,7 +266,7 @@ class AVendreALouer(SiteHelper):
   def zip_url(self, location, num_page):
     return 'http://www.avendrealouer.fr/annonces-immobilieres/vente/appartement+maison/' + str(location) + '+cp/page-' + str(num_page)
 
-  def url_for_region(self, region, num_page):
+  def region_url(self, region, num_page):
     dept = {'aquitaine': 'dordogne+24+gironde+33+pyrenees-atlantiques+64+landes+40+lot-et-garonne+47'}
     return 'http://www.avendrealouer.fr/annonces-immobilieres/vente/maison/' + dept[region] + '/page-' + str(num_page)
 
