@@ -25,12 +25,14 @@ class SiteHelper:
     return re.sub("\s+", " ", text).strip()
  
   def _parse_price(self, pub):
-    matched = re.findall('[0-9]+ *[0-9]*', 
-      pub.find(class_=self.price_class).\
-        get_text().encode('ascii', 'ignore')
-    )
-    if len(matched) > 0:
-      return int(matched[0].replace(' ', ''))
+    price_block = pub.find(class_=self.price_class)
+    if price_block:
+      matched = re.findall('[0-9]+ *[0-9]*', 
+        price_block.\
+          get_text().encode('ascii', 'ignore')
+      )
+      if len(matched) > 0:
+        return int(matched[0].replace(' ', ''))
 
   def _parse_description(self, pub):
     description = \
