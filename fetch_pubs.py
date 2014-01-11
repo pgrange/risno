@@ -43,7 +43,7 @@ def parse(page, helper):
      for o in helper.parse(page) if o['img'] != None]
 
 def fetch_page(location, helper, num_page):
-  return helper.fetch_page_for_region(location, num_page)
+  return helper.fetch_page(location, num_page)
 
 
 if __name__ == '__main__':
@@ -59,6 +59,9 @@ if __name__ == '__main__':
   parser.add_argument('--avendre-alouer',  const=True, action='store_const', help='recherche sur à vendre à louer')
   parser.add_argument('--pages-jaunes',  const=True, action='store_const', help='recherche sur pages jaunes')
   parser.add_argument('--immo-street',  const=True, action='store_const', help='recherche sur immo street')
+
+  parser.add_argument('--zip', metavar='<zipcode>', nargs='*', help='liste des codes postaux des annonces à récupérer')
+  parser.add_argument('--region', metavar='<region>', nargs='*', help='liste des régions des annonces à récupérer (seul aquitaine est supporté pour le moment)')
 
   parser.add_argument('--max-pages', action='store', help="ne récupère pas plus de <max-pages> pages sur chaque site, quoiqu'il arrive. Par défaut 200", type=int, default=200)
 
@@ -81,29 +84,45 @@ if __name__ == '__main__':
   if args.avendre_alouer: sites.append(AVendreALouer())
   if args.pages_jaunes: sites.append(PagesJaunes())
   if args.immo_street: sites.append(ImmoStreet())
-  
+
+  locations = {}
+  for site in sites:
+    locations[site] = []
+    if args.zip:
+      locations[site].extend([{'type': 'zip', 'id': zip} for zip in args.zip])
+    if args.region:
+      locations[site].extend([{'type': 'region', 'id': region} for region in args.region])
+
   num_page = 1
   while (len(sites) > 0 and num_page <= args.max_pages):
     site_i = 0
     while site_i < len(sites):
       site = sites[site_i]
-      for location in ['aquitaine']:
+      locations_i = 0
+      while locations_i < len(locations[site]):
+        location = locations[site][locations_i]
         try:
-          log_context = location + '/' + str(num_page) + ' ' + site.name
+          log_context = location['id'] + '/' + str(num_page) + ' ' + site.name
           page = fetch_page(location, site, num_page)
           pubs = parse(page, site)
           if len(pubs) == 0:
             if (num_page == 0):
               log("WA", "no pub, we may have been blacklisted")
             else:
-              log('OK', 'all pages fetched, removing site from list')
-              sites.remove(site) 
-              site_i = site_i - 1
+              log('OK', 'all pages fetched, removing this locations for this site')
+              locations[site].remove(location)
+              locations_i = locations_i - 1
+              if len(locations[site]) == 0:
+                log('OK', 'no more locations for the site, removing this site')
+                sites.remove(site) 
+                site_i = site_i - 1
           if args.test: show_pubs(pubs)
           else: insert_to_db(pubs)
           log("OK")
         except:
           log("KO", traceback.format_exc())
+        
+        locations_i = locations_i + 1
 
       site_i = site_i + 1
 
