@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Load configuration
-. etc/risnorc
+. $HOME/.config/risno
+
 if [ ! -d $RISNO_DIR ]
 then
     echo "Creates Risno directory"

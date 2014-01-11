@@ -1,6 +1,6 @@
 #!/bin/bash
 
-. etc/risnorc
+. $HOME/.config/risno
 
 nb_running=0
 for location in $POSTAL_CODE
