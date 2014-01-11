@@ -25,12 +25,14 @@ class SiteHelper:
     return re.sub("\s+", " ", text).strip()
  
   def _parse_price(self, pub):
-    matched = re.findall('[0-9]+ *[0-9]*', 
-      pub.find(class_=self.price_class).\
-        get_text().encode('ascii', 'ignore')
-    )
-    if len(matched) > 0:
-      return int(matched[0].replace(' ', ''))
+    price_block = pub.find(class_=self.price_class)
+    if price_block:
+      matched = re.findall('[0-9]+ *[0-9]*', 
+        price_block.\
+          get_text().encode('ascii', 'ignore')
+      )
+      if len(matched) > 0:
+        return int(matched[0].replace(' ', ''))
 
   def _parse_description(self, pub):
     description = \
@@ -95,14 +97,51 @@ class SiteHelper:
       s_date = re.findall(self.date_regex, s_date)[0].encode('utf8', 'ignore')
       return datetime.strptime(s_date, self.date_format).date()
 
-  def fetch_page(self, location):
-    s_url = self.url(location)
+  def fetch_page(self, location, num_page=1):
+    s_url = self.url(location, num_page)
     return urllib2.urlopen(s_url)
     
-  def url(self, location):
+  def url(self, location, num_page=1):
     """
     Define this method to return the appropriate url
     to get pubs for a given location for this site.
+
+    The pubs should be ordered by publication date.
+
+    location is of the form {'type': <type>, 'id': id},
+    type is the type of location and can be either
+    'zip' or 'region', 'id' is the id of the location,
+    dependding on the type it could be 'aquitaine'
+    when type is 'region' or '33125' when type is 'zip'.
+    
+    num_page is the number of the page to fetch. By default,
+    this should be set to 1.
+
+    You can also directly override zip_url and region_url
+    instead.
+    """
+    if location['type'] == 'zip':
+      return self.zip_url(location['id'], num_page)
+    elif location['type'] == 'region':
+      return self.region_url(location['id'], num_page)
+    else:
+      raise Exception("Illegal type, should be one of 'id' or 'region': " + location['type'])
+
+  def zip_url(self, zip, num_page):
+    """
+    Define this method to return the appropriate url
+    to get pubs for a given zip code for this site and
+    the given page.
+
+    The pubs should be ordered by publication date.
+    """
+    pass
+
+  def region_url(self, region, num_page):
+    """
+    Define this method to return the appropriate url
+    to get pubs for a given region for this site and
+    the given page.
 
     The pubs should be ordered by publication date.
     """
@@ -164,8 +203,11 @@ class LeBonCoin(SiteHelper):
       else:
         return d
 
-  def url(self, location):
-    return 'http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=0&ret=1&ret=5&pe=8&location=' + str(location)
+  def zip_url(self, location, num_page):
+    return 'http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=0&ret=1&ret=5&pe=8&location=' + str(location) + '&o=' + str(num_page)
+
+  def region_url(self, region, num_page):
+    return 'http://www.leboncoin.fr/ventes_immobilieres/offres/' + region + '/?o=' + str(num_page)
 
 class ParuVendu(SiteHelper):
   def __init__(self):
@@ -181,8 +223,12 @@ class ParuVendu(SiteHelper):
     img = pub.find('img', original=lambda(x): x != None)
     if img: return img['original']
 
-  def url(self, location):
-    return 'http://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&tbPen=1&tbRem=1&tbVia=1&tbImm=1&tbPar=1&tbAut=1&px1=200000&pa=FR&lo=' + str(location)
+  def zip_url(self, location, num_page):
+    return 'http://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&tbPen=1&tbRem=1&tbVia=1&tbImm=1&tbPar=1&tbAut=1&px1=200000&pa=FR&lo=' + str(location) + '&p=' + str(num_page)
+
+  def region_url(self, region, num_page):
+    dept = {'aquitaine': '24,33,40,47,64'}
+    return 'http://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbApp=1&tbDup=1&tbChb=1&tbLof=1&tbAtl=1&tbPla=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&pa=FR&lo=' + dept[region] + '&p=' + str(num_page)
 
 class SeLoger(SiteHelper):
   def __init__(self):
@@ -199,8 +245,12 @@ class SeLoger(SiteHelper):
   def _parse_location(self, pub):
     return self._text(pub.find(class_ = self.location_class))
 
-  def url(self, location):
-    return 'http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,10,12,11,9,13,14&pxmax=200000&tri=d_dt_crea&cp=' + str(location)
+  def zip_url(self, location, num_page):
+    return 'http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,10,12,11,9,13,14&pxmax=200000&tri=d_dt_crea&cp=' + str(location) + '&ANNONCEpg=' + str(num_page)
+
+  def region_url(self, region, num_page):
+    id = {'aquitaine': '2229'}
+    return 'http://www.seloger.com/recherche.htm?idtt=2&idtypebien=1,10,11,12,13,14,2,4,9&tri=d_dt_crea&div=' + id[region] + '&ANNONCEpg=' + str(num_page)
 
 class AVendreALouer(SiteHelper):
   def __init__(self):
@@ -215,8 +265,12 @@ class AVendreALouer(SiteHelper):
   def _parse_location(self, pub):
     return self._text(pub.find(class_ = self.location_class))
 
-  def url(self, location):
-    return 'http://www.avendrealouer.fr/annonces-immobilieres/vente/appartement+maison/' + str(location) + '+cp/max-300000-euros'
+  def zip_url(self, location, num_page):
+    return 'http://www.avendrealouer.fr/annonces-immobilieres/vente/appartement+maison/' + str(location) + '+cp/page-' + str(num_page)
+
+  def region_url(self, region, num_page):
+    dept = {'aquitaine': 'dordogne+24+gironde+33+pyrenees-atlantiques+64+landes+40+lot-et-garonne+47'}
+    return 'http://www.avendrealouer.fr/annonces-immobilieres/vente/maison/' + dept[region] + '/page-' + str(num_page)
 
 class LogicImmo(SiteHelper):
   def __init__(self):
@@ -257,7 +311,7 @@ class LogicImmo(SiteHelper):
   def _parse_location(self, pub):
     return self._text(pub.find(class_ = self.location_class))
 
-  def url(self, location):
+  def zip_url(self, location, num_page):
     location = str(location)
     if not self.logic_crap.has_key(location): 
       raise Exception("I do not know this location sorry: " + location)
@@ -266,7 +320,11 @@ class LogicImmo(SiteHelper):
       + self.logic_crap[location][0] + "-" \
       + location + "," \
       + self.logic_crap[location][1] \
-      + "-4f2f000000-0,200000-0,0-0,0-00-00-000000000000-00-0-0-3-0-0-1.html"
+      + '-4f2f000000-0,200000-0,0-0,0-00-00-000000000000-00-0-0-3-0-0-' + str(num_page) + '.html'
+
+  def region_url(self, region, num_page):
+    region_conversion = {'aquitaine': 'aquitaine-33000,15'}
+    return 'http://www.logic-immo.com/vente-immobilier-' + region_conversion[region] + '_0-ef2f800000-0,0-0,0-0,0-00-00-000000000000-00-0-0-1-1-0-' + str(num_page) + '.html'
 
 from cookielib import CookieJar
 class PagesJaunes(SiteHelper):
@@ -283,16 +341,32 @@ class PagesJaunes(SiteHelper):
     pj_crap = pub.find('a', 'idTag_PARTAGER')['data-pjonglet']
     return "http://www.pagesjaunes.fr/verticales/immo/afficherFicheDetaillee.do" + re.findall('.*(\?idAnnonce=.*)\'', pj_crap)[0]
     
-  def url(self, location):
-    return 'http://www.pagesjaunes.fr/verticales/immo/rechercher.do?transactionSimple=achat&ou=' + str(location)
+  def zip_url(self, zip):
+    return 'http://www.pagesjaunes.fr/verticales/immo/rechercher.do?transactionSimple=achat&ou=' + zip
 
-  def fetch_page(self, location):
+  def region_url(self, region):
+    return 'http://www.pagesjaunes.fr/verticales/immo/rechercherPA.do?transactionSimple=achat&typeBien=&ou=' + region
+
+  def fetch_page(self, location, num_page=1):
     #they did it again http://ploum.net/ploum-en-j2ee/
     cj = CookieJar()
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cj))
-    s_url = self.url(location)
+    # first get the search page
+
+    if location['type'] == 'zip':
+      s_url = self.zip_url(location['id'])
+    elif location['type'] == 'region':
+      s_url = self.region_url(location['id'])
+    else:
+      raise Exception("Illegal type, should be one of 'id' or 'region': " + location['type'])
+
     opener.open(s_url)
-    return opener.open('http://www.pagesjaunes.fr/verticales/immo/trierListeReponses.do?valeurTriImmo=DATE_PUBLICATION')
+
+    # then sort by date
+    opener.open('http://www.pagesjaunes.fr/verticales/immo/trierListeReponses.do?valeurTriImmo=DATE_PUBLICATION')
+
+    # and finally get the correct page (omg !)
+    return opener.open('http://www.pagesjaunes.fr/verticales/immo/changerPageListeReponses.do?numPage=' + str(num_page))
 
 class ImmoStreet(SiteHelper):
   def __init__(self):
@@ -330,10 +404,16 @@ class ImmoStreet(SiteHelper):
       '33400': 'place_id=4816463'
     }
 
-  def url(self, location):
+  def zip_url(self, location, num_page=1):
     location = str(location)
     if not self.immo_street_crap.has_key(location): 
       raise Exception("I do not know this location sorry: " + location)
 
     return "http://www.immostreet.fr/Listing/Search?search_type=3&" \
-      + self.immo_street_crap[location]
+      + self.immo_street_crap[location] + '&page=' + str(num_page - 1)
+
+  def region_url(self, region, num_page):
+    region_conversion = {'aquitaine': 'place_id=4815370'}
+    return "http://www.immostreet.fr/Listing/Search?search_type=3&" \
+      + region_conversion[region] + '&page=' + str(num_page - 1)
+    
