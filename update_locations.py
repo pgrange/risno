@@ -69,20 +69,26 @@ if __name__ == '__main__':
 
   args = parser.parse_args()
   
-  if args.all: pubs = get_pubs(filter=MatchAllFilter())
-  elif args.term: 
-    filter=ORFilter([TermFilter(field="description", value=args.term),
-                     TermFilter(field="location", value=args.term)])
-    pubs = get_pubs(filter=filter)
-  else: pubs = get_pubs()
+  previous_total = -1
+  total = 0
+  while previous_total != total:
+    # That's odd but it seems we do not update all
+    # found pubs... so adding this while loop :(
+    previous_total = total
+    if args.all: pubs = get_pubs(filter=MatchAllFilter())
+    elif args.term: 
+      filter=ORFilter([TermFilter(field="description", value=args.term),
+                       TermFilter(field="location", value=args.term)])
+      pubs = get_pubs(filter=filter)
+    else: pubs = get_pubs()
 
-  count = 0
-  total = pubs.total
-  log('OK', str(total) + ' pubs to update')
-  for pub in pubs:
-    search_for_locations(pub)
-    if args.test: show_pub(pub)
-    else: insert_to_db(pub)
-    count = count + 1
-    if count % 20 == 0:
-      log('OK', str(count) + ' / ' + str(total) + ' updated')
+    count = 0
+    total = pubs.total
+    log('OK', str(total) + ' pubs to update')
+    for pub in pubs:
+      search_for_locations(pub)
+      if args.test: show_pub(pub)
+      else: insert_to_db(pub)
+      count = count + 1
+      if count % 20 == 0:
+        log('OK', str(count) + ' / ' + str(total) + ' updated')
