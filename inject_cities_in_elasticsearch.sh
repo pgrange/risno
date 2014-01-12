@@ -50,14 +50,15 @@ curl -X PUT localhost:9200/cities -d '
    "filter" : {
     "stopwords_cities" : {
      "type" : "stop",
-     "stopwords" : [ "de", "du", "à", "a", "au", "en", "et", "le", "les", "sur", "m", "maison"],
+     "stopwords" : [ "de", "du", "à", "a", "au", "en", "et", "le", "la", "les", "sur", "m", "maison"],
      "ignore_case" : "true"
     },
     "synonyms_cities" : {
      "type" : "synonym",
      "synonyms" : [
       "st => saint",
-      "ste => sainte"
+      "ste => sainte",
+      "labrede => la brede"
      ]
     },
     "elision" : {
