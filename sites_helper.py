@@ -62,10 +62,12 @@ class SiteHelper:
 
   def _parse_img(self, pub):
     img = pub.find('img')
-    if img and img['src'].startswith('http'):
-      # ignore unexisting images or
-      # images we can't find
-      return img['src']
+    if img:
+      src = img['src']
+      if src.startswith('http://'):
+        return src
+      elif src.startswith('/'):
+        return 'http://' + self.site + src
 
   def _parse_location(self, pub):
     if self.location_class:
@@ -234,6 +236,7 @@ class SeLoger(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
     self.name = 'se-loger'
+    self.site = 'seloger.com'
     self.pub_class = 'annonce'
     self.pub_tag = 'article'
     self.price_class = 'annonce__agence__prix'
@@ -416,4 +419,21 @@ class ImmoStreet(SiteHelper):
     region_conversion = {'aquitaine': 'place_id=4815370'}
     return "http://www.immostreet.fr/Listing/Search?search_type=3&" \
       + region_conversion[region] + '&page=' + str(num_page - 1)
+
+class BelleImmobilier(SiteHelper):
+  def __init__(self):
+    SiteHelper.__init__(self)
+    self.name = 'belle-immobilier'
+    self.site = 'www.belle-immobilier.fr'
+    self.pub_class = 'item'
+    self.price_class = 'price'
+    self.description_class = 'item-text'
     
+  def _url(self, num_page=1):
+    return 'http://www.belle-immobilier.fr/fr/biens-immobiliers/?order_by=created_at&order_direction=DESC&page=' + str(num_page)
+
+  def zip_url(self, location, num_page=1):
+    return self._url(num_page)
+
+  def region_url(self, region, num_page):
+    return self._url(num_page)
