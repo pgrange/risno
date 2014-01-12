@@ -12,19 +12,18 @@ class TestSitesHelper(unittest.TestCase):
     self.maxDiff = None
 
   def test_sites_url(self):
-    self.assertEquals(sites_helper.LeBonCoin().url(33400), 
+    _33400 = {'type': 'zip', 'id': 33400}
+    self.assertEquals(sites_helper.LeBonCoin().url(_33400), 
                       _le_bon_coin_33400_url)
-    self.assertEquals(sites_helper.ParuVendu().url(33400), 
+    self.assertEquals(sites_helper.ParuVendu().url(_33400), 
                       _paru_vendu_33400_url)
-    self.assertEquals(sites_helper.LogicImmo().url(33400), 
+    self.assertEquals(sites_helper.LogicImmo().url(_33400), 
                       _logic_immo_33400_url)
-    self.assertEquals(sites_helper.SeLoger().url(33400), 
+    self.assertEquals(sites_helper.SeLoger().url(_33400), 
                       _se_loger_33400_url)
-    self.assertEquals(sites_helper.AVendreALouer().url(33400), 
+    self.assertEquals(sites_helper.AVendreALouer().url(_33400), 
                       _a_vendre_a_louer_33400_url)
-    self.assertEquals(sites_helper.PagesJaunes().url(33400), 
-                      _pages_jaunes_33400_url)
-    self.assertEquals(sites_helper.ImmoStreet().url(33400), 
+    self.assertEquals(sites_helper.ImmoStreet().url(_33400), 
                       _immo_street_33400_url)
 
   def test_parse_sites_extracts_every_pub(self):
@@ -174,13 +173,13 @@ _a_vendre_a_louer_test_page_ = os.path.join(_dir_, 'a_vendre_a_louer_test_page.h
 _pages_jaunes_test_page_ = os.path.join(_dir_, 'pages_jaunes_test_page.html')
 _immo_street_test_page_ = os.path.join(_dir_, 'immo_street_test_page.html')
 
-_le_bon_coin_33400_url = 'http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=0&ret=1&ret=5&pe=8&location=33400'
-_paru_vendu_33400_url  = 'http://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&tbPen=1&tbRem=1&tbVia=1&tbImm=1&tbPar=1&tbAut=1&px1=200000&pa=FR&lo=33400'
+_le_bon_coin_33400_url = 'http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=0&ret=1&ret=5&pe=8&location=33400&o=1'
+_paru_vendu_33400_url  = 'http://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&tbPen=1&tbRem=1&tbVia=1&tbImm=1&tbPar=1&tbAut=1&px1=200000&pa=FR&lo=33400&p=1'
 _logic_immo_33400_url  = 'http://www.logic-immo.com/vente-immobilier-talence-33400,32468_2-4f2f000000-0,200000-0,0-0,0-00-00-000000000000-00-0-0-3-0-0-1.html'
-_se_loger_33400_url    = 'http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,10,12,11,9,13,14&pxmax=200000&tri=d_dt_crea&cp=33400'
-_a_vendre_a_louer_33400_url = 'http://www.avendrealouer.fr/annonces-immobilieres/vente/appartement+maison/33400+cp/max-300000-euros'
+_se_loger_33400_url    = 'http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,10,12,11,9,13,14&pxmax=200000&tri=d_dt_crea&cp=33400&ANNONCEpg=1'
+_a_vendre_a_louer_33400_url = 'http://www.avendrealouer.fr/annonces-immobilieres/vente/appartement+maison/33400+cp/page-1'
 _pages_jaunes_33400_url = 'http://www.pagesjaunes.fr/verticales/immo/rechercher.do?transactionSimple=achat&ou=33400'
-_immo_street_33400_url = u'http://www.immostreet.fr/Listing/Search?search_type=3&place_id=4816463'
+_immo_street_33400_url = u'http://www.immostreet.fr/Listing/Search?search_type=3&place_id=4816463&page=0'
 
 _le_bon_coin_test_description_ = u'Maison 3 pièces 64m2'
 _paru_vendu_test_description_  = u'Vente - Maison - 55 m² environ - 2 pièces Talence (33400) Maison en pierre de 2 pièces principalesMaison en pierre de plain pied... voir l\'annonce'
