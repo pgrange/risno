@@ -34,20 +34,6 @@ def search_city(text):
   if len(cities) < 1:
     log("KO", text)
   return [city.get_id() for city in cities[:1]]
-  #ceil = cities.max_score/2
-  #log("DBG", "max: " + str(cities.max_score) + " ceil: " + str(ceil))
-  
-  #if len(cities) > 1:
-    #result.extend([city.get_id() for city in cities if city.get_meta().score > ceil])
-    #log("DBG", text)
-    #log("DBG", str([city.get_meta().score for city in cities]))
-    #log("DBG", str(result))
-  #else:
-  #  result.extend([city.get_id() for city in cities])
-
-  #if len(result) == 0:
-  #  cities = conn.search(query=TextQuery('zipcode', normalize_query_string(text)), indices="cities")
-  #  result.extend([city.get_id() for city in cities])
 
   return result
  
