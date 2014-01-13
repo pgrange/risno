@@ -59,6 +59,7 @@ if __name__ == '__main__':
   parser.add_argument('--avendre-alouer',  const=True, action='store_const', help='recherche sur à vendre à louer')
   parser.add_argument('--pages-jaunes',  const=True, action='store_const', help='recherche sur pages jaunes')
   parser.add_argument('--immo-street',  const=True, action='store_const', help='recherche sur immo street')
+  parser.add_argument('--belle-immobilier',  const=True, action='store_const', help='recherche sur belle-immobilier.fr')
 
   parser.add_argument('--zip', metavar='<zipcode>', nargs='*', help='liste des codes postaux des annonces à récupérer')
   parser.add_argument('--region', metavar='<region>', nargs='*', help='liste des régions des annonces à récupérer (seul aquitaine est supporté pour le moment)')
@@ -76,6 +77,7 @@ if __name__ == '__main__':
   from sites_helper import AVendreALouer
   from sites_helper import PagesJaunes
   from sites_helper import ImmoStreet
+  from sites_helper import BelleImmobilier
   
   if args.logic_immo: sites.append(LogicImmo())
   if args.le_bon_coin: sites.append(LeBonCoin())
@@ -84,6 +86,7 @@ if __name__ == '__main__':
   if args.avendre_alouer: sites.append(AVendreALouer())
   if args.pages_jaunes: sites.append(PagesJaunes())
   if args.immo_street: sites.append(ImmoStreet())
+  if args.belle_immobilier: sites.append(BelleImmobilier())
 
   locations = {}
   for site in sites:

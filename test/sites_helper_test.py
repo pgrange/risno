@@ -153,6 +153,9 @@ class TestSitesHelper(unittest.TestCase):
                       self._parse_pages_jaunes()[0]['date'])
     self.assertEquals(date(2013, 9, 17),
                       self._parse_immo_street()[0]['date'])
+    # no date on this site
+    self.assertEquals(None,
+                      self._parse_belle_immobilier()[0]['date'])
 
   def _parse_le_bon_coin(self):
     return _parsed_le_bon_coin
@@ -230,7 +233,7 @@ _logic_immo_test_location = u'TALENCE (33400)'
 _se_loger_test_location = u'Talence 33400 (Gironde)'
 _a_vendre_a_louer_test_location = u'Vente Appartement 5 pièces 84 m² 33400 TALENCE'
 _pages_jaunes_test_location = u'Talence (33)'
-_belle_immobilier_test_location = u''
+_belle_immobilier_test_location = u"A 10 MIN DE L'OCEAN, EN PLEIN COEUR DU VILLAGE"
 
 # BeautifulSoup is to slow to parse all the pages
 # in every test :(

@@ -428,6 +428,7 @@ class BelleImmobilier(SiteHelper):
     self.pub_class = 'item'
     self.price_class = 'price'
     self.description_class = 'item-text'
+    self.location_class = 'item-title'
     
   def _url(self, num_page=1):
     return 'http://www.belle-immobilier.fr/fr/biens-immobiliers/?order_by=created_at&order_direction=DESC&page=' + str(num_page)
