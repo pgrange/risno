@@ -204,7 +204,7 @@ class LeBonCoin(SiteHelper):
         return d
 
   def zip_url(self, location, num_page):
-    return 'http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=0&ret=1&ret=5&pe=8&location=' + str(location) + '&o=' + str(num_page)
+    return 'http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?&location=' + str(location) + '&o=' + str(num_page)
 
   def region_url(self, region, num_page):
     return 'http://www.leboncoin.fr/ventes_immobilieres/offres/' + region + '/?o=' + str(num_page)
@@ -224,7 +224,7 @@ class ParuVendu(SiteHelper):
     if img: return img['original']
 
   def zip_url(self, location, num_page):
-    return 'http://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&tbPen=1&tbRem=1&tbVia=1&tbImm=1&tbPar=1&tbAut=1&px1=200000&pa=FR&lo=' + str(location) + '&p=' + str(num_page)
+    return 'http://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&tbPen=1&tbRem=1&tbVia=1&tbImm=1&tbPar=1&tbAut=1&pa=FR&lo=' + str(location) + '&p=' + str(num_page)
 
   def region_url(self, region, num_page):
     dept = {'aquitaine': '24,33,40,47,64'}
@@ -246,7 +246,7 @@ class SeLoger(SiteHelper):
     return self._text(pub.find(class_ = self.location_class))
 
   def zip_url(self, location, num_page):
-    return 'http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,10,12,11,9,13,14&pxmax=200000&tri=d_dt_crea&cp=' + str(location) + '&ANNONCEpg=' + str(num_page)
+    return 'http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,10,12,11,9,13,14&tri=d_dt_crea&cp=' + str(location) + '&ANNONCEpg=' + str(num_page)
 
   def region_url(self, region, num_page):
     id = {'aquitaine': '2229'}
@@ -320,7 +320,7 @@ class LogicImmo(SiteHelper):
       + self.logic_crap[location][0] + "-" \
       + location + "," \
       + self.logic_crap[location][1] \
-      + '-4f2f000000-0,200000-0,0-0,0-00-00-000000000000-00-0-0-3-0-0-' + str(num_page) + '.html'
+      + '-4f2f000000-0,0-0,0-0,0-00-00-000000000000-00-0-0-3-0-0-' + str(num_page) + '.html'
 
   def region_url(self, region, num_page):
     region_conversion = {'aquitaine': 'aquitaine-33000,15'}
