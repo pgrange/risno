@@ -12,7 +12,7 @@ def log(status, message = ""):
   elif status == "KO": color = Fore.RED
   else: color = Fore.YELLOW
  
-  print color + status + " " + Fore.BLUE + log_context + Fore.RESET + " " + message
+  print color + status + " " + Fore.BLUE + log_context + Fore.RESET + " " + message.encode('UTF-8')
 
 def insert_to_db(pub):
   conn.update("immo", "immo", pub.get_id(), document=pub, upsert=pub)
