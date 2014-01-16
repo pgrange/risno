@@ -4,6 +4,8 @@ var ejs = require('elastic.js')
 
 var app = express()
 
+var user_code="12043"
+
 app.use(express.bodyParser());
 app.use(express.static(path.join(__dirname, 'public')))
 
@@ -15,22 +17,22 @@ app.get('/', function(req, res) {
   with_criteria(req, function(filter) {
     get_pubs(function(results) {
       render(res, results, "new")
-    }, ejs.QueryStringQuery('*'), filter)
-  }, ejs.MissingFilter("opinion"))
+    }, new_query(), filter)
+  }, new_filter())
 })
 app.get('/like', function(req, res) {
   with_criteria(req, function(filter) {
     get_pubs(function(results) {
       render(res, results, "like")
-    }, ejs.TermQuery('opinion', 'like'), filter)
-  })
+    }, like_query(), filter)
+  }, like_filter())
 })
 app.get('/dislike', function(req, res) {
   with_criteria(req, function(filter) {
     get_pubs(function(results) {
       render(res, results, "dislike")
-    }, ejs.TermQuery('opinion', 'dislike'), filter)
-  })
+    }, dislike_query(), filter)
+  }, dislike_filter())
 })
 app.get('/criteria', function(req, res) {
   get_criteria(function(criteria) {
@@ -53,7 +55,7 @@ app.post('/criteria', function(req, res) {
     }
   }
   console.log(criteria)
-  doc = ejs.Document("immo", "criteria", "criteria")
+  doc = ejs.Document(e_index, "criteria", "criteria")
   doc.source(criteria).upsert(criteria)
   doc.doUpdate(function() {
     res.redirect("/criteria")
@@ -124,6 +126,29 @@ var nc = require('elastic.js/elastic-node-client')
 ejs.client = nc.NodeClient('localhost', 9200);
 var e_index = 'immo';
 var e_type = 'immo';
+
+function new_query() {
+  return ejs.QueryStringQuery('*')
+}
+
+function new_filter() {
+  return ejs.MissingFilter("opinion")
+}
+
+function like_query() {
+  return ejs.TermQuery('opinion', 'like')
+}
+
+function like_filter() {
+  return null
+}
+
+function dislike_query() {
+  return ejs.TermQuery('opinion', 'dislike')
+}
+
+var dislike_filter = like_filter
+
 function get_pubs(handle_results, query, filter) {
   if (! query) query = ejs.QueryStringQuery('*')
   if (! filter) filter = ejs.TypeFilter(e_type)
