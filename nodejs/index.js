@@ -124,7 +124,7 @@ var client = new elasticsearch.Client({
 //elastic part
 var nc = require('elastic.js/elastic-node-client')
 ejs.client = nc.NodeClient('localhost', 9200);
-var e_index = 'immo';
+var e_index = 'immo2';
 var e_type = 'immo';
 
 function new_query() {
@@ -132,22 +132,33 @@ function new_query() {
 }
 
 function new_filter() {
-  return ejs.MissingFilter("opinion")
+  return ejs.AndFilter([
+    ejs.TypeFilter('immo'),
+    ejs.NotFilter(ejs.HasChildFilter(
+      ejs.TermQuery('user_code', user_code), "opinion"))
+  ])
 }
 
 function like_query() {
-  return ejs.TermQuery('opinion', 'like')
+  return ejs.HasChildQuery(
+    ejs.BoolQuery()
+      .must(ejs.TermQuery('user_code', user_code))
+      .must(ejs.TermQuery('opinion', 'like')),
+    'opinion')
 }
 
 function like_filter() {
-  return null
+  return ejs.TypeFilter('immo')
 }
+var dislike_filter = like_filter
 
 function dislike_query() {
-  return ejs.TermQuery('opinion', 'dislike')
+  return ejs.HasChildQuery(
+    ejs.BoolQuery()
+      .must(ejs.TermQuery('user_code', user_code))
+      .must(ejs.TermQuery('opinion', 'dislike')),
+    'opinion')
 }
-
-var dislike_filter = like_filter
 
 function get_pubs(handle_results, query, filter) {
   if (! query) query = ejs.QueryStringQuery('*')
@@ -159,23 +170,26 @@ function get_pubs(handle_results, query, filter) {
 }
 
 function vote(id, opinion, handle_update) {
-  ejs.Document(e_index, e_type, id)
-    .script('ctx._source.opinion = "' + opinion + '"')
-    .doUpdate(handle_update(id, opinion))
+  ejs.Document(e_index, 'opinion', user_code + '_' + id)
+    .parent(id)
+    .source({user_code: user_code, opinion: opinion})
+    .doIndex(handle_update(id, opinion))
 }
 
-function extract_pubs(results) {
+function extract_pubs(results, opinion) {
   var pubs = []
   console.log("nb results: " + results.hits.total)
   for(var i = 0; i < results.hits.hits.length; i++) {
+    console.log(results.hits.hits[i])
     pubs[i] = results.hits.hits[i]._source
     pubs[i].id = results.hits.hits[i]._id
+    pubs[i].opinion = opinion
   }
   return pubs
 }
 
 function render(res, results, active) {
-    var pubs = extract_pubs(results)
+    var pubs = extract_pubs(results, active)
     res.render('pubs.jade', {pubs: pubs, active: active})
 }
 
