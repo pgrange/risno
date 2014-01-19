@@ -169,6 +169,7 @@ class LeBonCoin(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
     self.name = 'le-bon-coin'
+    self.site = 'leboncoin.fr'
     self.pub_class = 'lbc'
     self.price_class = 'price'
     self.description_class = 'title'
@@ -259,6 +260,7 @@ class AVendreALouer(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
     self.name = 'a-vendre-a-louer'
+    self.site = 'avendrealouer.fr'
     self.pub_class = 'resultat'
     self.price_class = 'prix'
     self.description_class = 'descriptif'
@@ -279,6 +281,7 @@ class LogicImmo(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
     self.name = 'logic-immo'
+    self.site = 'www.logic-immo.com'
     self.pub_class = 'offer-block'
     self.price_class = 'price'
     self.description_class = 'offer-desc'
@@ -334,6 +337,7 @@ class PagesJaunes(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
     self.name = 'pages-jaunes'
+    self.site = 'pagesjaunes.fr'
     self.pub_class = 'visitCardContent'
     self.price_class = 'price'
     self.description_class = 'dataCard'
