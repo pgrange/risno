@@ -1,0 +1,29 @@
+#!/bin/bash
+
+install_dir=$(cd $(dirname $0) && cd .. && pwd)
+
+old_index="immo"
+new_index="ads_1.0"
+alias="ads"
+
+curl -XPUT localhost:9200/${new_index} -d '
+{
+ "mappings": {
+  "immo": {
+   "properties": {
+    "url": {"index": "not_analyzed", "type": "string"},
+    "img": {"index": "not_analyzed", "type": "string"},
+    "location": {"type": "string"},
+    "description": {"type": "string"},
+    "cities": {"type": "string"},
+    "price": {"type": "integer"},
+    "date": {"type": "date"}
+   }
+  }
+ }
+}'
+
+${install_dir}/tools/copy_index.sh ${old_index} ${new_index}
+
+curl -XPUT localhost:9200/${new_index}/_alias/${alias}
+

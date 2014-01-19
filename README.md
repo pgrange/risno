@@ -17,13 +17,21 @@ Then run :
 
     $ start_elastic.sh
 
-Then you have to initialize indexes. First, initialize french cities index this may take as long as 15 minutes, by running :
+Then you have to initialize indexes. To do that you need to install jq :
 
-    $ inject_cities_in_elasticsearch.sh
+    $ apt-get install jq
 
-After that you can initialize the index where risno stores the pubs. To do that, first edit *init-elastic-search.py* and change
-"immo2" (the index name) for "immo". Revert this change after index creation... just in case you accidentally re-run this script
-because it would destroy all your index.
+Know, initialize french cities index this may take as long as 15 minutes, by running :
+
+    $ ./elastic_mappings/cities/inject_cities_in_elasticsearch.sh
+
+After that you can initialize the index where risno stores the ads, by running :
+
+    $ ./elastic_mappings/ads/ads_1.0 
+
+Elasticsearch is now ready for risno.
+
+## Fetch pubs
 
 Install Python tools:
 
@@ -35,14 +43,6 @@ Install dependencies :
 
     $ mkvirtualenv risno
 	$ pip install -r requirements.txt
-
-To create the index, run :
-
-    $ python init-elastic-search.py
-
-Elasticsearch is now ready for risno.
-
-## Fetch pubs
 
 You are now ready to fetch pubs from several sites by running :
 
