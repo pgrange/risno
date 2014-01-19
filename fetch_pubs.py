@@ -22,7 +22,7 @@ def log(status, message = ""):
 
 def check_index_version():
   q = TermQuery('dtc', 'dtc')
-  conn.search(query=q, indices=e_index, doc_types="dtc").total()
+  conn.search(query=q, indices=e_index, doc_types="dtc").total
 
 def insert_to_db(pubs):
   for pub in pubs: 
