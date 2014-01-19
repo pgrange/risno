@@ -53,7 +53,7 @@ app.post('/criteria', function(req, res) {
     }
   }
   console.log(criteria)
-  doc = ejs.Document("immo", "criteria", "criteria")
+  doc = ejs.Document(e_index, "criteria", "criteria")
   doc.source(criteria).upsert(criteria)
   doc.doUpdate(function() {
     res.redirect("/criteria")
