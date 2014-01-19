@@ -4,6 +4,7 @@ from pyes import ES, TextQuery, MatchAllQuery, FilteredQuery, BoolQuery
 from pyes.filters import MissingFilter, TermFilter, ORFilter, MatchAllFilter
 
 conn = ES('127.0.0.1:9200') # Use HTTP
+e_index = "ads_1.0"
 
 log_context = ""
 def log(status, message = ""):
@@ -15,7 +16,7 @@ def log(status, message = ""):
   print color + status + " " + Fore.BLUE + log_context + Fore.RESET + " " + message.encode('UTF-8')
 
 def insert_to_db(pub):
-  conn.update("immo", "immo", pub.get_id(), document=pub, upsert=pub)
+  conn.update(e_index, "immo", pub.get_id(), document=pub, upsert=pub)
 
 def normalize_query_string(query_string):
   return query_string\
@@ -52,7 +53,7 @@ def search_for_locations(pub):
 def get_pubs(filter=MissingFilter('cities')):
   q = FilteredQuery(MatchAllQuery(), filter)
 
-  pubs = conn.search(query=q, indices="immo", doc_types="immo")
+  pubs = conn.search(query=q, indices=e_index, doc_types="immo")
   return pubs
 
 def show_pub(pub):

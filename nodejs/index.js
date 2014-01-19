@@ -124,7 +124,7 @@ var client = new elasticsearch.Client({
 //elastic part
 var nc = require('elastic.js/elastic-node-client')
 ejs.client = nc.NodeClient('localhost', 9200);
-var e_index = 'immo2';
+var e_index = 'ads_1.0';
 var e_type = 'immo';
 
 function new_query() {
@@ -166,7 +166,10 @@ function get_pubs(handle_results, query, filter) {
   
   // generates the elastic.js query and executes the search
   ejs.Request({indices: e_index, types: e_type})
-    .query(query).size(100).filter(filter).doSearch(handle_results)
+    .query(query).size(100).filter(filter)
+    .doSearch(handle_results,function(error) {
+      console.log(error)
+    })
 }
 
 function vote(id, opinion, handle_update) {
@@ -180,7 +183,6 @@ function extract_pubs(results, opinion) {
   var pubs = []
   console.log("nb results: " + results.hits.total)
   for(var i = 0; i < results.hits.hits.length; i++) {
-    console.log(results.hits.hits[i])
     pubs[i] = results.hits.hits[i]._source
     pubs[i].id = results.hits.hits[i]._id
     pubs[i].opinion = opinion
@@ -189,6 +191,7 @@ function extract_pubs(results, opinion) {
 }
 
 function render(res, results, active) {
+    if (results.error) console.log(results)
     var pubs = extract_pubs(results, active)
     res.render('pubs.jade', {pubs: pubs, active: active})
 }

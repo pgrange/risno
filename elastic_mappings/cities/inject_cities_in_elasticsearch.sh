@@ -1,5 +1,7 @@
 #!/bin/bash
 
+install_dir=$(cd $(dirname $0) && pwd)
+
 function csv2bulk() {
   while read line
   do
@@ -9,7 +11,7 @@ function csv2bulk() {
                 iconv -f UTF-8 -t US-ASCII -c |\
                 sed -e 's:[^A-Za-z]:_:g')
 
-    if echo ${name} | grep --silent -f city_unboost_terms.txt
+    if echo ${name} | grep --silent -f ${install_dir}/city_unboost_terms.txt
     then city_boost="0.3"
     else city_boost="1.0"
     fi
@@ -86,5 +88,5 @@ curl -X PUT localhost:9200/cities -d '
  }
 }'
 
-cat cp-france.csv | csv2bulk | bulk_insert
+cat ${install_dir}/cp-france.csv | csv2bulk | bulk_insert
 

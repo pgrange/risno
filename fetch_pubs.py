@@ -7,8 +7,9 @@ import random
 
 from bs4 import BeautifulSoup
 
-from pyes import ES
+from pyes import ES, TermQuery
 conn = ES('127.0.0.1:9200') # Use HTTP
+e_index = "ads_1.0"
 
 log_context = ""
 def log(status, message = ""):
@@ -19,9 +20,13 @@ def log(status, message = ""):
  
   print color + status + " " + Fore.BLUE + log_context + Fore.RESET + " " + message
 
+def check_index_version():
+  q = TermQuery('dtc', 'dtc')
+  conn.search(query=q, indices=e_index, doc_types="dtc").total
+
 def insert_to_db(pubs):
   for pub in pubs: 
-    conn.update("immo", "immo", pub['id'], document=pub['object'], upsert=pub['object'])
+    conn.update(e_index, "immo", pub['id'], document=pub['object'], upsert=pub['object'])
 
 def show_pubs(pubs):
   for pub in pubs:
@@ -68,6 +73,8 @@ if __name__ == '__main__':
 
   args = parser.parse_args()
   
+  if not args.test: check_index_version()
+
   sites = []
 
   from sites_helper import LogicImmo
