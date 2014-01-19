@@ -130,7 +130,10 @@ function get_pubs(handle_results, query, filter) {
   
   // generates the elastic.js query and executes the search
   ejs.Request({indices: e_index, types: e_type})
-    .query(query).size(100).filter(filter).doSearch(handle_results)
+    .query(query).size(100).filter(filter)
+    .doSearch(handle_results,function(error) {
+      console.log(error)
+    })
 }
 
 function vote(id, opinion, handle_update) {
@@ -150,6 +153,7 @@ function extract_pubs(results) {
 }
 
 function render(res, results, active) {
+    if (results.error) console.log(results)
     var pubs = extract_pubs(results)
     res.render('pubs.jade', {pubs: pubs, active: active})
 }
