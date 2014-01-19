@@ -122,7 +122,7 @@ var client = new elasticsearch.Client({
 //elastic part
 var nc = require('elastic.js/elastic-node-client')
 ejs.client = nc.NodeClient('localhost', 9200);
-var e_index = 'immo';
+var e_index = 'ads_1.0';
 var e_type = 'immo';
 function get_pubs(handle_results, query, filter) {
   if (! query) query = ejs.QueryStringQuery('*')
