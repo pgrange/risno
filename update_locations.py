@@ -4,7 +4,7 @@ from pyes import ES, TextQuery, MatchAllQuery, FilteredQuery, BoolQuery
 from pyes.filters import MissingFilter, TermFilter, ORFilter, MatchAllFilter
 
 conn = ES('127.0.0.1:9200') # Use HTTP
-e_index = "ads_1.0"
+e_index = "ads_2.0"
 
 log_context = ""
 def log(status, message = ""):

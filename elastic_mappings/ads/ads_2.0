@@ -1,0 +1,89 @@
+#!/bin/bash
+
+install_dir=$(cd $(dirname $0) && cd .. && pwd)
+
+old_index="ads_1.0"
+new_index="ads_2.0"
+alias="ads"
+
+curl -XPUT localhost:9200/${new_index} -d '
+{
+ "mappings": {
+  "immo": {
+   "properties": {
+    "url": {"index": "not_analyzed", "type": "string"},
+    "img": {"index": "not_analyzed", "type": "string"},
+    "location": {"type": "string"},
+    "description": {"type": "string"},
+    "cities": {"type": "string"},
+    "price": {"type": "integer"},
+    "date": {"type": "date"}
+   }
+  },
+  "opinion" : {
+   "_parent": {"type": "immo"},
+   "properties": {
+    "user_code" : { "type" : "string"},
+    "opinion": {"type": "string"}
+   }
+  }
+ }
+}'
+
+${install_dir}/tools/copy_index.sh ${old_index} ${new_index}
+
+function init_scroll() {
+  curl -s -XGET "localhost:9200/${new_index}/_search?search_type=scan&prettyi&size=100&scroll=10m" -d '
+  {
+   "query": {"filtered" : {"filter": {"terms": {"opinion": ["like", "dislike"]}}}}
+  }' \
+  | jq -r "._scroll_id,.hits.total"
+}
+
+function scroll() {
+  scroll_id=$1
+  curl -s -XGET 'localhost:9200/_search/scroll?scroll=10m' -d ${scroll_id} \
+  | jq ".hits.hits | .[]"
+}
+
+function translate_opinion() {
+  jq -c "{
+          index: {
+           _index:\"${new_index}\",
+           _type: \"opinion\",
+           _id:([\"12043\",\"_\",._id] | add),
+           _parent:._id
+          }
+         },
+         {
+          opinion:._source.opinion,
+          user_code:\"12043\"
+         }"
+}
+
+function bulk_insert() {
+  curl -ifs -XPOST localhost:9200/_bulk --data-binary @-
+}
+
+set $(init_scroll)
+scroll_id=$1
+total=$2
+
+echo "$total opinions to initiate with user_code 12043"
+
+i=0
+while scroll ${scroll_id} | translate_opinion | bulk_insert >/dev/null
+do
+  echo "$i bulk opinions translated"
+  i=$((i+1))
+done
+
+curl -XPUT localhost:9200/${new_index}/_alias/${alias}
+
+curl -XPOST 'http://localhost:9200/_aliases' -d "
+{
+    \"actions\" : [
+        { \"remove\" : { \"index\" : \"${old_index}\", \"alias\" : \"${alias}\" } },
+        { \"add\" : { \"index\" : \"${new_index}\", \"alias\" : \"${alias}\" } }
+    ]
+}"
