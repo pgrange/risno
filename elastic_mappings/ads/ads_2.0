@@ -78,7 +78,8 @@ do
   i=$((i+1))
 done
 
-curl -XPUT localhost:9200/${new_index}/_alias/${alias}
+# criteria translation
+curl -XGET localhost:9200/${new_index}/criteria/criteria | jq "._source + {user_code: \"12043\"}" | curl -XPUT localhost:9200/${new_index}/criteria/criteria_12043 -d@-
 
 curl -XPOST 'http://localhost:9200/_aliases' -d "
 {
