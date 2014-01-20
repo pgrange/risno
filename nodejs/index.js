@@ -55,7 +55,7 @@ app.post('/criteria', function(req, res) {
     }
   }
   console.log(criteria)
-  doc = ejs.Document(e_index, "criteria", "criteria")
+  doc = ejs.Document(e_index, "criteria", "criteria_" + user_code)
   doc.source(criteria).upsert(criteria)
   doc.doUpdate(function() {
     res.redirect("/criteria")
@@ -197,7 +197,7 @@ function render(res, results, active) {
 }
 
 function get_criteria(handle_results) {
-  doc = ejs.Document(e_index, "criteria", "criteria")
+  doc = ejs.Document(e_index, "criteria", "criteria_" + user_code)
   doc.doGet(function(result) {
     handle_results(result._source)
   }, function() {
