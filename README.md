@@ -27,7 +27,7 @@ Know, initialize french cities index this may take as long as 15 minutes, by run
 
 After that you can initialize the index where risno stores the ads, by running :
 
-    $ ./elastic_mappings/ads/ads_1.0 
+    $ ./elastic_mappings/ads/ads_2.0 
 
 Elasticsearch is now ready for risno.
 
@@ -65,3 +65,8 @@ Start the node web server. To do that, go inside nodejs subdirectory and run :
 You can now browse this url and take a look at the pubs :
 
     http://localhost:12043/
+
+WARNING ! If you used risno before ads_2.0 model, go to this url to find your
+liked and dislikes opinions :
+
+    http://localhost:12043/12043
