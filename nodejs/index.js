@@ -1,10 +1,9 @@
 var path = require('path');
 var express = require('express')
 var ejs = require('elastic.js')
+var crypto = require('crypto')
 
 var app = express()
-
-var user_code="12043"
 
 app.use(express.bodyParser());
 app.use(express.static(path.join(__dirname, 'public')))
@@ -14,6 +13,8 @@ function price_filter(req) {
 }
 
 app.get('/', function(req, res) {
+  var user_code = crypto.randomBytes(10).toString('hex')
+  console.log(user_code)
   res.redirect('/new/' + user_code)
 })
 app.get('/new/:user_code', function(req, res) {
