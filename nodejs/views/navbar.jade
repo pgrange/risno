@@ -24,10 +24,10 @@ nav.navbar.navbar-default(role="navigation")
  .collapse.navbar-collapse(id="navbar")
   ul.nav.navbar-nav
    li(class=criteria_class)
-    a(href="/criteria") Critères
+    a(href="/criteria/" + user_code) Critères
    li(class=new_class)
-    a(href="/") Nouveautés
+    a(href="/new/" + user_code) Nouveautés
    li(class=like_class)
-    a(href="/like") Bien
+    a(href="/like/" + user_code) Bien
    li(class=dislike_class)
-    a(href="/dislike") Bof
+    a(href="/dislike/" + user_code) Bof

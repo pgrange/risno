@@ -14,32 +14,40 @@ function price_filter(req) {
 }
 
 app.get('/', function(req, res) {
-  with_criteria(req, function(filter) {
-    get_pubs(function(results) {
-      render(res, results, "new")
-    }, new_query(), filter)
-  }, new_filter())
+  res.redirect('/new/' + user_code)
 })
-app.get('/like', function(req, res) {
-  with_criteria(req, function(filter) {
+app.get('/new/:user_code', function(req, res) {
+  var user_code = req.param('user_code')
+  with_criteria(req, user_code, function(filter) {
     get_pubs(function(results) {
-      render(res, results, "like")
-    }, like_query(), filter)
-  }, like_filter())
+      render(res, user_code, results, "new")
+    }, new_query(user_code), filter)
+  }, new_filter(user_code))
 })
-app.get('/dislike', function(req, res) {
-  with_criteria(req, function(filter) {
+app.get('/like/:user_code', function(req, res) {
+  var user_code = req.param('user_code')
+  with_criteria(req, user_code, function(filter) {
     get_pubs(function(results) {
-      render(res, results, "dislike")
-    }, dislike_query(), filter)
-  }, dislike_filter())
+      render(res, user_code, results, "like")
+    }, like_query(user_code), filter)
+  }, like_filter(user_code))
 })
-app.get('/criteria', function(req, res) {
-  get_criteria(function(criteria) {
-    render_criteria(res, criteria)
+app.get('/dislike/:user_code', function(req, res) {
+  var user_code = req.param('user_code')
+  with_criteria(req, user_code, function(filter) {
+    get_pubs(function(results) {
+      render(res, user_code, results, "dislike")
+    }, dislike_query(user_code), filter)
+  }, dislike_filter(user_code))
+})
+app.get('/criteria/:user_code', function(req, res) {
+  var user_code = req.param('user_code')
+  get_criteria(user_code, function(criteria) {
+    render_criteria(res, user_code, criteria)
   })
 })
-app.post('/criteria', function(req, res) {
+app.post('/criteria/:user_code', function(req, res) {
+  var user_code = req.param('user_code')
   criteria = {
     max_price: parseInt(req.param('max_price')),
     cities: req.param('cities').split(',')
@@ -63,7 +71,8 @@ app.post('/criteria', function(req, res) {
     console.log("KATASTROPH")
   })
 })
-app.post('/pub/:id', function(req, res) {
+app.post('/pub/:user_code/:id', function(req, res) {
+  var user_code = req.param('user_code')
   var id = req.param('id')
   var opinion = req.param('opinion')
   console.log("vote for " + 
@@ -127,11 +136,11 @@ ejs.client = nc.NodeClient('localhost', 9200);
 var e_index = 'ads_2.0';
 var e_type = 'immo';
 
-function new_query() {
+function new_query(user_code) {
   return ejs.QueryStringQuery('*')
 }
 
-function new_filter() {
+function new_filter(user_code) {
   return ejs.AndFilter([
     ejs.TypeFilter('immo'),
     ejs.NotFilter(ejs.HasChildFilter(
@@ -139,7 +148,7 @@ function new_filter() {
   ])
 }
 
-function like_query() {
+function like_query(user_code) {
   return ejs.HasChildQuery(
     ejs.BoolQuery()
       .must(ejs.TermQuery('user_code', user_code))
@@ -147,12 +156,12 @@ function like_query() {
     'opinion')
 }
 
-function like_filter() {
+function like_filter(user_code) {
   return ejs.TypeFilter('immo')
 }
 var dislike_filter = like_filter
 
-function dislike_query() {
+function dislike_query(user_code) {
   return ejs.HasChildQuery(
     ejs.BoolQuery()
       .must(ejs.TermQuery('user_code', user_code))
@@ -190,13 +199,13 @@ function extract_pubs(results, opinion) {
   return pubs
 }
 
-function render(res, results, active) {
+function render(res, user_code, results, active) {
     if (results.error) console.log(results)
     var pubs = extract_pubs(results, active)
-    res.render('pubs.jade', {pubs: pubs, active: active})
+    res.render('pubs.jade', {user_code: user_code, pubs: pubs, active: active})
 }
 
-function get_criteria(handle_results) {
+function get_criteria(user_code, handle_results) {
   doc = ejs.Document(e_index, "criteria", "criteria_" + user_code)
   doc.doGet(function(result) {
     handle_results(result._source)
@@ -205,14 +214,14 @@ function get_criteria(handle_results) {
   })
 }
 
-function with_criteria(req, handle, filter) {
+function with_criteria(req, user_code, handle, filter) {
   if (req.param('raw')) {
     handle(filter)
     return
   }
   if (! filter) filter = ejs.TypeFilter(e_type)
   filter = ejs.AndFilter(filter)
-  get_criteria(function(criteria) {
+  get_criteria(user_code, function(criteria) {
     if (criteria) {
       filter.filters(ejs.NumericRangeFilter("price").lte(criteria.max_price))
       filter.filters(cities_filter(criteria.cities))
@@ -230,8 +239,8 @@ function cities_filter(cities) {
   return ejs.OrFilter(filters)
 }
 
-function render_criteria(res, criteria) {
-  res.render('criteria.jade', {criteria: criteria, active: 'criteria'})
+function render_criteria(res, user_code, criteria) {
+  res.render('criteria.jade', {user_code: user_code, criteria: criteria, active: 'criteria'})
 }
 
 

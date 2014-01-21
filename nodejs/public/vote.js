@@ -7,10 +7,10 @@ function init_vote() {
     var tr = $(this).parents('tr')
     var id = tr.attr('id')
   
-    $.post("pub/" + id, {opinion: opinion}, function(data) {
+    $.post("/pub/" + user_code + "/" + id, {opinion: opinion}, function(data) {
       tr.removeClass("like")
       tr.removeClass("dislike")
-      tr.addClass(data.opinion)
+      tr.addlass(data.opinion)
     })
   }
 }
