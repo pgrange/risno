@@ -27,6 +27,7 @@ Know, initialize french cities index this may take as long as 15 minutes, by run
 
 After that you can initialize the index where risno stores the ads, by running :
 
+    $ ./elastic_mappings/ads/ads_1.0 
     $ ./elastic_mappings/ads/ads_2.0 
 
 Elasticsearch is now ready for risno.
