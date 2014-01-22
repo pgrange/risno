@@ -10,7 +10,7 @@ function init_vote() {
     $.post("/pub/" + user_code + "/" + id, {opinion: opinion}, function(data) {
       tr.removeClass("like")
       tr.removeClass("dislike")
-      tr.addlass(data.opinion)
+      tr.addClass(data.opinion)
     })
   }
 }
