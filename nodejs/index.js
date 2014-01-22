@@ -67,7 +67,7 @@ app.post('/criteria/:user_code', function(req, res) {
   doc = ejs.Document(e_index, "criteria", "criteria_" + user_code)
   doc.source(criteria).upsert(criteria)
   doc.doUpdate(function() {
-    res.redirect("/criteria")
+    res.redirect("/criteria/" + user_code)
   }, function() {
     console.log("KATASTROPH")
   })
@@ -78,13 +78,14 @@ app.post('/pub/:user_code/:id', function(req, res) {
   var opinion = req.param('opinion')
   console.log("vote for " + 
               id + ": " + 
-              opinion)
+              opinion + 
+              " by user_code: " + user_code)
   if (opinion != "like" && opinion != "dislike") {
     var msg = "That's not an opinion: " + opinion
     console.log(msg)
     res.send(400, msg)
   } else {
-    vote(id, opinion, function() {
+    vote(user_code, id, opinion, function() {
       res.send({id: id, opinion: opinion})
     })
   }
@@ -182,7 +183,7 @@ function get_pubs(handle_results, query, filter) {
     })
 }
 
-function vote(id, opinion, handle_update) {
+function vote(user_code, id, opinion, handle_update) {
   ejs.Document(e_index, 'opinion', user_code + '_' + id)
     .parent(id)
     .source({user_code: user_code, opinion: opinion})
@@ -207,7 +208,10 @@ function render(res, user_code, results, active) {
 }
 
 function get_criteria(user_code, handle_results) {
-  doc = ejs.Document(e_index, "criteria", "criteria_" + user_code)
+  var criteria_id = "criteria_" + user_code
+  doc = ejs.Document(e_index, "criteria", criteria_id)
+  console.log('user_code: ' + user_code)
+  console.log('criteria: ' + criteria_id)
   doc.doGet(function(result) {
     handle_results(result._source)
   }, function() {
