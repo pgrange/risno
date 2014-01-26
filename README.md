@@ -70,4 +70,4 @@ You can now browse this url and take a look at the pubs :
 WARNING ! If you used risno before ads_2.0 model, go to this url to find your
 liked and dislikes opinions :
 
-    http://localhost:12043/12043
+    http://localhost:12043/12043/new

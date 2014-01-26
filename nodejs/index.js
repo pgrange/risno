@@ -15,9 +15,9 @@ function price_filter(req) {
 app.get('/', function(req, res) {
   var user_code = crypto.randomBytes(10).toString('hex')
   console.log(user_code)
-  res.redirect('/new/' + user_code)
+  res.redirect(user_code + '/new')
 })
-app.get('/new/:user_code', function(req, res) {
+app.get('/:user_code/new', function(req, res) {
   var user_code = req.param('user_code')
   with_criteria(req, user_code, function(filter) {
     get_pubs(function(results) {
@@ -25,7 +25,7 @@ app.get('/new/:user_code', function(req, res) {
     }, new_query(user_code), filter)
   }, new_filter(user_code))
 })
-app.get('/like/:user_code', function(req, res) {
+app.get('/:user_code/like', function(req, res) {
   var user_code = req.param('user_code')
   with_criteria(req, user_code, function(filter) {
     get_pubs(function(results) {
@@ -33,7 +33,7 @@ app.get('/like/:user_code', function(req, res) {
     }, like_query(user_code), filter)
   }, like_filter(user_code))
 })
-app.get('/dislike/:user_code', function(req, res) {
+app.get('/:user_code/dislike', function(req, res) {
   var user_code = req.param('user_code')
   with_criteria(req, user_code, function(filter) {
     get_pubs(function(results) {
@@ -41,13 +41,13 @@ app.get('/dislike/:user_code', function(req, res) {
     }, dislike_query(user_code), filter)
   }, dislike_filter(user_code))
 })
-app.get('/criteria/:user_code', function(req, res) {
+app.get('/:user_code/criteria', function(req, res) {
   var user_code = req.param('user_code')
   get_criteria(user_code, function(criteria) {
     render_criteria(res, user_code, criteria)
   })
 })
-app.post('/criteria/:user_code', function(req, res) {
+app.post('/:user_code/criteria', function(req, res) {
   var user_code = req.param('user_code')
   criteria = {
     max_price: parseInt(req.param('max_price')),
@@ -67,12 +67,12 @@ app.post('/criteria/:user_code', function(req, res) {
   doc = ejs.Document(e_index, "criteria", "criteria_" + user_code)
   doc.source(criteria).upsert(criteria)
   doc.doUpdate(function() {
-    res.redirect("/criteria/" + user_code)
+    res.redirect("/" + user_code + "/criteria")
   }, function() {
     console.log("KATASTROPH")
   })
 })
-app.post('/pub/:user_code/:id', function(req, res) {
+app.post('/:user_code/pub/:id', function(req, res) {
   var user_code = req.param('user_code')
   var id = req.param('id')
   var opinion = req.param('opinion')
