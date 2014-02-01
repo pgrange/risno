@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # Load configuration
-. $HOME/.config/risno
+[[ -f /etc/opt/risno ]] && . /etc/opt/risno
+[[ -f $HOME/.config/risno ]] && . $HOME/.config/risno
 
 if [ ! -d $RISNO_DIR ]
 then
