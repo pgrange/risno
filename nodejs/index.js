@@ -2,8 +2,16 @@ var path = require('path');
 var express = require('express')
 var ejs = require('elastic.js')
 var crypto = require('crypto')
+var nconf = require('nconf')
+
+nconf.argv()
+     .env()
+     .file({ file: '/etc/opt/risno.json' })
+     .defaults({ listen_port: 12043})
+
 
 var app = express()
+
 
 app.use(express.bodyParser());
 app.use(express.static(path.join(__dirname, 'public')))
@@ -250,5 +258,5 @@ function render_criteria(res, user_code, criteria) {
 
 
 
-app.listen(12043)
+app.listen(nconf.get('listen_port'))
 console.log("Server started")
