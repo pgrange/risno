@@ -1,6 +1,8 @@
 #!/bin/bash
 
-. $HOME/.config/risno
+# Load configuration
+[[ -f /etc/opt/risno ]] && . /etc/opt/risno
+[[ -f $HOME/.config/risno ]] && . $HOME/.config/risno
 
 #Fetching for zip code in parallel
 nb_running=0
