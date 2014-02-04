@@ -10,22 +10,24 @@ case active
  when "dislike"
   - action = "/dislike"
 
-include head
-include navbar
-table.table.table-hover
- tbody
-  each pub in pubs
-   tr.pub(id=pub.id, class=pub.opinion)
-    td
-     div
-      a(href=pub.url)= pub.location
-     div= pub.description
-     div= pub.cities
-    td= pub.price
-    td
-     a(href=pub.url)
-      img.pub(src=pub.img)
-    td
-     button.btn.btn-success.btn-vote Bien
-     button.btn.btn-danger.btn-vote Bof
-include foot
+html
+ include head
+ body
+  include navbar
+  table.table.table-hover
+   tbody
+    each pub in pubs
+     tr.pub(id=pub.id, class=pub.opinion)
+      td
+       div
+        a(href=pub.url)= pub.location
+       div= pub.description
+       div= pub.cities
+      td= pub.price
+      td
+       a(href=pub.url)
+        img.pub(src=pub.img)
+      td
+       button.btn.btn-success.btn-vote Bien
+       button.btn.btn-danger.btn-vote Bof
+  include foot

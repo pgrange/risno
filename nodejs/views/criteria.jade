@@ -9,14 +9,16 @@ if criteria && criteria.cities
 else
   cities = []
 
-include head
-include navbar
-form(action="/" + user_code + "/criteria", method="post")
- div
-  .input-group
-   span.input-group-addon &euro;
-   input.form-control(type="text", name="max_price", placeholder="prix max", value=max_price)
- input(type="hidden", id="cities", name="cities", value=cities)
- div
-  button.btn.btn-default(type="submit") enregistrer
-include foot
+html
+ include head
+ body
+  include navbar
+  form(action="/" + user_code + "/criteria", method="post")
+   div
+    .input-group
+     span.input-group-addon &euro;
+     input.form-control(type="text", name="max_price", placeholder="prix max", value=max_price)
+   input(type="hidden", id="cities", name="cities", value=cities)
+   div
+    button.btn.btn-default(type="submit") enregistrer
+  include foot

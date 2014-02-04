@@ -11,6 +11,7 @@ nconf.argv()
 
 
 var app = express()
+app.locals.pretty = true
 
 
 app.use(express.bodyParser());
