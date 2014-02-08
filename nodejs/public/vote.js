@@ -4,13 +4,13 @@ function init_vote() {
   function vote() {
     var opinion = $(this).hasClass('btn-success') 
       ? "like" : "dislike"
-    var tr = $(this).parents('tr')
-    var id = tr.attr('id')
+    var pub = $(this).parents(".pub")
+    var id = pub.attr('id')
   
     $.post("/" + user_code + "/pub/" + id, {opinion: opinion}, function(data) {
-      tr.removeClass("like")
-      tr.removeClass("dislike")
-      tr.addClass(data.opinion)
+      pub.removeClass("like")
+      pub.removeClass("dislike")
+      pub.addClass(data.opinion)
     })
   }
 }

@@ -14,20 +14,19 @@ html
  include head
  body
   include navbar
-  table.table.table-hover
-   tbody
-    each pub in pubs
-     tr.pub(id=pub.id, class=pub.opinion)
-      td
-       div
-        a(href=pub.url)= pub.location
-       div= pub.description
-       div= pub.cities
-      td= pub.price
-      td
-       a(href=pub.url)
-        img.pub(src=pub.img)
-      td
-       button.btn.btn-success.btn-vote Bien
-       button.btn.btn-danger.btn-vote Bof
+  .container
+   each pub in pubs
+    .row.pub(id=pub.id, class=pub.opinion)
+     .col-md-6
+      div
+       a(href=pub.url)= pub.location
+      div= pub.description
+      div= pub.cities
+     .col-md-1= pub.price
+     .col-md-3
+      a(href=pub.url)
+       img.pub(src=pub.img)
+     .col-md-2
+      button.btn.btn-success.btn-vote Bien
+      button.btn.btn-danger.btn-vote Bof
   include foot

@@ -1,7 +1,7 @@
-tr.like .btn-success {
+.pub.like .btn-success {
   visibility: hidden;
 }
-tr.dislike .btn-danger {
+.pub.dislike .btn-danger {
   visibility: hidden;
 }
 
