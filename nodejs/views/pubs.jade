@@ -14,19 +14,19 @@ html
  include head
  body
   include navbar
-  .container
+  .container(class=active)
    each pub in pubs
     .row.pub(id=pub.id, class=pub.opinion)
-     .col-md-6
+     .col-md-6.desc
       div
        a(href=pub.url)= pub.location
       div= pub.description
       div= pub.cities
-     .col-md-1= pub.price
-     .col-md-3
+     .col-md-1.desc= pub.price
+     .col-md-3.desc
       a(href=pub.url)
        img.pub(src=pub.img)
-     .col-md-2
+     .col-md-2.vote
       button.btn.btn-success.btn-vote Bien
       button.btn.btn-danger.btn-vote Bof
   include foot
