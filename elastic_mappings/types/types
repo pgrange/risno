@@ -1,0 +1,36 @@
+#!/bin/bash
+
+install_dir=$(cd $(dirname $0) && cd .. && pwd)
+
+new_index="types"
+
+curl -XPUT localhost:9200/${new_index} -d '
+{ 
+ "mappings" : {
+  "type" : {
+   "properties" : {
+    "type" : { "type" : "string"},
+    "french" : { "type" : "string"}
+   }
+  }
+ }
+}'
+
+curl -XPUT localhost:9200/${new_index}/type/flat -d '
+{
+  "type":"flat",
+  "french":"appartement"
+}'
+
+curl -XPUT localhost:9200/${new_index}/type/house -d '
+{
+ "type":"house",
+ "french":"maison"
+}'
+
+curl -XPUT localhost:9200/${new_index}/type/field -d '
+{
+ "type":"field",
+ "french":"terrain"
+}'
+

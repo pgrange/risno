@@ -1,13 +1,24 @@
 !!! 5
 
-if criteria && criteria.max_price > 0
-  max_price = criteria.max_price
-else
-  max_price = ""
-if criteria && criteria.cities
-  cities = criteria.cities
-else
-  cities = []
+- var checked_flat = "checked"
+- var checked_house = "checked"
+- var checked_field = "checked"
+- var checked_other = "checked"
+
+if criteria
+  if criteria.max_price > 0
+    max_price = criteria.max_price
+  else
+    max_price = ""
+  if criteria.cities
+    cities = criteria.cities
+  else
+    cities = []
+  if criteria.types
+    checked_flat = criteria.types.indexOf('flat')   != -1 ? "checked" : undefined
+    checked_house = criteria.types.indexOf('house') != -1 ? "checked" : undefined
+    checked_field = criteria.types.indexOf('field') != -1 ? "checked" : undefined
+    checked_other = criteria.types.indexOf('other') != -1 ? "checked" : undefined
 
 html
  include head
@@ -18,7 +29,20 @@ html
     .input-group
      span.input-group-addon &euro;
      input.form-control(type="text", name="max_price", placeholder="prix max", value=max_price)
-   input(type="hidden", id="cities", name="cities", value=cities)
+    .checkbox
+     label
+      input(name="types",type="checkbox",value="flat",checked=checked_flat)
+      p Appartement
+     label
+      input(name="types",type="checkbox",value="house",checked=checked_house)
+      p Maison
+     label
+      input(name="types",type="checkbox",value="field",checked=checked_field)
+      p terrain
+     label
+      input(name="types",type="checkbox",value="other",checked=checked_other)
+      p autre
+   input(type="hidden",id="cities",name="cities",value=cities)
    div
     button.btn.btn-default(type="submit") enregistrer
   include foot

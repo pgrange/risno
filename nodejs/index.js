@@ -58,9 +58,10 @@ app.get('/:user_code/criteria', function(req, res) {
 })
 app.post('/:user_code/criteria', function(req, res) {
   var user_code = req.param('user_code')
-  criteria = {
+  var criteria = {
     max_price: parseInt(req.param('max_price')),
-    cities: req.param('cities').split(',')
+    cities: req.param('cities').split(','),
+    types: [].concat(req.param('types'))
   }
   for(var i = 0; i < criteria.cities.length; i++) {
     city = criteria.cities[i]
@@ -237,11 +238,28 @@ function with_criteria(req, user_code, handle, filter) {
   filter = ejs.AndFilter(filter)
   get_criteria(user_code, function(criteria) {
     if (criteria) {
-      filter.filters(ejs.NumericRangeFilter("price").lte(criteria.max_price))
-      filter.filters(cities_filter(criteria.cities))
+      if (criteria.max_price)
+        filter.filters(ejs.NumericRangeFilter("price").lte(criteria.max_price))
+      if (criteria.cities)
+        filter.filters(cities_filter(criteria.cities))
+      if (criteria.types)
+        filter.filters(types_filter(criteria.types))
     }
     handle(filter)
   })
+}
+
+function types_filter(types) {
+  var filters = []
+  for(var i = 0; i < types.length; i++) {
+    var type = types[i]
+    if (type == "other") {
+      filters.push(ejs.MissingFilter('types'))
+    } else {
+      filters.push(ejs.QueryFilter(ejs.MatchQuery('types', type)))
+    }
+  }
+  return ejs.OrFilter(filters)
 }
 
 function cities_filter(cities) {
