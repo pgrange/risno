@@ -29,19 +29,22 @@ html
     .input-group
      span.input-group-addon &euro;
      input.form-control(type="text", name="max_price", placeholder="prix max", value=max_price)
-    .checkbox
-     label
-      input(name="types",type="checkbox",value="flat",checked=checked_flat)
-      p Appartement
-     label
-      input(name="types",type="checkbox",value="house",checked=checked_house)
-      p Maison
-     label
-      input(name="types",type="checkbox",value="field",checked=checked_field)
-      p terrain
-     label
-      input(name="types",type="checkbox",value="other",checked=checked_other)
-      p autre
+    .panel.panel-default
+     .panel-heading Type de bien
+     .panel-body
+      .checkbox
+       label
+        input(name="types",type="checkbox",value="flat",checked=checked_flat)
+        p Appartement
+       label
+        input(name="types",type="checkbox",value="house",checked=checked_house)
+        p Maison
+       label
+        input(name="types",type="checkbox",value="field",checked=checked_field)
+        p Terrain
+       label
+        input(name="types",type="checkbox",value="other",checked=checked_other)
+        p Inconnu
    input(type="hidden",id="cities",name="cities",value=cities)
    div
     button.btn.btn-default(type="submit") enregistrer
