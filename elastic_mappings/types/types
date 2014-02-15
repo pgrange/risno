@@ -4,31 +4,68 @@ install_dir=$(cd $(dirname $0) && cd .. && pwd)
 
 new_index="types"
 
-curl -XPUT localhost:9200/${new_index} -d '
+curl -f -XPUT localhost:9200/${new_index} -d '
 { 
+ "settings" : {
+  "analysis" : {
+   "analyzer" : {
+    "french_type" : {
+     "type" : "custom",
+     "tokenizer" : "standard",
+     "filter" : ["asciifolding", "lowercase", "synonyms_french_type", "unique"]
+    }
+   },
+   "filter" : {
+    "synonyms_french_type" : {
+     "type" : "synonym",
+     "synonyms" : [
+      "app,appt,studio,duplex,loft => appartement",
+      "t1,t1bis,t2,t3,t4,t5,f2,f3,f4,f5 => appartement",
+      "residence,plateau,studette => appartement",
+      "appartements => appartement",
+      "pavillon,villa,propriete => maison",
+      "contemporaine,comtemporaine => maison",
+      "chateau,ferme,grange,landaise,bergerie => maison",
+      "demeure,gite,echoppe,batisse,battisse => maison",
+      "maisonette,maisonnette,fermette => maison",
+      "traditionnelle,longere,chalet => maison",
+      "perigourdine,arcachonnaise,chartreuse,girondine => maison",
+      "bearnaise,neo-bearnaise,basquaise => maison",
+      "cottage => maison",
+      "hotel particulier => maison",
+      "ossature bois => maison",
+      "plain pied => maison",
+      "plein pied => maison",
+      "parcelle,lotissement => terrain",
+      "beauterrain,terr => terrain"
+     ]
+    }
+   }
+  }
+ },
  "mappings" : {
   "type" : {
    "properties" : {
     "type" : { "type" : "string"},
-    "french" : { "type" : "string"}
+    "french" : { "type" : "string", "analyzer" : "french_type"}
    }
   }
  }
 }'
 
-curl -XPUT localhost:9200/${new_index}/type/flat -d '
+curl -f -XPUT localhost:9200/${new_index}/type/flat -d '
 {
   "type":"flat",
   "french":"appartement"
 }'
 
-curl -XPUT localhost:9200/${new_index}/type/house -d '
+curl -f -XPUT localhost:9200/${new_index}/type/house -d '
 {
  "type":"house",
  "french":"maison"
 }'
 
-curl -XPUT localhost:9200/${new_index}/type/field -d '
+curl -f -XPUT localhost:9200/${new_index}/type/field -d '
 {
  "type":"field",
  "french":"terrain"
