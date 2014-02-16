@@ -1,7 +1,7 @@
 risno
 =====
 
-real-estate search engine
+Real-estate search engine. You can try it here : http://risno.org
 
 # How to use
 
