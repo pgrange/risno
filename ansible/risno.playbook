@@ -59,9 +59,9 @@
           job="python /opt/risno/fetch_pubs.py --logic-immo --se-loger --paru-vendu --avendre-alouer --pages-jaunes --immo-street --belle-immobilier --region aquitaine"
   - name: crontab to update locations
     cron: name="update locations" cron_file=risno user=risno
-          hour=17 minute=1
+          hour=18 minute=1
           job="python /opt/risno/update_locations.py" 
   - name: crontab to update types
     cron: name="update types" cron_file=risno user=risno
-          hour=17 minute=10
+          hour=17 minute=1
           job="python /opt/risno/update_type.py" 
