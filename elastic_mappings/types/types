@@ -28,7 +28,7 @@ curl -f -XPUT localhost:9200/${new_index} -d '
       "chateau,ferme,grange,landaise,bergerie => maison",
       "demeure,gite,echoppe,batisse,battisse => maison",
       "maisonette,maisonnette,fermette => maison",
-      "traditionnelle,longere,chalet => maison",
+      "traditionnelle,traditonnelle,longere,chalet => maison",
       "perigourdine,arcachonnaise,chartreuse,girondine => maison",
       "bearnaise,neo-bearnaise,basquaise => maison",
       "cottage => maison",
@@ -36,7 +36,7 @@ curl -f -XPUT localhost:9200/${new_index} -d '
       "ossature bois => maison",
       "plain pied => maison",
       "plein pied => maison",
-      "parcelle,lotissement => terrain",
+      "terrains,parcelle,lotissement => terrain",
       "beauterrain,terr => terrain"
      ]
     }
