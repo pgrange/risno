@@ -1,5 +1,6 @@
 # -*- coding: iso-8859-15 -*-
 
+import os
 import hashlib
 import urllib2
 import re
@@ -8,7 +9,8 @@ import random
 from bs4 import BeautifulSoup
 
 from pyes import ES, TermQuery
-conn = ES('127.0.0.1:9200') # Use HTTP
+elastic_url=os.environ.get('ELASTIC_URL', '127.0.0.1:9200')
+conn = ES(elastic_url) # Use HTTP
 e_index = "ads_2.0"
 
 log_context = ""
