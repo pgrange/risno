@@ -207,7 +207,7 @@ class LeBonCoin(SiteHelper):
         return d
 
   def zip_url(self, location, num_page):
-    return 'http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?&location=' + str(location) + '&o=' + str(num_page)
+    return 'http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?location=' + str(location) + '&o=' + str(num_page)
 
   def region_url(self, region, num_page):
     return 'http://www.leboncoin.fr/ventes_immobilieres/offres/' + region + '/?o=' + str(num_page)

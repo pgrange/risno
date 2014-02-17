@@ -192,10 +192,10 @@ _pages_jaunes_test_page_ = os.path.join(_dir_, 'pages_jaunes_test_page.html')
 _immo_street_test_page_ = os.path.join(_dir_, 'immo_street_test_page.html')
 _belle_immobilier_test_page_ = os.path.join(_dir_, 'belle_immobilier_test_page.html')
 
-_le_bon_coin_33400_url = 'http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?sp=0&ret=1&ret=5&pe=8&location=33400&o=1'
-_paru_vendu_33400_url  = 'http://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&tbPen=1&tbRem=1&tbVia=1&tbImm=1&tbPar=1&tbAut=1&px1=200000&pa=FR&lo=33400&p=1'
-_logic_immo_33400_url  = 'http://www.logic-immo.com/vente-immobilier-talence-33400,32468_2-4f2f000000-0,200000-0,0-0,0-00-00-000000000000-00-0-0-3-0-0-1.html'
-_se_loger_33400_url    = 'http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,10,12,11,9,13,14&pxmax=200000&tri=d_dt_crea&cp=33400&ANNONCEpg=1'
+_le_bon_coin_33400_url = 'http://www.leboncoin.fr/ventes_immobilieres/offres/aquitaine/?location=33400&o=1'
+_paru_vendu_33400_url  = 'http://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&tbPen=1&tbRem=1&tbVia=1&tbImm=1&tbPar=1&tbAut=1&pa=FR&lo=33400&p=1'
+_logic_immo_33400_url  = 'http://www.logic-immo.com/vente-immobilier-talence-33400,32468_2-4f2f000000-0,0-0,0-0,0-00-00-000000000000-00-0-0-3-0-0-1.html'
+_se_loger_33400_url    = 'http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,10,12,11,9,13,14&tri=d_dt_crea&cp=33400&ANNONCEpg=1'
 _a_vendre_a_louer_33400_url = 'http://www.avendrealouer.fr/annonces-immobilieres/vente/appartement+maison/33400+cp/page-1'
 _pages_jaunes_33400_url = 'http://www.pagesjaunes.fr/verticales/immo/rechercher.do?transactionSimple=achat&ou=33400'
 _immo_street_33400_url = u'http://www.immostreet.fr/Listing/Search?search_type=3&place_id=4816463&page=0'
