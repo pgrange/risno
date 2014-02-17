@@ -1,8 +1,9 @@
 function init_criteria() {
   $('#cities').select2({
-    placeholder: "Indiquez une ville",
+    placeholder: "Indiquez une ou plusieurs villes",
     allowClear: true,
     multiple: true,
+    width: '300px',
     ajax: {
       url: "/suggest",
       dataType: "json",
