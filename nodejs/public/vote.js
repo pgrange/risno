@@ -12,5 +12,6 @@ function init_vote() {
       pub.removeClass("dislike")
       pub.addClass(data.opinion)
     })
+    return false //avoid following link if any defined on this button
   }
 }

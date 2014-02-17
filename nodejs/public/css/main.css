@@ -3,6 +3,10 @@
   background-color: #FEFEFE;
 }
 
+.pubs a {
+  color: inherit;
+}
+
 .pub .btn {
   opacity: 0.5
 }

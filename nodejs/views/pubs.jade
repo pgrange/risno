@@ -14,20 +14,20 @@ html
  include head
  body
   include navbar
-  .container(class=active)
+  .container.pubs(class=active)
    each pub in pubs
-    .row.pub(id=pub.id, class=pub.opinion)
-     .col-md-6.desc
-      div
-       a(href=pub.url)= pub.location
-      div= pub.description
-      div= pub.cities
-      div= pub.types
-     .col-md-1.desc= pub.price
-     .col-md-3.desc
-      a(href=pub.url)
+    a(href=pub.url)
+     .row.pub(id=pub.id, class=pub.opinion)
+      .col-md-6.desc
+       div
+       div= pub.location
+       div= pub.description
+       div= pub.cities
+       div= pub.types
+      .col-md-1.desc= pub.price
+      .col-md-3.desc
        img.pub(src=pub.img)
-     .col-md-2.vote
-      button.btn.btn-success.btn-vote Bien
-      button.btn.btn-danger.btn-vote Bof
+      .col-md-2.vote
+       button.btn.btn-success.btn-vote Bien
+       button.btn.btn-danger.btn-vote Bof
   include foot
