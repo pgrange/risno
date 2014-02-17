@@ -24,7 +24,7 @@ html
        div= pub.description
        div= pub.cities
        div= pub.types
-      .col-md-1.desc= pub.price
+      .col-md-1.desc!=pub.price+'&nbsp;&euro;'
       .col-md-3.desc
        img.pub(src=pub.img)
       .col-md-2.vote
