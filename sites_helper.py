@@ -175,7 +175,7 @@ class LeBonCoin(SiteHelper):
     self.description_class = 'title'
     self.location_class = 'placement'
     self.date_class = 'date'
-    self.date_format = '%d %b %H:%M'
+    self.date_format = '%d %m %H:%M'
     self.date_regex = '.*'
 
   def _parse_date(self, pub):
@@ -190,10 +190,11 @@ class LeBonCoin(SiteHelper):
       # it seems like le bon coin is using a custom
       # date localisation/conversion scheme :(
       # so filtering before parsing
-      s_date = re.sub(u'c([^.a-z]|$)', u'c. '.encode('utf8'), s_date)
-      s_date = re.sub(u'nov([^.]|$)', u'nov. ', s_date)
-      s_date = re.sub(u'oct([^.]|$)', u'oct. ', s_date)
-      s_date = re.sub(u'jan([^v][^.]|$)', u'janv. ', s_date)
+      s_date = re.sub(u'd..c([^.a-z]|$)', u'12 '.encode('utf8'), s_date)
+      s_date = re.sub(u'nov([^.]|$)', u'11 ', s_date)
+      s_date = re.sub(u'oct([^.]|$)', u'10 ', s_date)
+      s_date = re.sub(u'jan([^v][^.]|$)', u'01 ', s_date)
+      s_date = re.sub(u'f..v([^.]|$)', u'02 ', s_date)
 
       old_locale = locale.getlocale(locale.LC_TIME)
       locale.setlocale(locale.LC_TIME, "fr_FR.utf8")
