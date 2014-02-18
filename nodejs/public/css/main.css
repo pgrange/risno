@@ -7,6 +7,14 @@
   color: inherit;
 }
 
+img.pub {
+  width: 240px;
+}
+
+.pub .price {
+  font-weight: bold;
+}
+
 .pub .btn {
   opacity: 0.5
 }
@@ -32,8 +40,4 @@
 
 .dislike .pub.like .desc {
   opacity: 0.5
-}
-
-img.pub {
-  width: 240px;
 }

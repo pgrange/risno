@@ -275,7 +275,34 @@ function render_criteria(res, user_code, criteria) {
   res.render('criteria.jade', {user_code: user_code, criteria: criteria, active: 'criteria'})
 }
 
+//city pretty formatting
+app.locals.format_city_from_id = function(id) {
+  id = '' + id //convert jade object to string
+  var ucFirstAllWords = function(str) {
+    var pieces = str.split(" ");
+    for ( var i = 0; i < pieces.length; i++ )
+    {
+        var j = pieces[i].charAt(0).toUpperCase();
+        pieces[i] = j + pieces[i].substr(1).toLowerCase();
+    }
+    return pieces.join(" ");
+  }
 
+  var zip = id.replace(/fr_([0-9]+)_.*/, '$1')
+  var name = id.replace(/fr_[0-9]+_/, '').replace(/_/g, ' ')
+  return ucFirstAllWords(name) + ' (' + zip + ')'
+}
+//type pretty formatting
+app.locals.tr_type = function(type) {
+  var tr_type = {
+    'flat' : {text: 'appart.', icon: 'glyphicon-sort'},
+    'house': {text: 'maison', icon: 'glyphicon-home'},
+    'field': {text: 'terrain', icon: 'glyphicon-flag'}
+  }
+  var tr = tr_type[type]
+  if (! tr) tr = {'text': 'autre', icon: 'glyphicon-question-sign'}
+  return tr
+}
 
 app.listen(nconf.get('listen_port'))
 console.log("Server started")
