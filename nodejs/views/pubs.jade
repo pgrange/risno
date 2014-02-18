@@ -20,8 +20,8 @@ html
      .row.pub(id=pub.id, class=pub.opinion)
       .col-md-6.desc
        div= format_city_from_id(pub.cities)
-       span= pub.location + ' '
-       span= pub.description
+       span= pub.location
+       span= ' ' + pub.description
       .col-md-1.desc
        div
         i.glyphicon(class=tr_type(pub.types).icon)
