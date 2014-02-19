@@ -295,7 +295,7 @@ app.locals.format_city_from_id = function(id) {
 //type pretty formatting
 app.locals.tr_type = function(type) {
   var tr_type = {
-    'flat' : {text: 'appart.', icon: 'glyphicon-sort'},
+    'flat' : {text: 'appart.', icon: 'glyphicon-stats'},
     'house': {text: 'maison', icon: 'glyphicon-home'},
     'field': {text: 'terrain', icon: 'glyphicon-flag'}
   }
