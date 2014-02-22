@@ -135,6 +135,10 @@ app.get('/suggest/:prefix', function(req, res) {
     res.send(response.city[0].options)
   })
 })
+app.get('/:user_code', function(req, res) {
+  var user_code = req.param('user_code')
+  res.redirect(user_code + '/new')
+})
 
 //new elasticsearch client part
 var elasticsearch = require('elasticsearch');
