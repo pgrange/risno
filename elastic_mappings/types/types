@@ -23,7 +23,7 @@ curl -f -XPUT localhost:9200/${new_index} -d '
       "t1,t1bis,t2,t3,t4,t5,f2,f3,f4,f5 => appartement",
       "residence,plateau,studette => appartement",
       "appartements => appartement",
-      "pavillon,villa,propriete => maison",
+      "pavillon,pavilon,villa,propriete => maison",
       "contemporaine,comtemporaine => maison",
       "chateau,ferme,grange,landaise,bergerie => maison",
       "demeure,gite,echoppe,batisse,battisse => maison",
