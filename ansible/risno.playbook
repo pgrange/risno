@@ -1,6 +1,10 @@
 - hosts: risno
   sudo: yes
   tasks:
+  - name: install sysstat
+    apt: pkg=sysstat
+  - name: enable sysstat
+    lineinfile: dest=/etc/default/sysstat regexp=^ENABLED= line=ENABLED='"true"'
   - name: depose docker repo key
     copy: src=docker-repo-key.asc dest=/root/docker-repo-key.asc
   - name: add docker repo key
