@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[[ -z ELASTIC_URL ]] && ELASTIC_URL=localhost:9200
+
 install_dir=$(cd $(dirname $0) && pwd)
 
 function csv2bulk() {
@@ -33,12 +35,12 @@ EOF
 }
 
 function bulk_insert() {
-  curl -XPOST localhost:9200/_bulk --data-binary @-
+  curl -XPOST $ELASTIC_URL/_bulk --data-binary @-
 }
 
-curl -X DELETE localhost:9200/cities
+curl -X DELETE $ELASTIC_URL/cities
 
-curl -X PUT localhost:9200/cities -d '
+curl -X PUT $ELASTIC_URL/cities -d '
 { 
  "settings" : {
   "analysis" : {

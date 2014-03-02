@@ -1,10 +1,12 @@
 #!/bin/bash
 
+[[ -z ELASTIC_URL ]] && ELASTIC_URL=localhost:9200
+
 install_dir=$(cd $(dirname $0) && cd .. && pwd)
 
 new_index="types"
 
-curl -f -XPUT localhost:9200/${new_index} -d '
+curl -f -XPUT $ELASTIC_URL/${new_index} -d '
 { 
  "settings" : {
   "analysis" : {
@@ -56,19 +58,19 @@ curl -f -XPUT localhost:9200/${new_index} -d '
  }
 }'
 
-curl -f -XPUT localhost:9200/${new_index}/type/flat -d '
+curl -f -XPUT $ELASTIC_URL/${new_index}/type/flat -d '
 {
   "type":"flat",
   "french":"appartement"
 }'
 
-curl -f -XPUT localhost:9200/${new_index}/type/house -d '
+curl -f -XPUT $ELASTIC_URL/${new_index}/type/house -d '
 {
  "type":"house",
  "french":"maison"
 }'
 
-curl -f -XPUT localhost:9200/${new_index}/type/field -d '
+curl -f -XPUT $ELASTIC_URL/${new_index}/type/field -d '
 {
  "type":"field",
  "french":"terrain"

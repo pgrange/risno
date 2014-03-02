@@ -23,7 +23,6 @@ function price_filter(req) {
 
 app.get('/', function(req, res) {
   var user_code = crypto.randomBytes(10).toString('hex')
-  console.log(user_code)
   res.redirect(user_code + '/new')
 })
 app.get('/:user_code/new', function(req, res) {
