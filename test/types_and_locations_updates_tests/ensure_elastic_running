@@ -1,0 +1,29 @@
+#!/bin/bash
+
+[[ -z $ELASTIC_PORT ]] && exit 1
+[[ -z $ELASTIC_URL  ]] && exit 1
+
+if [ -f elastic.id ]
+then
+  container=$(cat elastic.id)
+  if $(docker inspect $container 2>/dev/null | jq '.[0].State.Running' | sed -e 's:null:false:')
+  then
+    exit
+  fi
+fi
+
+docker run -d -p $ELASTIC_PORT:9200 pgrange/elasticsearch >elastic.id
+while true
+do
+  curl -f $ELASTIC_URL >/tmp/$$.curl 2>&1
+  case $? in
+        0) exit
+           ;;
+    52|56) echo "waiting for elasticsearch to start" >&2
+           sleep 1
+           ;;
+        *) cat /tmp/$$.curl
+           exit 1
+           ;;
+  esac
+done

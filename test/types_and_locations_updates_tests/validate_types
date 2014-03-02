@@ -1,0 +1,21 @@
+#!/bin/bash
+
+[[ -z $ELASTIC_PORT ]] && exit 1
+[[ -z $ELASTIC_URL  ]] && exit 1
+
+STATUS=/tmp/$$.status
+echo 0 >$STATUS
+
+cat sample_data.csv | grep -v '^#' \
+| while read line
+  do
+    id=$(echo $line | cut -d';' -f1)
+    expected_type=$(echo $line | cut -d';' -f2)
+    actual_type=$(curl -sf $ELASTIC_URL/ads_2.0/immo/$id | jq -r '._source.types[0]')
+    if [ "$actual_type" != "$expected_type" ]
+    then
+      echo 1 >$STATUS
+      echo "$id expected: $expected_type actual: $actual_type" >&2
+    fi
+   done
+exit $(cat $STATUS)

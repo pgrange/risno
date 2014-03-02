@@ -1,0 +1,18 @@
+#!/bin/bash
+
+[[ -z $ELASTIC_PORT ]] && exit 1
+[[ -z $ELASTIC_URL  ]] && exit 1
+
+cat sample_data.csv | grep -v '^#' \
+| while read line
+  do
+    id=$(echo $line | cut -d';' -f1)
+    location=$(echo $line | cut -d';' -f4)
+    description=$(echo $line | cut -d';' -f5-)
+    cat <<EOF
+{"index":{"_index":"ads_2.0","_type":"immo","_id":"${id}"}}
+{"location":"${location}","description":"${description}"}
+EOF
+  done \
+| curl -XPOST $ELASTIC_URL/_bulk --data-binary @-
+

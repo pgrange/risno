@@ -1,0 +1,21 @@
+#!/bin/bash
+
+[[ -z $ELASTIC_PORT ]] && exit 1
+[[ -z $ELASTIC_URL  ]] && exit 1
+
+STATUS=/tmp/$$.status
+echo 0 >$STATUS
+
+cat sample_data.csv | grep -v '^#' \
+| while read line
+  do
+    id=$(echo $line | cut -d';' -f1)
+    expected_city=$(echo $line | cut -d';' -f3)
+    actual_city=$(curl -sf $ELASTIC_URL/ads_2.0/immo/$id | jq -r '._source.cities[0]')
+    if [ "$actual_city" != "$expected_city" ]
+    then
+      echo 1 >$STATUS
+      echo "$id expected: $expected_city actual: $actual_city" >&2
+    fi
+   done
+exit $(cat $STATUS)
