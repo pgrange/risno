@@ -1,7 +1,9 @@
 export ELASTIC_PORT=9299
 export ELASTIC_URL=localhost:$(ELASTIC_PORT)
+CSV=$(wildcard *.csv)
+TST=$(CSV:.csv=.tst)
 
-.PHONY: elastic_running stop all clean cclean
+.PHONY: elastic_running stop all clean distclean types_updated
 
 all: test
 
@@ -13,42 +15,41 @@ elastic.id: elastic_running
 types_injected: elastic.id ../../elastic_mappings/types/types
 	../../elastic_mappings/types/types
 	@touch types_injected
-
-types_updated: types_injected data_injected
-	@curl -sf $(ELASTIC_URL)/_all/_refresh
-	python ../../update_type.py --all
-	touch types_updated
-
 cities_injected: elastic.id ../../elastic_mappings/cities/inject_cities_in_elasticsearch.sh ../../elastic_mappings/cities/cp-france.csv ../../elastic_mappings/cities/city_unboost_terms.txt
 	@echo injecting cities... please be patient
 	../../elastic_mappings/cities/inject_cities_in_elasticsearch.sh
 	@touch cities_injected
 
-cities_updated: cities_injected data_injected
+%.tst.inserted: %.csv elastic.id
+	./insert_sample_data $<
+	touch $@
+%.tst.type.updated: %.tst.inserted types_injected elastic.id
+	@curl -sf $(ELASTIC_URL)/_all/_refresh
+	python ../../update_type.py
+	@touch $@
+%.tst.type: %.csv %.tst.type.updated elastic.id
 	@curl -sf $(ELASTIC_URL)/_all/_refresh >/dev/null
-	python ../../update_locations.py --all
-	@touch cities_updated
-
-data_injected: elastic.id sample_data.csv
-	./insert_sample_data
-	@touch data_injected
-
-test_type: types_updated
+	./validate_types $<
+	@touch $@
+%.tst.city.updated: %.tst.inserted cities_injected elastic.id
+	@curl -sf $(ELASTIC_URL)/_all/_refresh
+	python ../../update_locations.py
+	@touch $@
+%.tst.city: %.csv %.tst.city.updated elastic.id
 	@curl -sf $(ELASTIC_URL)/_all/_refresh >/dev/null
-	./validate_types
+	./validate_cities $<
+	@touch $@
+%.tst: %.tst.type %.tst.city
+	@touch $@
 
-test_city: cities_updated
-	@curl -sf $(ELASTIC_URL)/_all/_refresh >/dev/null
-	./validate_cities
-
-test: test_type test_city
+test: $(TST)
 
 stop:
 	docker stop `cat elastic.id`
 	rm elastic.id
 
 clean:
-	rm -f cities_updated types_updated data_injected
+	rm -f *.tst*
 
-cclean: clean stop
+distclean: clean stop
 	rm -f cities_injected types_injected

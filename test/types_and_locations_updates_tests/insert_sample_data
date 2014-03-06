@@ -3,7 +3,11 @@
 [[ -z $ELASTIC_PORT ]] && exit 1
 [[ -z $ELASTIC_URL  ]] && exit 1
 
-cat sample_data.csv | grep -v '^#' \
+data_file="$1"
+
+[[ -z $data_file ]] && data_file=sample_data.csv
+
+cat "$data_file" | grep -v '^#' \
 | while read line
   do
     id=$(echo $line | cut -d';' -f1)
