@@ -20,7 +20,7 @@ cities_injected: elastic.id ../../elastic_mappings/cities/inject_cities_in_elast
 	../../elastic_mappings/cities/inject_cities_in_elasticsearch.sh
 	@touch cities_injected
 
-%.tst.inserted: %.csv elastic.id
+%.tst.inserted: %.csv types_injected cities_injected elastic.id
 	./insert_sample_data $<
 	touch $@
 %.tst.type.updated: %.tst.inserted types_injected elastic.id
