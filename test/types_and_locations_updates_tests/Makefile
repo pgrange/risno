@@ -49,7 +49,7 @@ stop:
 	rm elastic.id
 
 clean:
-	rm -f *.tst*
+	rm -f sample_data/*.tst*
 
 distclean: clean stop
 	rm -f cities_injected types_injected
