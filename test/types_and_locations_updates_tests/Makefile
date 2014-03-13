@@ -1,6 +1,6 @@
 export ELASTIC_PORT=9299
 export ELASTIC_URL=localhost:$(ELASTIC_PORT)
-CSV=$(wildcard *.csv)
+CSV=$(wildcard sample_data/*.csv)
 TST=$(CSV:.csv=.tst)
 
 .PHONY: elastic_running stop all clean distclean types_updated
