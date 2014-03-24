@@ -6,6 +6,8 @@ install_dir=$(cd $(dirname $0) && cd .. && pwd)
 
 new_index="types"
 
+curl -XDELETE $ELASTIC_URL/${new_index}
+
 curl -f -XPUT $ELASTIC_URL/${new_index} -d '
 { 
  "settings" : {
@@ -23,6 +25,7 @@ curl -f -XPUT $ELASTIC_URL/${new_index} -d '
      "synonyms" : [
       "appart,app,appt,studio,duplex,loft => appartement",
       "t1,t1bis,t2,t3,t4,t5,f2,f3,f4,f5 => appartement",
+      "4 pieces,5 pieces => appartement",
       "residence,plateau,studette => appartement",
       "appartements => appartement",
       "pavillon,pavilon,villa,propriete => maison",
@@ -36,6 +39,7 @@ curl -f -XPUT $ELASTIC_URL/${new_index} -d '
       "bearnaise,neo-bearnaise,basquaise => maison",
       "cottage,resiniere,girolle => maison",
       "hotel particulier => maison",
+      "moulin,chai,chais,domaine => maison",
       "ossature bois => maison",
       "plain pied => maison",
       "plein pied => maison",
