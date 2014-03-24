@@ -5,7 +5,7 @@ TST=$(CSV:.csv=.tst)
 TYPE_CSV=$(wildcard test_type/*.csv)
 TYPE_TST=$(TYPE_CSV:.csv=.tst.type)
 
-.PHONY: elastic_running stop all clean distclean types_updated
+.PHONY: elastic_running stop all clean distclean types_updated test type
 
 all: test
 
@@ -44,7 +44,7 @@ cities_injected: elastic.id ../../elastic_mappings/cities/inject_cities_in_elast
 %.tst: %.tst.type %.tst.city
 	@touch $@
 
-test: $(TST)
+test: $(TST) type
 
 type: $(TYPE_TST)
 
