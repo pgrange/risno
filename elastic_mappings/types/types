@@ -24,9 +24,14 @@ curl -f -XPUT $ELASTIC_URL/${new_index} -d '
      "type" : "synonym",
      "synonyms" : [
       "appart,app,appt,studio,duplex,loft => appartement",
-      "t1,t1bis,t2,t3,t4,t5,f2,f3,f4,f5 => appartement",
-      "4 pieces,5 pieces => appartement",
+      "t1,t1bis,t2,t3,t4,t5,t6,f2,f3,f4,f5,f6 => appartement",
+      "1 piece,2 pieces,3 pieces,4 pieces,5 pieces => appartement",
+      "une piece,deux pieces,trois pieces => appartement",
+      "quatre pieces,cinq pieces => appartement",
+      "1piece,2pieces,3pieces,4pieces,5pieces => appartement",
+      "type 1,type 2,type 3,type 4 => appartement",
       "residence,plateau,studette => appartement",
+      "t4duplex => appartement",
       "appartements => appartement",
       "pavillon,pavilon,villa,propriete => maison",
       "contemporaine,comtemporaine => maison",
@@ -37,16 +42,19 @@ curl -f -XPUT $ELASTIC_URL/${new_index} -d '
       "perigourdine,chartreuse,girondine => maison",
       "arcachonnaise,arcachonaise => maison",
       "bearnaise,neo-bearnaise,basquaise => maison",
+      "californienne => maison",
       "cottage,resiniere,girolle => maison",
       "hotel particulier => maison",
-      "moulin,chai,chais,domaine => maison",
+      "relais,moulin,chai,chais,domaine,monastere,prieure => maison",
       "ossature bois => maison",
       "plain pied => maison",
       "plein pied => maison",
       "maisons => maison",
+      "ossataure bois => maison",
       "terrains,parcelle,lotissement => terrain",
       "beauterrain,terr => terrain",
-      "a batir => terrain"
+      "a batir => terrain",
+      "viabilite,viabilise => terrain"
      ]
     }
    }

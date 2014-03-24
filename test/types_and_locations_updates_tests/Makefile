@@ -2,6 +2,8 @@ export ELASTIC_PORT=9299
 export ELASTIC_URL=localhost:$(ELASTIC_PORT)
 CSV=$(wildcard sample_data/*.csv)
 TST=$(CSV:.csv=.tst)
+TYPE_CSV=$(wildcard test_type/*.csv)
+TYPE_TST=$(TYPE_CSV:.csv=.tst.type)
 
 .PHONY: elastic_running stop all clean distclean types_updated
 
@@ -43,6 +45,8 @@ cities_injected: elastic.id ../../elastic_mappings/cities/inject_cities_in_elast
 	@touch $@
 
 test: $(TST)
+
+type: $(TYPE_TST)
 
 stop:
 	docker stop `cat elastic.id`
