@@ -196,6 +196,7 @@ class LeBonCoin(SiteHelper):
       s_date = re.sub(u'jan([^v][^.]|$)', u'01 ', s_date)
       s_date = re.sub(u'f..v([^.]|$)', u'02 ', s_date)
       s_date = re.sub(u'mar([^.]|$)', u'03 ', s_date)
+      s_date = re.sub(u'avr([^.]|$)', u'04 ', s_date)
 
       old_locale = locale.getlocale(locale.LC_TIME)
       locale.setlocale(locale.LC_TIME, "fr_FR.utf8")
