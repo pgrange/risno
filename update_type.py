@@ -24,6 +24,7 @@ def insert_to_db(pub):
 def normalize_query_string(query_string):
   return query_string\
     .replace('/', ' ')\
+    .replace('"', ' ')\
     .replace('!', ' ')\
     .replace('~', ' ')\
     .replace(':', ' ')\
