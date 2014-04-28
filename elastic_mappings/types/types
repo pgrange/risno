@@ -16,10 +16,16 @@ curl -f -XPUT $ELASTIC_URL/${new_index} -d '
     "french_type" : {
      "type" : "custom",
      "tokenizer" : "standard",
-     "filter" : ["asciifolding", "lowercase", "synonyms_french_type", "unique"]
+     "filter" : ["stopwords_misc", "asciifolding", "lowercase", "synonyms_french_type", "unique"]
     }
    },
    "filter" : {
+    "stopwords_misc" : {
+     "type" : "stop",
+     "stopwords" : ["fermé"],
+     "ignore_case" : "true"
+    },
+
     "synonyms_french_type" : {
      "type" : "synonym",
      "synonyms" : [
