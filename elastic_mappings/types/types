@@ -29,6 +29,7 @@ curl -f -XPUT $ELASTIC_URL/${new_index} -d '
     "synonyms_french_type" : {
      "type" : "synonym",
      "synonyms" : [
+      "dans villa => appartement",
       "appart,app,appt,studio,duplex,loft => appartement",
       "t1,t1bis,t2,t3,t4,t5,t6,f2,f3,f4,f5,f6 => appartement",
       "1 piece,2 pieces,3 pieces,4 pieces,5 pieces => appartement",
