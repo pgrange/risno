@@ -4,6 +4,8 @@ CSV=$(wildcard sample_data/*.csv)
 TST=$(CSV:.csv=.tst)
 TYPE_CSV=$(wildcard test_type/*.csv)
 TYPE_TST=$(TYPE_CSV:.csv=.tst.type)
+CITY_CSV=$(wildcard test_city/*.csv)
+CITY_TST=$(CITY_CSV:.csv=.tst.city)
 
 .PHONY: elastic_running stop all clean distclean types_updated test type
 
@@ -44,9 +46,11 @@ cities_injected: elastic.id ../../elastic_mappings/cities/inject_cities_in_elast
 %.tst: %.tst.type %.tst.city
 	@touch $@
 
-test: $(TST) type
+test: $(TST) type city
 
 type: $(TYPE_TST)
+
+city: $(CITY_TST)
 
 stop:
 	docker stop `cat elastic.id`
