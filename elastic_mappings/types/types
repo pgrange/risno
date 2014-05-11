@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[[ -z ELASTIC_URL ]] && ELASTIC_URL=localhost:9200
+[[ -z $ELASTIC_URL ]] && ELASTIC_URL=localhost:9200
 
 install_dir=$(cd $(dirname $0) && cd .. && pwd)
 
