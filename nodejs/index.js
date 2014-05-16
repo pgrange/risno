@@ -25,6 +25,9 @@ app.get('/', function(req, res) {
   var user_code = crypto.randomBytes(10).toString('hex')
   res.redirect(user_code + '/new')
 })
+app.get('/test', function(req, res) {
+  res.render('test.jade')
+})
 app.get('/:user_code/new', function(req, res) {
   var user_code = req.param('user_code')
   with_criteria(req, user_code, function(filter) {

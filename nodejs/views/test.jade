@@ -1,0 +1,165 @@
+!!! 5
+
+html
+ include head
+ body
+  .jumbotron
+   .hero
+    h1 Risno
+    p Le moteur de recherche immobilier 
+
+  .promote
+   .container
+    .row
+     .col-lg-6.col-md-6.box
+      h2 Toutes les annonces
+      p Risno recherche sur les principaux sites d'annonces immobilières mais aussi sur les sites des principales enseignes d'agences et même peut-être celui de la petite agence près de chez vous.
+
+     .col-lg-6.col-md-6.box
+      h2 Classer mes annonces
+      p Une annonce vous plaît ? Mettez là de coté dans les 
+       span.label.label-success biens
+      p Encore une annonce pas terrible ? Oubliez la dans les 
+       span.label.label-danger bofs 
+
+  .promote
+   .container
+    .row
+     .col-lg-6.col-md-6.box
+      h2 Nouveau venu ?
+      p Votre compte Risno est déjà prêt. Votre identifiant est 
+       span.label.label-primary 12043
+      p Conservez-le précieusement, il vous permettra de retrouver vos annonces et vos filtres à chaque visite.
+      p
+       button.btn.btn-primary(data-toggle="modal",data-target="#send_new_id") J'ai peur de l'oublier, envoyez le moi par email !
+
+     .col-lg-6.col-md-6.box
+      h2 Je suis déjà venu !
+      p Vous avez déjà reçu un identifiant qui vous permet de retrouver vos annonces et vos critères.
+      p
+       button.btn.btn-success(data-toggle="modal",data-target="#enter_id") Ah oui, je m'en souviens !
+      p
+       button.btn.btn-danger(data-toggle="modal",data-target='#send_id') Ah... ben j'ai oublié :(
+
+  .modal.fade(id="send_new_id",role="dialog")
+   .modal-dialog
+    .modal-content
+     form(id="send_new_id_form",role="form")
+      .modal-header
+       button.close(type="button",data-dismiss="modal") &times;
+       h4.modal-title Recevoir votre identifiant par email 
+        span.label.label-primary 12043
+      .modal-body
+       .form-group
+        label.control-label.sr-only(for="email") Votre email
+        input.form-control(id="email",name="email",type="email",placeholder="Votre email")
+       .form-group
+        label.control-label.sr-only(for="confirm_email") Confirmez votre email
+        .controls
+         input.form-control(name="confirm_email",type="email",placeholder="Confirmez votre email")
+      .modal-footer
+       .form-group
+        button.btn.btn-primary(type=submit) Envoyer
+
+  .modal.fade(id="enter_id",role="dialog")
+   .modal-dialog
+    .modal-content
+     form(id="enter_id_form",role="form")
+      .modal-header
+       button.close(type="button",data-dismiss="modal") &times;
+       h4.modal-title Retrouvez vos critères et vos annonces
+      .modal-body
+       .form-group
+        label.control-label.sr-only(for="user_id") Votre identifiant Risno
+        input.form-control(name="user_id",type="text",placeholder="Votre identifiant Risno")
+      .modal-footer
+       .form-group
+        button.btn.btn-primary(type=submit) Voir mes annonces
+
+  .modal.fade(id="send_id",role="dialog")
+   .modal-dialog
+    .modal-content
+     form(id="send_id_form",role="form")
+      .modal-header
+       button.close(type="button",data-dismiss="modal") &times;
+       h4.modal-title Recevoir votre identifiant par email 
+      .modal-body
+       .form-group
+        label.control-label.sr-only(for="email") Votre email
+        input.form-control(name="email",type="email",placeholder="Votre email")
+       .form-group
+      .modal-footer
+       .form-group
+        button.btn.btn-primary(type=submit) Envoyer
+  include foot
+  
+  script(src="/jquery/jquery.validate.js")
+
+  script.
+   $(document).ready(function() {
+    $('#enter_id_form').validate({
+     rules: {
+       user_id: {
+         required: true
+       }
+     },
+     messages: {
+       user_id: "Veuillez indiquer votre identifiant Risno :"
+     },
+     errorPlacement: function(error, element) {
+       error.addClass("control-label")
+       error.insertBefore(element)
+     },
+     highlight: function(element) {
+      $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+     },
+     success: function(element) {
+      element.closest('.form-group').removeClass('has-error').addClass('has-success')
+     }
+    })
+    $('#send_id_form').validate({
+     rules: {
+      email: {
+       required: true
+      }
+     }
+     messages: {
+       email: "Veuillez indiquer un email valide :",
+     },
+     errorPlacement: function(error, element) {
+       error.addClass("control-label")
+       error.insertBefore(element)
+     },
+     highlight: function(element) {
+      $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+     },
+     success: function(element) {
+      element.closest('.form-group').removeClass('has-error').addClass('has-success')
+     }
+    })
+    $('#send_new_id_form').validate({
+     rules: {
+      email: {
+       required: true
+      },
+      confirm_email: {
+       required: true,
+       equalTo: "#email"
+      }
+     },
+     messages: {
+       email: "Veuillez indiquer un email valide :",
+       confirm_email: "Veuillez confirmer votre email :"
+     },
+     errorPlacement: function(error, element) {
+       error.addClass("control-label")
+       error.insertBefore(element)
+     },
+     highlight: function(element) {
+      $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+     },
+     success: function(element) {
+      element.closest('.form-group').removeClass('has-error').addClass('has-success')
+     }
+    })
+   })

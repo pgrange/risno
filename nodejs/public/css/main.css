@@ -41,3 +41,18 @@ img.pub {
 .dislike .pub.like .desc {
   opacity: 0.5
 }
+
+/************/
+/* Esthetic */
+/************/
+
+.jumbotron {
+ background-attachment: fixed;
+ background-image: url("../images/annonces-dark.jpg");
+ background-position: center bottom;
+ background-size: cover;
+ position: relative;
+ width: 100%;
+ color: #FFFFFF;
+}
+
