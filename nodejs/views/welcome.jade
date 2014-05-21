@@ -75,8 +75,8 @@ html
        h4.modal-title Retrouvez vos critères et vos annonces
       .modal-body
        .form-group
-        label.control-label.sr-only(for="user_id") Votre identifiant Risno
-        input.form-control(name="user_id",type="text",required,placeholder="Votre identifiant Risno")
+        label.control-label.sr-only(for="user_code") Votre identifiant Risno
+        input.form-control(name="user_code",type="text",required,placeholder="Votre identifiant Risno")
       .modal-footer
        .form-group
         button.btn.btn-primary(type=submit) Voir mes annonces
@@ -115,7 +115,7 @@ html
  
     $('#enter_id_form').validate({
      messages: {
-       user_id: "Veuillez indiquer votre identifiant Risno :"
+       user_code: "Veuillez indiquer votre identifiant Risno :"
      },
      errorPlacement: errorPlacement,
      highlight: highlight,

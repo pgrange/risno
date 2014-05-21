@@ -22,8 +22,12 @@ function price_filter(req) {
 }
 
 app.get('/', function(req, res) {
-  var user_code = crypto.randomBytes(10).toString('hex')
-  res.render('welcome.jade', {user_code: user_code})
+  var user_code = req.param('user_code')
+  if (user_code) res.redirect(user_code)
+  else { 
+    user_code = crypto.randomBytes(10).toString('hex')
+    res.render('welcome.jade', {user_code: user_code})
+  }
 })
 app.get('/:user_code/new', function(req, res) {
   var user_code = req.param('user_code')
