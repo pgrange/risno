@@ -76,7 +76,7 @@ app.post('/:user_code/criteria', function(req, res) {
   doc = ejs.Document(e_index, "criteria", "criteria_" + user_code)
   doc.source(criteria).upsert(criteria)
   doc.doUpdate(function() {
-    res.redirect("/" + user_code + "/criteria")
+    res.redirect("/" + user_code + "/new")
   }, function() {
     console.log("KATASTROPH")
   })
