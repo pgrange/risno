@@ -328,9 +328,10 @@ smtp_transport.sendMail(
   from: "contact@risno.org",
   to: to,
   subject: "Bienvenue sur Risno",
-  text: "Bonjour et bienvenue sur Risno\n" +
+  text: "Bonjour,\n" +
         "\n" +
-        "Retrouvez vos nouvelle annnoces à cette addresse :\n" +
+        "Bienvenue sur Risno !\n +
+        "Retrouvez vos nouvelle annonces immobilières à l'addresse suivante :\n" +
         "\n" +
         "http://risno.org/" + id
  },
