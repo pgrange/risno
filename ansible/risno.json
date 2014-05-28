@@ -1,1 +1,10 @@
-{"listen_port": 80}
+{
+ "listen_port": 80,
+ "smtp": {
+  "host": "{{smtp_host}}",
+  "auth": {
+   "user": "{{smtp_user}}",
+   "pass": "{{smtp_passwd}}"
+   }
+ }
+}
