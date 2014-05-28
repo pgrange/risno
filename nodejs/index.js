@@ -3,6 +3,7 @@ var express = require('express')
 var ejs = require('elastic.js')
 var crypto = require('crypto')
 var nconf = require('nconf')
+var nodemailer = require('nodemailer')
 
 nconf.argv()
      .env()
@@ -142,6 +143,16 @@ app.get('/:user_code', function(req, res) {
   var user_code = req.param('user_code')
   res.redirect(user_code + '/new')
 })
+app.post('/send_new_id', function(req, res) {
+  var user_code = req.param('user_code')
+  var mail = req.param('email')
+  var confirm_email = req.param('confirm_email')
+  //TODO check email == confirm_email
+
+  send_new_id(mail, user_code)
+  res.redirect(user_code + '/criteria')
+})
+
 
 //new elasticsearch client part
 var elasticsearch = require('elasticsearch');
@@ -311,5 +322,32 @@ app.locals.tr_type = function(type) {
   return tr
 }
 
+function send_new_id(to, id) {
+smtp_transport.sendMail(
+ {
+  from: "contact@risno.org",
+  to: to,
+  subject: "Bienvenue sur Risno",
+  text: "Bonjour et bienvenue sur Risno\n" +
+        "\n" +
+        "Retrouvez vos nouvelle annnoces à cette addresse :\n" +
+        "\n" +
+        "http://risno.org/" + id
+ },
+ function(error, response) {
+   if (error) {
+     console.log("Unable to send new id " +
+                 "[" + id + "]" + "[" + to + "]" + 
+                 " " + error)
+   } else {
+     console.log("New id sent " +
+                 "[" + id + "]" + "[" + to + "]" + 
+                 " " + response.message);
+   }
+ })
+}
+
+var smtp_config = nconf.get('smtp')
+var smtp_transport = nodemailer.createTransport("SMTP", smtp_config)
 app.listen(nconf.get('listen_port'))
 console.log("Server started")

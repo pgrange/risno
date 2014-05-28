@@ -49,7 +49,8 @@ html
       h4.modal-title Ne perdez pas votre identifiant : 
        span.label.label-primary= user_code
      .modal-body
-      form(id="send_new_id_form",role="form")
+      form(method="POST",action="/send_new_id",id="send_new_id_form",role="form")
+       input(type="hidden",name="user_code",value=user_code)
        p Votre identifiant est très important, il vous permet de retrouver vos critères et vos nouveautés. Pour plus de sécurité, recevez-le par email.
        .form-group
         label.control-label.sr-only(for="email") Votre email
