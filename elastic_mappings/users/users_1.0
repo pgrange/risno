@@ -1,0 +1,14 @@
+#!/bin/bash
+
+curl -XPUT http://localhost:9200/users -d '{
+ "mappings": {
+  "user": {
+   "properties": {
+    "mail": {
+     "index": "not_analyzed",
+     "type": "string"
+    }
+   }
+  }
+ }
+}'
