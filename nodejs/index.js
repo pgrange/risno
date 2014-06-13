@@ -139,18 +139,82 @@ app.get('/suggest/:prefix', function(req, res) {
     res.send(response.city[0].options)
   })
 })
-app.get('/:user_code', function(req, res) {
-  var user_code = req.param('user_code')
-  res.redirect(user_code + '/new')
-})
 app.post('/send_new_id', function(req, res) {
   var user_code = req.param('user_code')
   var mail = req.param('email')
   var confirm_email = req.param('confirm_email')
   //TODO check email == confirm_email
 
-  send_new_id(mail, user_code)
-  res.redirect(user_code + '/criteria')
+  //store email in db first time
+  ejs.Document('users', 'user')
+    .source({user_code: user_code, mail: mail})
+    .doIndex(
+      function() {
+        send_new_id(mail, user_code)
+        res.redirect(user_code + '/criteria')
+      },
+      function() {
+        console.log("KATASTROPH")
+      })
+})
+app.get('/check_mail', function(req, res) {
+  var mail = req.param('email')
+  var query = ejs.FieldQuery('mail', mail)
+  ejs.Request({indices: 'users', types: 'user'})
+  .query(query).size(1000)
+  .doSearch(function(result) {
+    if (result.error) {
+      console.log(result)
+      res.send(false)
+    } else if (result.hits.hits.length > 0) {
+      res.send(true)
+    } else {
+      res.send(false)
+    }
+  })
+})
+app.post('/send_id', function(req, res) {
+  var mail = req.param('email')
+  var query = ejs.FieldQuery('mail', mail)
+  ejs.Request({indices: 'users', types: 'user'})
+  .query(query).size(1000)
+  .doSearch(function(result) {
+    if (result.error) {
+      console.log(result)
+      res.send(500, '')
+    }
+    else if (result.hits.hits.length <= 0) {
+      console.log("unknown email")
+      res.send(404, '')
+    } else {
+      var user_codes = []
+      for(var i = 0; i < result.hits.hits.length; i++) {
+        user_codes[i] = result.hits.hits[i]._source.user_code
+      }
+      smtp_transport.sendMail(
+        prepare_send_id_mail(mail, user_codes),
+        function(error, response) {
+          if (error) {
+            console.log("Unable to send ids " +
+                        "[" + mail + "]" + 
+                        " " + error)
+            res.send(500, '')
+          } else {
+            console.log("ids sent " +
+                        "[" + mail + "]" + 
+                        " " + response.message);
+            res.send(200, '')
+          }
+        }
+      )
+    }
+  },function(error) {
+    console.log(error)
+  })
+})
+app.get('/:user_code', function(req, res) {
+  var user_code = req.param('user_code')
+  res.redirect(user_code + '/new')
 })
 
 
@@ -330,7 +394,7 @@ smtp_transport.sendMail(
   subject: "Bienvenue sur Risno",
   text: "Bonjour,\n" +
         "\n" +
-        "Bienvenue sur Risno !\n +
+        "Bienvenue sur Risno !\n" +
         "Retrouvez vos nouvelle annonces immobilières à l'addresse suivante :\n" +
         "\n" +
         "http://risno.org/" + id
@@ -346,6 +410,21 @@ smtp_transport.sendMail(
                  " " + response.message);
    }
  })
+}
+
+function prepare_send_id_mail(mail, user_codes) {
+  var text= "Bonjour,\n" +
+        "\n" +
+        "Vous pouvez retrouvez nos nouvelles annonces immobilières sur Risno :\n"
+  for(var i = 0; i < user_codes.length; i++) {
+    text += "http://risno.org/" + user_codes[i] + "\n"
+  }
+  return {
+    from: "contact@risno.org",
+    to: mail,
+    subject: "Rappel de vos identifiants Risno",
+    text: text
+  }
 }
 
 var smtp_config = nconf.get('smtp')

@@ -96,8 +96,35 @@ html
        .form-group
       .modal-footer
        .form-group
-        button.btn.btn-primary(type=submit) Envoyer
+        button.btn.btn-primary(id="send_id_button",type="button",data-loading-text="Envoi...") Envoyer
+       .alert.alert-success(style="display: none;") Un email avec vos identifiants vous a été envoyé.
+       .alert.alert-danger(style="display: none;") Désolé, l'envoi vers cette adresse a échoué.
   include foot
+
+  script.
+    $('#send_id_button').button('reset')
+    $('#send_id_button').click(function() {
+      var btn = $(this)
+      var form = btn.parents('form')
+      if (! form.valid()) return
+      var input = form.find('input[name=email]')
+      var email = input.val()
+      var success_msg = btn.closest('.modal-footer').find('.alert-success')
+      var error_msg = btn.closest('.modal-footer').find('.alert-danger')
+      success_msg.hide()
+      error_msg.hide()
+      btn.button('loading')
+      $.ajax("/send_id", {
+        data: {email: email},
+        type: 'POST'
+      }).done(function() {
+        success_msg.show()
+      }).fail(function() {
+        error_msg.show()
+      }).always(function() {
+        btn.button('reset')
+      })
+    })
   
   script(src="/jquery/jquery.validate.js")
 
@@ -123,6 +150,11 @@ html
      success: success
     })
     $('#send_id_form').validate({
+     rules: {
+       email: {
+         remote: '/check_mail'
+       }
+     },
      messages: {
        email: "Veuillez indiquer un email valide :",
      },
