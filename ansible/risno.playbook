@@ -26,7 +26,7 @@
     git: repo=https://github.com/pgrange/risno.git dest=/opt/risno update=no
 
   - name: install risno configuration files
-    copy: src={{item}} dest=/etc/opt/{{item}}
+    template: src={{item}} dest=/etc/opt/{{item}}
     with_items:
     - risno
     - risno.json
