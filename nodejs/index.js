@@ -395,7 +395,7 @@ smtp_transport.sendMail(
   text: "Bonjour,\n" +
         "\n" +
         "Bienvenue sur Risno !\n" +
-        "Retrouvez vos nouvelle annonces immobilières à l'addresse suivante :\n" +
+        "Retrouvez vos nouvelles annonces immobilières sur Risno :\n" +
         "\n" +
         "http://risno.org/" + id
  },
@@ -415,7 +415,8 @@ smtp_transport.sendMail(
 function prepare_send_id_mail(mail, user_codes) {
   var text= "Bonjour,\n" +
         "\n" +
-        "Vous pouvez retrouvez nos nouvelles annonces immobilières sur Risno :\n"
+        "Retrouvez vos nouvelles annonces immobilières sur Risno :\n" +
+        "\n"
   for(var i = 0; i < user_codes.length; i++) {
     text += "http://risno.org/" + user_codes[i] + "\n"
   }
