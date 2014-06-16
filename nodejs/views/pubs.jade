@@ -24,7 +24,7 @@ html
        span= ' ' + pub.description
       .col-md-1.desc
        div
-        i.glyphicon(class=tr_type(pub.types).icon)
+        span.glyphicon(class=tr_type(pub.types).icon)
         = ' ' + tr_type(pub.types).text
        div.price!= pub.price+'&nbsp;&euro;'
       .col-md-3.desc
