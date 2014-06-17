@@ -24,17 +24,16 @@ html
  include head
  body
   include navbar
+  include jumbo
   .container
    form(action="/" + user_code + "/criteria", method="post")
-    .panel.panel-default
-     .panel-heading Prix maximum
-     .panel-body
-      .input-group
-       span.input-group-addon &euro;
-       input.form-control(type="text", name="max_price", placeholder="prix max", value=max_price)
-    .panel.panel-default
-     .panel-heading Type de bien
-     .panel-body
+    .form-group
+     label(for="max_price") Prix maximum
+     .input-group
+      span.input-group-addon &euro;
+      input.form-control(type="text", name="max_price", placeholder="prix max", value=max_price)
+    .form-group
+     label(for="types") Type de bien
       .checkbox
        label
         input(name="types",type="checkbox",value="flat",checked=checked_flat)
@@ -48,10 +47,11 @@ html
        label
         input(name="types",type="checkbox",value="other",checked=checked_other)
         p Inconnu
-    .panel.panel-default
-     .panel-heading Villes
-     .panel-body
-      input(type="hidden",id="cities",name="cities",value=cities)
-    div
-     button.btn.btn-default(type="submit") enregistrer
+    .form-group
+     label(for=cities) Villes
+     .input-group
+      span.input-group-addon.glyphicon.glyphicon-search
+      input.form-control(type="hidden",id="cities",name="cities",value=cities)
+    button.btn.btn-primary(type="submit") enregistrer
+ 
   include foot

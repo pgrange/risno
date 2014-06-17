@@ -56,3 +56,26 @@ img.pub {
  color: #FFFFFF;
 }
 
+.navbar {
+ background: #FFF;
+ overflow: hidden;
+ border: 0;
+ border-radius: 0 !important;
+ text-align: left;
+ -webkit-box-shadow: 0px 5px 11px 0px rgba(50, 50, 50, 0.08);
+         box-shadow: 0px 5px 11px 0px rgba(50, 50, 50, 0.08);
+}
+
+.navbar-default .navbar-nav > .active > a,
+.navbar-default .navbar-nav > .active > a:hover,
+.navbar-default .navbar-nav > .active > a:focus {
+ background-color: #FFFFFF;
+}
+
+.active a {
+  color: #e96656 !important;
+  position: relative;
+  outline: none;
+}
+
+
