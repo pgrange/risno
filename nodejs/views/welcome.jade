@@ -43,12 +43,11 @@ html
     .modal-content
      .modal-header
       button.close(type="button",data-dismiss="modal") &times;
-      h4.modal-title Ne perdez pas votre identifiant : 
+      h4.modal-title Recevez votre identifiant par email : 
        span.label.label-primary= user_code
      .modal-body
       form(method="POST",action="/send_new_id",id="send_new_id_form",role="form")
        input(type="hidden",name="user_code",value=user_code)
-       p Votre identifiant est très important, il vous permet de retrouver vos critères et vos nouveautés. Pour plus de sécurité, recevez-le par email.
        .form-group
         label.control-label.sr-only(for="email") Votre email
         input.form-control(id="email",name="email",type="email",required,placeholder="Votre email")
@@ -60,7 +59,7 @@ html
         button.btn.btn-success.pull-right(type=submit) Envoyer
      .modal-footer
       .pull-left
-       p(style="text-align: left;") Attention ! si vous ne choisissez pas de recevoir votre identifiant par email, nous ne pourrons rien pour vous si jamais vous le perdez.
+       p(style="text-align: left;") Attention ! si vous choisissez de ne pas recevoir votre identifiant par email, nous ne pourrions rien pour vous si jamais vous le perdiez.
       .form-group
        a.button.btn.btn-danger(href=user_code + '/criteria') Je prend le risque
 
