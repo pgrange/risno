@@ -1,0 +1,98 @@
+#!/bin/bash
+
+install_dir=$(cd $(dirname $0) && pwd)
+
+#load util functions
+source ${install_dir}/../tools/utils.sh
+
+old_index="ads_2.0"
+new_index="ads_2.1"
+alias="ads"
+
+curl -XPUT localhost:9200/${new_index} -d '
+{
+ "mappings": {
+  "immo": {
+   "properties": {
+    "url": {"index": "not_analyzed", "type": "string"},
+    "img": {"index": "not_analyzed", "type": "string"},
+    "location": {"type": "string"},
+    "description": {"type": "string"},
+    "cities": {"type": "string"},
+    "price": {"type": "integer"},
+    "date": {"type": "date"},
+    "site_name": {"index": "not_analyzed", "type": "string"}
+   }
+  },
+  "opinion" : {
+   "_parent": {"type": "immo"},
+   "properties": {
+    "user_code" : { "type" : "string"},
+    "opinion": {"type": "string"}
+   }
+  }
+ }
+}'
+
+function update_site_name() {
+  jq -c . | sed -e 's:\\:\\\\:g' | \
+  while read line
+  do
+    if [ "$(echo $line | jq -r ._type)" == "immo" ]
+    then
+      local site_name
+      case $(echo $line | jq -r ._source.url) in
+        *leboncoin.fr*)
+          site_name=le-bon-coin
+          ;;
+        *paruvendu.fr*)
+          site_name=paru-vendu
+          ;;
+        *seloger.com*)
+          site_name=se-loger
+          ;;
+        *avendrealouer.fr*)
+          site_name=a-vendre-a-louer
+          ;;
+        *logic-immo.com*)
+          site_name=logic-immo
+          ;;
+        *pagesjaunes.fr*)
+          site_name=pages-jaunes
+          ;;
+        *immostreet.fr*)
+          site_name=immo-street
+          ;;
+        *belle-immobilier.fr*)
+          site_name=belle-immobilier
+          ;;
+        *)
+          ;;
+      esac
+      echo $line | jq -c ". + {__extra: {site_name: \"$site_name\"}}"
+    else
+      echo $line
+    fi
+  done
+}
+
+set $(init_scroll ${old_index})
+scroll_id=$1
+total=$2
+
+echo "$total ads to update with site_name" >&2
+
+i=0
+while scroll ${scroll_id} | update_site_name | object2bulk ${new_index} | bulk_insert >/dev/null
+do
+  echo "$i bulk pubs updated" >&2
+  i=$((i+1))
+done
+
+curl -XPOST 'http://localhost:9200/_aliases' -d "
+{
+    \"actions\" : [
+        { \"remove\" : { \"index\" : \"${old_index}\", \"alias\" : \"${alias}\" } },
+        { \"add\" : { \"index\" : \"${new_index}\", \"alias\" : \"${alias}\" } }
+    ]
+}"
