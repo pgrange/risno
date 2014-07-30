@@ -29,6 +29,7 @@ After that you can initialize the index where risno stores the ads, by running :
 
     $ ./elastic_mappings/ads/ads_1.0 
     $ ./elastic_mappings/ads/ads_2.0 
+    $ ./elastic_mappings/ads/ads_2.1 
 
 Elasticsearch is now ready for risno.
 
