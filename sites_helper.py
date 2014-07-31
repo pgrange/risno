@@ -165,6 +165,14 @@ class SiteHelper:
 
     return pubs
 
+  def expired(self, url):
+    try:
+      page = urllib2.urlopen(url)
+      return self._expired(page)
+    except urllib2.HTTPError as err:
+      if err.code == 404: return True
+      else: raise(err)
+
 class LeBonCoin(SiteHelper):
 
   def __init__(self):
