@@ -33,7 +33,7 @@ def get_pubs(site):
 def show_pub(pub):
   print pub
 
-def expire(pub):
+def expire(pub, site):
   return True
 
 if __name__ == '__main__':
@@ -89,7 +89,7 @@ if __name__ == '__main__':
       total = pubs.total
       log('OK', str(total) + ' pubs to update')
       for pub in pubs:
-        if expire(pub):
+        if expire(pub, site):
           expired = expired + 1
           if args.test: show_pub(pub)
           else: insert_to_db(pub)

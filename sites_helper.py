@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import re
 import urllib2
 
@@ -218,6 +219,11 @@ class LeBonCoin(SiteHelper):
   def region_url(self, region, num_page):
     return 'http://www.leboncoin.fr/ventes_immobilieres/offres/' + region + '/?o=' + str(num_page)
 
+  def _expired(self, page):
+    soup = BeautifulSoup(page)
+    header = soup.header.h1.get_text().strip()
+    return header == u'Annonce introuvable'
+
 class ParuVendu(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
@@ -238,6 +244,11 @@ class ParuVendu(SiteHelper):
   def region_url(self, region, num_page):
     dept = {'aquitaine': '24,33,40,47,64'}
     return 'http://www.paruvendu.fr/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbApp=1&tbDup=1&tbChb=1&tbLof=1&tbAtl=1&tbPla=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&pa=FR&lo=' + dept[region] + '&p=' + str(num_page)
+
+  def _expired(self, page):
+    soup = BeautifulSoup(page)
+    header = soup.find("div", class_ = "listeann")
+    return header != None
 
 class SeLoger(SiteHelper):
   def __init__(self):
@@ -262,6 +273,11 @@ class SeLoger(SiteHelper):
     id = {'aquitaine': '2229'}
     return 'http://www.seloger.com/recherche.htm?idtt=2&idtypebien=1,10,11,12,13,14,2,4,9&tri=d_dt_crea&div=' + id[region] + '&ANNONCEpg=' + str(num_page)
 
+  def _expired(self, page):
+    soup = BeautifulSoup(page)
+    header = soup.find("div", id = "detail")
+    return header == None
+
 class AVendreALouer(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
@@ -282,6 +298,11 @@ class AVendreALouer(SiteHelper):
   def region_url(self, region, num_page):
     dept = {'aquitaine': 'dordogne+24+gironde+33+pyrenees-atlantiques+64+landes+40+lot-et-garonne+47'}
     return 'http://www.avendrealouer.fr/annonces-immobilieres/vente/maison/' + dept[region] + '/page-' + str(num_page)
+
+  def _expired(self, page):
+    soup = BeautifulSoup(page)
+    header = soup.find("div", class_ = "prod-desc")
+    return header == None
 
 class LogicImmo(SiteHelper):
   def __init__(self):
@@ -338,6 +359,11 @@ class LogicImmo(SiteHelper):
     region_conversion = {'aquitaine': 'aquitaine-33000,15'}
     return 'http://www.logic-immo.com/vente-immobilier-' + region_conversion[region] + '_0-ef2f800000-0,0-0,0-0,0-00-00-000000000000-00-0-0-1-1-0-' + str(num_page) + '.html'
 
+  def _expired(self, page):
+    soup = BeautifulSoup(page)
+    header = soup.find("div", id = "detail")
+    return header == None
+
 from cookielib import CookieJar
 class PagesJaunes(SiteHelper):
   def __init__(self):
@@ -380,6 +406,11 @@ class PagesJaunes(SiteHelper):
 
     # and finally get the correct page (omg !)
     return opener.open('http://www.pagesjaunes.fr/verticales/immo/changerPageListeReponses.do?numPage=' + str(num_page))
+
+  def _expired(self, page):
+    soup = BeautifulSoup(page)
+    header = soup.find("h2", class_ = "titleAd")
+    return header == None
 
 class ImmoStreet(SiteHelper):
   def __init__(self):
@@ -430,6 +461,11 @@ class ImmoStreet(SiteHelper):
     return "http://www.immostreet.fr/Listing/Search?search_type=3&" \
       + region_conversion[region] + '&page=' + str(num_page - 1)
 
+  def _expired(self, page):
+    soup = BeautifulSoup(page)
+    header = soup.find("div", class_ = "item_details")
+    return header == None
+
 class BelleImmobilier(SiteHelper):
   def __init__(self):
     SiteHelper.__init__(self)
@@ -448,3 +484,8 @@ class BelleImmobilier(SiteHelper):
 
   def region_url(self, region, num_page):
     return self._url(num_page)
+
+  def _expired(self, page):
+    soup = BeautifulSoup(page)
+    header = soup.find("div", class_ = "item")
+    return header == None
