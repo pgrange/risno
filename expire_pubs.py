@@ -27,6 +27,7 @@ def insert_to_db(pub):
 
 def get_pubs(site):
   q = TermQuery('site_name', site.name)
+  q = FilteredQuery(q, MissingFilter('expired'))
   pubs = conn.search(query=q, indices=e_index, doc_types="immo")
   return pubs
 
