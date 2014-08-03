@@ -227,7 +227,7 @@ var client = new elasticsearch.Client({
 //elastic part
 var nc = require('elastic.js/elastic-node-client')
 ejs.client = nc.NodeClient('localhost', 9200);
-var e_index = 'ads_2.0';
+var e_index = 'ads';
 var e_type = 'immo';
 
 function new_query(user_code) {
