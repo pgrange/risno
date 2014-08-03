@@ -18,7 +18,7 @@ html
   .container.pubs(class=active)
    each pub in pubs
     a(href=pub.url)
-     .row.pub(id=pub.id, class=pub.opinion)
+     .row.pub(id=pub.id, class=pub.opinion, class=pub.expired ? "expired" : "")
       .col-md-6.desc
        div= format_city_from_id(pub.cities)
        span= pub.location

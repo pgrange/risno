@@ -42,6 +42,10 @@ img.pub {
   opacity: 0.5
 }
 
+.pub.expired {
+  opacity: 0.3
+}
+
 /************/
 /* Esthetic */
 /************/
