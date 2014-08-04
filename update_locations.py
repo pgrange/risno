@@ -7,7 +7,7 @@ from pyes.filters import MissingFilter, TermFilter, ORFilter, MatchAllFilter
 
 elastic_url=os.environ.get('ELASTIC_URL', '127.0.0.1:9200')
 conn = ES(elastic_url) # Use HTTP
-e_index = "ads_2.0"
+e_index = "ads"
 
 log_context = ""
 def log(status, message = ""):
