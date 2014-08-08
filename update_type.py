@@ -16,7 +16,8 @@ def log(status, message = ""):
   elif status == "KO": color = Fore.RED
   else: color = Fore.YELLOW
  
-  print color + status + " " + Fore.BLUE + log_context + Fore.RESET + " " + message.encode('UTF-8')
+  from datetime import datetime
+  print color + status + " " + Fore.BLUE + log_context +  ' [' + str(datetime.now()) + ']' + Fore.RESET + " " + message.encode('UTF-8')
 
 def insert_to_db(pub):
   conn.update(e_index, "immo", pub.get_id(), document=pub, upsert=pub)
