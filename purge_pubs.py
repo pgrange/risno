@@ -38,7 +38,9 @@ def show_pub(pub):
 if __name__ == '__main__':
   import traceback
   import argparse
-
+  
+  log_context = "purge"
+  
   parser = argparse.ArgumentParser(description='Supprime les annonces expirées que plus personne ne référence')
   parser.add_argument('--test', const=True, action='store_const', help='affiche les annonces correspondates sans les supprimer')
 

@@ -66,6 +66,8 @@ if __name__ == '__main__':
   import traceback
   import argparse
 
+  log_context = "upd_location"
+
   parser = argparse.ArgumentParser(description='récupère les annonces pour le site et le code postal précisé')
   parser.add_argument('--test', const=True, action='store_const', help='affiche les annonces mises à jour sans les stocker en base')
   parser.add_argument('--all', const=True, action='store_const', help='met à jour toutes les annonces, et pas seulement celles associées à aucune ville')

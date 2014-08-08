@@ -45,6 +45,8 @@ if __name__ == '__main__':
   import traceback
   import argparse
 
+ log_context = "expire"
+
   parser = argparse.ArgumentParser(description='Détecte et marque en base les annonces périmée')
   parser.add_argument('--test', const=True, action='store_const', help='affiche les annonces mises à jour sans les stocker en base')
   parser.add_argument('--le-bon-coin', const=True, action='store_const', help='recherche sur le bon coin')
