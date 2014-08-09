@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #load util functions
-source $(pwd $0)/utils.sh
+source $(dirname $0)/utils.sh
 
 function usage() {
   printf "$1\n" >&2
