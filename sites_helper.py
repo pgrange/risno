@@ -173,10 +173,7 @@ class SiteHelper:
       return self._expired(page)
     except urllib2.HTTPError as err:
       if err.code == 404: return True
-      else:
-        log("KO", "unable to check expiration of " + url + " err: " + err)
-    except:
-      log("KO", "unable to check expiration of " + url + " err: " + traceback.format_exc())
+      else: raise err
 
 class LeBonCoin(SiteHelper):
 

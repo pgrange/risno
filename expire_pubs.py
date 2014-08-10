@@ -36,10 +36,14 @@ def show_pub(pub):
   print pub
 
 def expire(pub, site):
-  if site.expired(pub['url']):
-    pub['expired'] = True
-    return True
-  else:
+  try:
+    if site.expired(pub['url']):
+      pub['expired'] = True
+      return True
+    else:
+      return False
+  except:
+    log("KO", "unable to check expiration of " + pub['url'] + " err: " + traceback.format_exc())
     return False
 
 if __name__ == '__main__':
