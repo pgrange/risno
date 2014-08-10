@@ -4,6 +4,8 @@ import urllib2
 
 import locale
 
+import traceback
+
 from datetime import timedelta
 from datetime import date
 from datetime import datetime
@@ -173,8 +175,8 @@ class SiteHelper:
       if err.code == 404: return True
       else:
         log("KO", "unable to check expiration of " + url + " err: " + err)
-    except err:
-      log("KO", "unable to check expiration of " + url + " err: " + err)
+    except:
+      log("KO", "unable to check expiration of " + url + " err: " + traceback.format_exc())
 
 class LeBonCoin(SiteHelper):
 
