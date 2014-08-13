@@ -88,24 +88,18 @@ if __name__ == '__main__':
   if args.belle_immobilier: sites.append(BelleImmobilier())
 
   for site in sites:
-    previous_total = -1
-    total = 0
-    while previous_total != total:
-      # That's odd but it seems we do not update all
-      # found pubs... so adding this while loop :(
-      previous_total = total
-      pubs = get_pubs(site)
+    pubs = get_pubs(site)
 
-      count = 0
-      expired = 0
-      total = pubs.total
-      log('OK', str(total) + ' pubs to update')
-      for pub in pubs:
-        if expire(pub, site):
-          expired = expired + 1
-          if args.test: show_pub(pub)
-          else: insert_to_db(pub)
-        count = count + 1
-        if count % 20 == 0:
-          log('OK', str(count) + ' / ' + str(total) + ' updated')
+    count = 0
+    expired = 0
+    total = pubs.total
+    log('OK', str(total) + ' pubs to update')
+    for pub in pubs:
+      if expire(pub, site):
+        expired = expired + 1
+        if args.test: show_pub(pub)
+        else: insert_to_db(pub)
+      count = count + 1
+      if count % 20 == 0:
+        log('OK', str(count) + ' / ' + str(total) + ' updated')
     log('OK', str(expired) + ' pubs expired for ' + site.name)
