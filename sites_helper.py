@@ -22,6 +22,7 @@ class SiteHelper:
     self.date_class = None
     self.date_format = '%d/%m/%Y'
     self.date_regex = '[0-9]{2}/[0-9]{2}/[0-9]{4}'
+    self.fetch_timeout = 10
 
   def _text(self, tag):
     text = tag.get_text() 
@@ -104,7 +105,7 @@ class SiteHelper:
 
   def fetch_page(self, location, num_page=1):
     s_url = self.url(location, num_page)
-    return urllib2.urlopen(s_url)
+    return urllib2.urlopen(s_url, None, self.fetch_timeout)
     
   def url(self, location, num_page=1):
     """
@@ -169,7 +170,7 @@ class SiteHelper:
 
   def expired(self, url):
     try:
-      page = urllib2.urlopen(url)
+      page = urllib2.urlopen(url, None, self.fetch_timeout)
       return self._expired(page)
     except urllib2.HTTPError as err:
       if err.code == 404: return True
@@ -410,13 +411,13 @@ class PagesJaunes(SiteHelper):
     else:
       raise Exception("Illegal type, should be one of 'id' or 'region': " + location['type'])
 
-    opener.open(s_url)
+    opener.open(s_url, None, self.fetch_timeout)
 
     # then sort by date
-    opener.open('http://www.pagesjaunes.fr/verticales/immo/trierListeReponses.do?valeurTriImmo=DATE_PUBLICATION')
+    opener.open('http://www.pagesjaunes.fr/verticales/immo/trierListeReponses.do?valeurTriImmo=DATE_PUBLICATION', None, self.fetch_timeout)
 
     # and finally get the correct page (omg !)
-    return opener.open('http://www.pagesjaunes.fr/verticales/immo/changerPageListeReponses.do?numPage=' + str(num_page))
+    return opener.open('http://www.pagesjaunes.fr/verticales/immo/changerPageListeReponses.do?numPage=' + str(num_page), None, self.fetch_timeout)
 
   def _expired(self, page):
     soup = BeautifulSoup(page)
