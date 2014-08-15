@@ -267,16 +267,16 @@ class SeLoger(SiteHelper):
     SiteHelper.__init__(self)
     self.name = 'se-loger'
     self.site = 'seloger.com'
-    self.pub_class = 'annonce'
+    self.pub_class = 'listing'
     self.pub_tag = 'article'
-    self.price_class = 'annonce__agence__prix'
-    self.description_class = 'annone__description__small'
-    self.location_class = 'annone__detail__localisation'
+    self.price_class = 'amount'
+    self.description_class = 'description'
     #no date displayed know :(
     #self.date_class = 'rech_majref'
 
   def _parse_location(self, pub):
-    return self._text(pub.find(class_ = self.location_class))
+    #return self._text(pub.find(class_ = self.location_class))
+    return self._text(pub.find(class_ = 'listing_infos').h2.a.span)
 
   def zip_url(self, location, num_page):
     return 'http://www.seloger.com/recherche.htm?idtt=2&idtypebien=2,10,12,11,9,13,14&tri=d_dt_crea&cp=' + str(location) + '&ANNONCEpg=' + str(num_page)
