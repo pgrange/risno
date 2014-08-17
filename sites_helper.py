@@ -153,18 +153,21 @@ class SiteHelper:
     """
     pass
 
+  def _parse_pub(self, pub):
+    return {
+      'price': self._parse_price(pub),
+      'description': self._parse_description(pub),
+      'url': self._parse_url(pub),
+      'img': self._parse_img(pub),
+      'location': self._parse_location(pub),
+      'date': self._parse_date(pub),
+    }
+
   def parse(self, page):
     soup = BeautifulSoup(page)
     pubs = []
     for pub in soup.find_all(self.pub_tag, class_ = self.pub_class):
-      pubs.append({
-        'price': self._parse_price(pub),
-        'description': self._parse_description(pub),
-        'url': self._parse_url(pub),
-        'img': self._parse_img(pub),
-        'location': self._parse_location(pub),
-        'date': self._parse_date(pub),
-      })
+      pubs.append(self._parse_pub(pub))
 
     return pubs
 
@@ -295,11 +298,25 @@ class AVendreALouer(SiteHelper):
     SiteHelper.__init__(self)
     self.name = 'a-vendre-a-louer'
     self.site = 'avendrealouer.fr'
-    self.pub_class = 'resultat'
-    self.price_class = 'prix'
-    self.description_class = 'descriptif'
-    self.location_class = "annonce_url"
-    self.date_class = 'parution'
+    self.pub_tag = 'li'
+    self.pub_class = None
+    self.price_class = 'price'
+    self.description_class = 'wrapper'
+    self.location_class = "loca"
+    self.date_class = 'pro-details'
+
+  def parse(self, page):
+    soup = BeautifulSoup(page)
+    pubs = []
+    results = soup.find('ul', class_ = 'search-results')
+    for pub in results.find_all(self.pub_tag):
+      pubs.append(self._parse_pub(pub))
+
+    return pubs
+
+  def _parse_url(self, pub):
+    link = pub.find('a', class_ = 'link-wrapper')
+    return 'http://www.' + self.site + link['href']
 
   def _parse_location(self, pub):
     return self._text(pub.find(class_ = self.location_class))
@@ -308,8 +325,8 @@ class AVendreALouer(SiteHelper):
     return 'http://www.avendrealouer.fr/annonces-immobilieres/vente/appartement+maison/' + str(location) + '+cp/page-' + str(num_page)
 
   def region_url(self, region, num_page):
-    dept = {'aquitaine': 'dordogne+24+gironde+33+pyrenees-atlantiques+64+landes+40+lot-et-garonne+47'}
-    return 'http://www.avendrealouer.fr/annonces-immobilieres/vente/maison/' + dept[region] + '/page-' + str(num_page)
+    code = {'aquitaine': '2-72'}
+    return 'http://www.avendrealouer.fr/vente/' + region + '/b-maison/loc-' + code[region] + '.html?page=' + str(num_page)
 
   def _expired(self, page):
     soup = BeautifulSoup(page)
