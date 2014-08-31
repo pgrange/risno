@@ -1,0 +1,29 @@
+{
+  "name": "slurp",
+  "version": "0.1.0",
+  "description": "A real-estate slurp engine",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/pgrange/risno.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pgrange/risno/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/fullscale/elastic.js/blob/master/LICENSE-MIT"
+    }
+  ],
+  "author": {
+    "name": "Pascal Grange",
+    "url": "https://github.com/pgrange/risno/blob/master/AUTHORS"
+  },
+  "dependencies": {
+    "source-map-support": "*"
+  },
+  "devDependencies": {
+    "coffee-script": "*",
+    "nodeunit": "*"
+  }
+}
