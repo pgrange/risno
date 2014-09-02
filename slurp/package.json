@@ -20,7 +20,9 @@
     "url": "https://github.com/pgrange/risno/blob/master/AUTHORS"
   },
   "dependencies": {
-    "source-map-support": "*"
+    "source-map-support": "*",
+
+    "cheerio": "*"
   },
   "devDependencies": {
     "coffee-script": "*",
