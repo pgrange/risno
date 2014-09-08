@@ -1,3 +1,13 @@
+exports.url = (params, region, page_num) ->
+  if params.region_id
+    throw "Unknown region " + region unless params.region_id[region]
+    region = params.region_id[region] if params.region_id
+  format = params.format
+  format = format.replace /HOST/, params.host
+  format = format.replace /REGION/, region
+  format = format.replace /PAGE/, page_num
+  format
+
 exports.find_ads = (context, selector) ->
   context(selector)
 
