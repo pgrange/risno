@@ -16,8 +16,8 @@ exports.parse_ad = (ad, selectors, host) ->
   price = /[0-9]+[0-9 ]*/.exec(ad.find(selectors.price).text())
   price = price[0].replace /\s/g, '' if price
 
-  description: ad.find(selectors.description).text()
-  location: ad.find(selectors.location).text()
+  description: strip ad.find(selectors.description).text()
+  location: strip ad.find(selectors.location).text()
   price: price
   image: find_image ad, host
   url: find_url ad, host
@@ -43,6 +43,9 @@ find_url = (ad, host) ->
       href
     else
       'http://' + host + href
+
+strip = (string) ->
+  string.replace(/\s+/g, ' ').replace(/^\s/, '').replace(/\s$/, '')
  
 crappy_pages_jaunes_url = (a) ->
   param = /\?idAnnonce=[^']*/.exec(a.attr('data-pjonglet'))

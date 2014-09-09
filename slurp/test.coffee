@@ -22,6 +22,18 @@ exports.testShouldParseAdDescription = (test) ->
   test.equals ad.description, 'Description'
   test.done()
 
+exports.testShouldStripAdDescription = (test) ->
+  ad = parse_ad_from_src '<description>\n                                    \n                                            \n                                        \n                                        \n                                        \n                                            Talence\n                                            \n                                                /\n                                            \n                                        \n                                        Gironde\n                                    \n                                </description>'
+
+  test.equals ad.description, 'Talence / Gironde'
+  test.done()
+
+exports.testShouldStripAdLocation = (test) ->
+  ad = parse_ad_from_src '<location>\n                                    \n                                            \n                                        \n                                        \n                                        \n                                            Talence\n                                            \n                                                /\n                                            \n                                        \n                                        Gironde\n                                    \n                                </location>'
+
+  test.equals ad.location, 'Talence / Gironde'
+  test.done()
+
 exports.testShouldParseAdLocation = (test) ->
   ad = parse_ad_from_src '<location>Location</location>'
 
