@@ -9,7 +9,7 @@ slurp = require('./slurp')
 exports.testShouldFindAllAds = (test) ->
   dom = cheerio.load '<ad></ad><ad></ad>'
 
-  ads = slurp.find_ads dom, 'ad'
+  ads = slurp.find_ads dom, ads: 'ad'
 
   test.equal ads.length, 2
   test.done()
@@ -100,17 +100,18 @@ exports.testShouldExtractUrlFromStrangePagesJaunesMethod = (test) ->
 parse_ad_from_src = (src) ->
   ad = cheerio.load('<ad>' + src + '</ad>')('ad')
   slurp.parse_ad ad, 
-    price: 'price'
-    location: 'location'
-    description: 'description',
-    'site'
+    host: 'site'
+    selectors: 
+      price: 'price'
+      location: 'location'
+      description: 'description',
 
 # Build fetch URL
 
 exports.testForgeSimpleUrl = (test) ->
   url = slurp.url
     host: 'www.exemple.com'
-    format: 'http://HOST/ads/REGION?p=PAGE',
+    url_format: 'http://HOST/ads/REGION?p=PAGE',
     'aquitaine', 2
 
   test.equals url, 'http://www.exemple.com/ads/aquitaine?p=2'
@@ -119,7 +120,7 @@ exports.testForgeSimpleUrl = (test) ->
 exports.testForgeUrlWithSiteSpecificRegionIds = (test) ->
   url = slurp.url
     host: 'www.exemple.com'
-    format: 'http://HOST/ads/REGION?p=PAGE'
+    url_format: 'http://HOST/ads/REGION?p=PAGE'
     region_id: {'aquitaine': '12043'},
     'aquitaine', 2
 
@@ -130,7 +131,7 @@ exports.testShouldFailWhenUnableToConvertRegionToId = (test) ->
   test.throws ->
     slurp.url
       host: 'www.exemple.com'
-      format: 'http://HOST/ads/REGION?p=PAGE'
+      url_format: 'http://HOST/ads/REGION?p=PAGE'
       region_id: {'aquitain': '12043'},
       'aquitaine', 2
 

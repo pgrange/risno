@@ -2,25 +2,26 @@ exports.url = (params, region, page_num) ->
   if params.region_id
     throw "Unknown region " + region unless params.region_id[region]
     region = params.region_id[region] if params.region_id
-  format = params.format
+  format = params.url_format
   format = format.replace /HOST/, params.host
   format = format.replace /REGION/, region
   format = format.replace /PAGE/, page_num
   format
 
-exports.find_ads = (context, selector) ->
-  context(selector)
+exports.find_ads = (context, params) ->
+  context(params.ads)
 
-exports.parse_ad = (ad, selectors, host) ->
-  selectors = {} if ! selectors
+exports.parse_ad = (ad, params) ->
+  params = {} unless params
+  selectors = params.selectors || {}
   price = /[0-9]+[0-9 ]*/.exec(ad.find(selectors.price).text())
   price = price[0].replace /\s/g, '' if price
 
   description: strip ad.find(selectors.description).text()
   location: strip ad.find(selectors.location).text()
   price: price
-  image: find_image ad, host
-  url: find_url ad, host
+  image: find_image ad, params.host
+  url: find_url ad, params.host
 
 find_image = (ad, host) ->
   img = ad.find('img[original]')
