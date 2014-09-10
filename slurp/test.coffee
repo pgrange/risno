@@ -114,7 +114,7 @@ exports.testForgeSimpleUrl = (test) ->
     url_format: 'http://HOST/ads/REGION?p=PAGE',
     'aquitaine', 2
 
-  test.equals url, 'http://www.exemple.com/ads/aquitaine?p=2'
+  test.deepEqual url, ['http://www.exemple.com/ads/aquitaine?p=2']
   test.done()
 
 exports.testForgeUrlWithSiteSpecificRegionIds = (test) ->
@@ -124,7 +124,7 @@ exports.testForgeUrlWithSiteSpecificRegionIds = (test) ->
     region_id: {'aquitaine': '12043'},
     'aquitaine', 2
 
-  test.equals url, 'http://www.exemple.com/ads/12043?p=2'
+  test.deepEqual url, ['http://www.exemple.com/ads/12043?p=2']
   test.done()
 
 exports.testShouldFailWhenUnableToConvertRegionToId = (test) ->
@@ -136,3 +136,20 @@ exports.testShouldFailWhenUnableToConvertRegionToId = (test) ->
       'aquitaine', 2
 
   test.done()
+
+exports.testShouldReturnArrayOfUrlsWhenComplexScenario = (test) ->
+  url = slurp.url
+    host: 'www.exemple.com'
+    url_format: [
+      'http://HOST/ads/REGION',
+      'http://HOST/ads/PAGE',
+    ],
+    'aquitaine', 2
+
+  test.deepEqual url, [
+    'http://www.exemple.com/ads/aquitaine',
+    'http://www.exemple.com/ads/2',
+  ]
+  test.done()
+
+

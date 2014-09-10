@@ -2,11 +2,15 @@ exports.url = (params, region, page_num) ->
   if params.region_id
     throw "Unknown region " + region unless params.region_id[region]
     region = params.region_id[region] if params.region_id
-  format = params.url_format
-  format = format.replace /HOST/, params.host
-  format = format.replace /REGION/, region
-  format = format.replace /PAGE/, page_num
-  format
+  replace = (format) ->
+    format = format.replace /HOST/, params.host
+    format = format.replace /REGION/, region
+    format = format.replace /PAGE/, page_num
+
+  if Array.isArray params.url_format
+    replace format for format in params.url_format
+  else
+    [replace params.url_format]
 
 exports.find_ads = (context, params) ->
   context(params.ads)
