@@ -1,0 +1,17 @@
+.ad_parsing {
+  border-style: dashed !important;
+  border-width: thick !important;
+  border-color: red !important;
+}
+
+.price_parsing {
+  background-color: yellow;
+}
+
+.description_parsing {
+  background-color: gray;
+}
+
+.location_parsing {
+  background-color: green;
+}

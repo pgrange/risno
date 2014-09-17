@@ -21,8 +21,12 @@
   },
   "dependencies": {
     "source-map-support": "*",
-
-    "cheerio": "*"
+    "cheerio": "*",
+    "request": "*",
+    "tough-cookie": "*",
+    "express": "3.4.0",
+    "jade": "0.35.0",
+    "browserify": "~5.11.2"
   },
   "devDependencies": {
     "coffee-script": "*",

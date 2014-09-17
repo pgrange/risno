@@ -1,0 +1,29 @@
+{
+  "leboncoin": {
+    "name": "le-bon-coin",
+    "host": "www.leboncoin.fr",
+    "url_sequence": [
+      "http://HOST/ventes_immobilieres/offres/REGION/?o=PAGE"
+    ],
+    "ads": ".lbc",
+    "selectors": {
+      "price": ".price",
+      "location": ".placement"
+    }
+  },
+  "pages_jaunes": {
+    "name": "pages-jaunes",
+    "host": "www.pagesjaunes.fr",
+    "url_sequence": [
+      "http://HOST/verticales/immo/rechercherPA.do?transactionSimple=achat&typeBien=&ou=REGION",
+      "http://HOST/verticales/immo/trierListeReponses.do?valeurTriImmo=DATE_PUBLICATION",
+      "http://HOST/verticales/immo/changerPageListeReponses.do?numPage=PAGE"
+    ],
+    "ads": ".visitCardContent",
+    "selectors": {
+      "price": ".price",
+      "location": ".location",
+      "description": ".dataCard"
+    }
+  }
+}

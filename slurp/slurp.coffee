@@ -7,13 +7,13 @@ exports.url = (params, region, page_num) ->
     format = format.replace /REGION/, region
     format = format.replace /PAGE/, page_num
 
-  if Array.isArray params.url_format
-    replace format for format in params.url_format
+  if Array.isArray params.url_sequence
+    replace format for format in params.url_sequence
   else
-    [replace params.url_format]
+    [replace params.url_sequence]
 
 exports.find_ads = (context, params) ->
-  context(params.ads)
+  context.find(params.ads)
 
 exports.parse_ad = (ad, params) ->
   params = {} unless params

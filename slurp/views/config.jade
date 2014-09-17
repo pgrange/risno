@@ -1,0 +1,38 @@
+!!! 5
+
+- var url_sequence = site.url_sequence
+if Array.isArray(url_sequence)
+ url_sequence = url_sequence.join('\n')
+
+html
+ head
+  link(href="parsing.css",rel="stylesheet")
+  script(src="js/jquery-1.10.2.js")
+  script(src="js/bundle.js")
+ body
+  form(method="POST", action="/save/" + site_id)
+   p
+     label(for="url_sequence", alt="HOST, PAGE and REGION will be substituted") url sequence
+     textarea#url_sequence(name="url_sequence",rows=5,cols=100,autocomplete="off")= url_sequence
+
+   p
+    label.ad_parsing(for="ad_selector") Ad selector
+    input#ad_selector(name="ad_selector",type="text",autocomplete="off", value=site.ads)
+    span#nb_ads 0
+    span ads on this page
+
+   p
+    label.price_parsing(for="price_selector") price selector
+    input#price_selector(name="price_selector",type="text",autocomplete="off", value=site.selectors.price)
+
+    label.description_parsing(for="description_selector") description selector
+    input#description_selector(name="description_selector",type="text",autocomplete="off", value=site.selectors.description)
+
+    label.location_parsing(for="location_selector") location selector
+    input#location_selector(name="location_selector",type="text",autocomplete="off", value=site.selectors.location)
+
+   p
+    button(type="submit") save
+
+  div#found_ads(style="float: right; width: 29%")
+  iframe#remote(height="500px",width="70%")
