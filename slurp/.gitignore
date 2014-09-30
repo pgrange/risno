@@ -2,3 +2,5 @@ node_modules
 *.js
 *.map
 .installed
+.elastic.id
+.*.swp
