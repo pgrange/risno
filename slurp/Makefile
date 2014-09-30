@@ -1,3 +1,6 @@
+export ELASTIC_PORT=9299
+export ELASTIC_URL=localhost:$(ELASTIC_PORT)
+
 SRC=$(wildcard *.coffee)
 JS=$(SRC:.coffee=.js)
 NODE_UNIT=./node_modules/nodeunit/bin/nodeunit
@@ -8,7 +11,7 @@ help:
 	@echo "\tmake config: start web configuration tool"
 	@echo "\tmake test: run tests"
 	@echo "\tmake clean: clean all build files"
-	@echo "\tmake dist-clean: you probably don't want this"
+	@echo "\tmake dist-clean: purge all generated file, node modules..."
 
 config: compile public/js/bundle.js
 	node config
@@ -16,11 +19,11 @@ config: compile public/js/bundle.js
 public/js/bundle.js: public/js/parsing.js
 	$(BROWSERIFY) public/js/parsing.js -o public/js/bundle.js
 
-test: compile
+test: compile elastic_running
 	$(NODE_UNIT) test*.js
 
-clean:
-	rm *.js *.map public/js/bundle.js
+clean: elastic_stop
+	-rm *.js *.map public/js/bundle.js
 
 compile: install $(JS)
 install: .installed
@@ -28,8 +31,16 @@ install: .installed
 	npm install
 	@touch .installed
 dist-clean: clean
-	rm .installed
-	rm -rf node_modules
+	-rm .installed
+	-rm -rf node_modules
 %.js: %.coffee
 	$(COFFEE) -c -m $<
-.PHONY: clean help dist-clean install compile run test
+
+elastic_running:
+	./ensure_elastic_running
+elastic_stop:
+	-docker stop `cat .elastic.id`
+	-rm .elastic.id
+
+
+.PHONY: clean help dist-clean install compile run test elastic_running elastic_stop
