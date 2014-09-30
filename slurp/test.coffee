@@ -77,6 +77,13 @@ exports.testShouldConvertImageRelativeURIToAbsolute = (test) ->
   test.equals ad.image, 'http://site/image'
   test.done()
 
+exports.testShouldNotGuessImageIfNoneFound = (test) ->
+  ad = parse_ad_from_src '<ad></ad>'
+
+  test.equal undefined, ad.image
+  test.done()
+
+
 exports.testShouldParseAdUrl = (test) ->
   dom = cheerio.load('<a href="http://site/ad"><ad></ad></a>')
 

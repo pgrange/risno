@@ -31,10 +31,11 @@ find_image = (ad, host) ->
   img = ad.find('img[original]')
   src = if img.length > 0 then img.attr('original') else ad.find('img').attr('src')
 
-  if /^http:/.test(src)
-    src
-  else
-    'http://' + host + src
+  if src
+    if /^http:/.test(src)
+      src
+    else
+      'http://' + host + src
   
 find_url = (ad, host) ->
   a = ad.find('a.idTag_PARTAGER')
