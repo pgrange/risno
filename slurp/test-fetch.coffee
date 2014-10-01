@@ -127,7 +127,7 @@ exports.fetching = nodeunit.testCase
         test.equal "ad 1", ad.description
         test.equal "somwhere", ad.location
         test.equal 12043, ad.price
-        test.equal "http://test.com/img1", ad.image
+        test.equal "http://test.com/img1", ad.img
         test.equal "http://test.com/pub", ad.url
         test.done()
       .catch (err) ->

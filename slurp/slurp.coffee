@@ -24,7 +24,7 @@ exports.parse_ad = (ad, params) ->
   description: strip ad.find(selectors.description).text()
   location: strip ad.find(selectors.location).text()
   price: price
-  image: find_image ad, params.host
+  img: find_image ad, params.host
   url: find_url ad, params.host
 
 find_image = (ad, host) ->

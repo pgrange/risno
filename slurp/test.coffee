@@ -62,25 +62,25 @@ exports.testShouldNotFailIfSelectorsAreMissing = (test) ->
 exports.testShouldParseAdImage = (test) ->
   ad = parse_ad_from_src '<img src="http://site/image"></img>'
 
-  test.equals ad.image, 'http://site/image'
+  test.equals ad.img, 'http://site/image'
   test.done()
 
 exports.testShouldExtractImageWithOriginalAttributeIfAny = (test) ->
   ad = parse_ad_from_src '<img src="http://no"></img><img original="http://site/image"></img>'
 
-  test.equals ad.image, 'http://site/image'
+  test.equals ad.img, 'http://site/image'
   test.done()
 
 exports.testShouldConvertImageRelativeURIToAbsolute = (test) ->
   ad = parse_ad_from_src '<img src="/image"></img>'
 
-  test.equals ad.image, 'http://site/image'
+  test.equals ad.img, 'http://site/image'
   test.done()
 
 exports.testShouldNotGuessImageIfNoneFound = (test) ->
   ad = parse_ad_from_src '<ad></ad>'
 
-  test.equal undefined, ad.image
+  test.equal undefined, ad.img
   test.done()
 
 

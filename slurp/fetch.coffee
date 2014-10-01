@@ -32,11 +32,11 @@ set_id = (ad, handler) ->
     ad.id = hash ad.description
     ad
 
-  if not ad.image
+  if not ad.img
     handler null, set_id_from_description(ad)
   else
     client = request.defaults({})
-    client ad.image, (err, response, body) ->
+    client ad.img, (err, response, body) ->
       if err or response.statusCode != 200
         console.log('err: ' + err) if err
         console.log('http status code: ' + response.statusCode) if response
