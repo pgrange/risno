@@ -65,7 +65,7 @@ save_config = (config, handler) ->
 
 read_config (config_from_file) ->
   config = config_from_file
-  console.log(config)
+  console.log config
   app.listen 12045
   console.log 'configuration tool ready'
   console.log 'connect to http://localhost:12045'
