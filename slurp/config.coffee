@@ -6,6 +6,10 @@ express = require('express')
 fetch = require('./fetch')
 
 config = {}
+if process.argv[2]
+  config_file = process.argv[2]
+else
+  config_file = __dirname + '/config.json'
 
 app = express()
 app.use express.bodyParser()
@@ -40,7 +44,7 @@ app.post '/save/:site', (req, res) ->
   site.url_sequence = req.param('url_sequence').split('\n')
   site.ads = req.param('ad_selector')
   site.selectors.price = req.param('price_selector')
-  site.selectors.description = req.param('description selector')
+  site.selectors.description = req.param('description_selector')
   site.selectors.location = req.param('location_selector')
 
   save_config config, () ->
@@ -49,17 +53,15 @@ app.post '/save/:site', (req, res) ->
 
 read_config = (handler) ->
   fs = require('fs')
-  file = __dirname + '/config.json'
 
-  fs.readFile file, 'utf8', (err, data) ->
+  fs.readFile config_file, 'utf8', (err, data) ->
     throw err if err
     handler JSON.parse(data)
 
 save_config = (config, handler) ->
   fs = require('fs')
-  file = __dirname + '/config.json'
 
-  fs.writeFile file, JSON.stringify(config, null, 2), (err) ->
+  fs.writeFile config_file, JSON.stringify(config, null, 2), (err) ->
     throw err if err
     handler()
 
