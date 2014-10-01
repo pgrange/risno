@@ -15,7 +15,7 @@ app.use express.logger()
 app.get '/', (req, res) ->
   res.render 'index.jade', sites: config
 
-#TODO Filter requests so that e are not polluted by
+#TODO Filter requests so that we are not polluted by
 #     css, images and js needed by the navigator for
 #     the fetched page.
 #
