@@ -20,7 +20,7 @@ app.get '/', (req, res) ->
 #     the fetched page.
 #
 app.get '/:site', (req, res) ->
-  res.render 'config.jade', 
+  res.render 'config.jade',
     site: config[req.param('site')]
     site_id: req.param('site')
 
