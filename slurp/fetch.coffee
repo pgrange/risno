@@ -35,7 +35,7 @@ set_id = (ad, handler) ->
   if not ad.image
     handler null, set_id_from_description(ad)
   else
-    client = request.defaults()
+    client = request.defaults({})
     client ad.image, (err, response, body) ->
       if err or response.statusCode != 200
         console.log('err: ' + err) if err
