@@ -133,4 +133,3 @@ exports.fetching = nodeunit.testCase
       .catch (err) ->
         test.fail "elastic request failed", err
         test.done()
-#TODO set now as insertion date
