@@ -1,32 +1,32 @@
-exports.url = (params, region, page_num) ->
-  if params.region_id
-    throw "Unknown region " + region unless params.region_id[region]
-    region = params.region_id[region] if params.region_id
+exports.url = (site, region, page_num) ->
+  if site.region_id
+    throw "Unknown region " + region unless site.region_id[region]
+    region = site.region_id[region] if site.region_id
   replace = (format) ->
-    format = format.replace /HOST/, params.host
+    format = format.replace /HOST/, site.host
     format = format.replace /REGION/, region
     format = format.replace /PAGE/, page_num
 
-  if Array.isArray params.url_sequence
-    replace format for format in params.url_sequence
+  if Array.isArray site.url_sequence
+    replace format for format in site.url_sequence
   else
-    [replace params.url_sequence]
+    [replace site.url_sequence]
 
-exports.find_ads = (context, params) ->
-  context.find(params.ads)
+exports.find_ads = (context, site) ->
+  context.find(site.ads)
 
-exports.parse_ad = (ad, params) ->
-  params = {} unless params
-  selectors = params.selectors || {}
+exports.parse_ad = (ad, site) ->
+  site = {} unless site
+  selectors = site.selectors || {}
   price = /[0-9]+[0-9 ]*/.exec(ad.find(selectors.price).text())
   price = price[0].replace /\s/g, '' if price
 
   description: strip ad.find(selectors.description).text()
   location: strip ad.find(selectors.location).text()
   price: price
-  img: find_image ad, params.host
-  url: find_url ad, params.host
-  site_name: params.name
+  img: find_image ad, site.host
+  url: find_url ad, site.host
+  site_name: site.name
 
 find_image = (ad, host) ->
   img = ad.find('img[original]')
