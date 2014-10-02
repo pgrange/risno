@@ -129,6 +129,7 @@ exports.fetching = nodeunit.testCase
         test.equal 12043, ad.price
         test.equal "http://test.com/img1", ad.img
         test.equal "http://test.com/pub", ad.url
+        test.equal "test", ad.site_name
         test.done()
       .catch (err) ->
         test.fail "elastic request failed", err

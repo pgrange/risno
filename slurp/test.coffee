@@ -59,6 +59,12 @@ exports.testShouldNotFailIfSelectorsAreMissing = (test) ->
   
   test.done()
 
+exports.testShouldSetSiteNameInAds = (test) ->
+  ad = parse_ad_from_src ''
+
+  test.equals ad.site_name, 'test'
+  test.done()
+
 exports.testShouldParseAdImage = (test) ->
   ad = parse_ad_from_src '<img src="http://site/image"></img>'
 
@@ -108,6 +114,7 @@ parse_ad_from_src = (src) ->
   ad = cheerio.load('<ad>' + src + '</ad>')('ad')
   slurp.parse_ad ad, 
     host: 'site'
+    name: 'test'
     selectors: 
       price: 'price'
       location: 'location'

@@ -26,6 +26,7 @@ exports.parse_ad = (ad, params) ->
   price: price
   img: find_image ad, params.host
   url: find_url ad, params.host
+  site_name: params.name
 
 find_image = (ad, host) ->
   img = ad.find('img[original]')
