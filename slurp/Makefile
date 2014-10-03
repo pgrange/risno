@@ -16,7 +16,7 @@ help:
 config: compile public/js/bundle.js
 	node config
 
-public/js/bundle.js: public/js/parsing.js
+public/js/bundle.js: public/js/parsing.js slurp.js
 	$(BROWSERIFY) public/js/parsing.js -o public/js/bundle.js
 
 test: compile elastic_running
