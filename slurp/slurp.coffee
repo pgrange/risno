@@ -1,7 +1,7 @@
 exports.url = (site, region, page_num) ->
   if site.region_id
     throw "Unknown region " + region unless site.region_id[region]
-    region = site.region_id[region] if site.region_id
+    region = site.region_id[region]
   replace = (format) ->
     format = format.replace /HOST/, site.host
     format = format.replace /REGION/, region
