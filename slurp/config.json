@@ -15,6 +15,22 @@
       "location": ".desc cite"
     }
   },
+  "a_vendre_a_louer": {
+    "name": "a-vendre-a-louer",
+    "host": "www.avendrealouer.fr",
+    "url_sequence": [
+      "http://HOST/recherche.html?pageIndex=PAGE&sortPropertyName=ReleaseDate&sortDirection=Descending&searchTypeID=1&typeGroupCategoryID=1&transactionId=1&localityIds=REGION&typeGroupIds=1,2,3,4,5,7,9,10,11,12,98,105"
+    ],
+    "region_id": {
+      "aquitaine": "2-72"
+    },
+    "ads": "ul.search-results li",
+    "selectors": {
+      "price": ".price",
+      "description": ".wrapper",
+      "location": ".loca"
+    }
+  },
   "pages_jaunes": {
     "name": "pages-jaunes",
     "host": "www.pagesjaunes.fr",
