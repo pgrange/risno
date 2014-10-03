@@ -77,6 +77,7 @@ clone_site = (site) ->
   host: site.host
   url_sequence: site.url_sequence
   ads: site.ads
+  region_id: site.region_id
   selectors:
     price: site.price
     location: site.location
