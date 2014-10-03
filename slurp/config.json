@@ -1,4 +1,20 @@
 {
+  "paru_vendu": {
+    "name": "paru-vendu",
+    "host": "www.paruvendu.fr",
+    "url_sequence": [
+      "http://HOST/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbApp=1&tbDup=1&tbChb=1&tbLof=1&tbAtl=1&tbPla=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&pa=FR&lo=REGION&p=PAGE"
+    ],
+    "region_id": {
+      "aquitaine": "24,33,40,47,64"
+    },
+    "ads": ".annonce",
+    "selectors": {
+      "price": ".price",
+      "description": ".desc",
+      "location": ".desc cite"
+    }
+  },
   "pages_jaunes": {
     "name": "pages-jaunes",
     "host": "www.pagesjaunes.fr",
