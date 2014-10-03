@@ -52,6 +52,12 @@ exports.testShouldExtractPriceFromCrap = (test) ->
   test.equals ad.price, 12043595
   test.done()
 
+exports.testShouldExtractPriceFromUtterCrap = (test) ->
+  ad = parse_ad_from_src '<price>126&#160;900  € </price>'
+
+  test.equals ad.price, 126900
+  test.done()
+
 exports.testShouldNotFailIfSelectorsAreMissing = (test) ->
   ad= cheerio.load('<ad></ad>')('ad')
  

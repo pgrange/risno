@@ -18,8 +18,7 @@ exports.find_ads = (context, site) ->
 exports.parse_ad = (ad, site) ->
   site = {} unless site
   selectors = site.selectors || {}
-  price = /[0-9]+[0-9 ]*/.exec(ad.find(selectors.price).text())
-  price = price[0].replace /\s/g, '' if price
+  price = clear_price ad.find(selectors.price).text()
 
   description: strip ad.find(selectors.description).text()
   location: strip ad.find(selectors.location).text()
@@ -53,7 +52,12 @@ find_url = (ad, host) ->
 
 strip = (string) ->
   string.replace(/\s+/g, ' ').replace(/^\s/, '').replace(/\s$/, '')
- 
+
+clear_price = (price) ->
+  price = price.replace /\s/g, ''
+  price = /[0-9]+/.exec(price)
+  price[0] if price
+
 crappy_pages_jaunes_url = (a) ->
   param = /\?idAnnonce=[^']*/.exec(a.attr('data-pjonglet'))
   'http://www.pagesjaunes.fr/verticales/immo/afficherFicheDetaillee.do' + param
