@@ -31,11 +31,7 @@ find_image = (ad, host) ->
   img = ad.find('img[original]')
   src = if img.length > 0 then img.attr('original') else ad.find('img').attr('src')
 
-  if src
-    if /^http:/.test(src)
-      src
-    else
-      'http://' + host + src
+  absolutize src, host if src
   
 find_url = (ad, host) ->
   a = ad.find('a.idTag_PARTAGER')
@@ -43,12 +39,20 @@ find_url = (ad, host) ->
     crappy_pages_jaunes_url(a)
   else
     a = ad.find('.link-wrapper') #avendrealouer specific
-    href = if a.length > 0 then a.attr('href') else ad.parent('a').attr('href')
-
-    if /^http:/.test(href)
-      href
+    if a.length > 0
+      absolutize a.attr('href'), host
     else
-      'http://' + host + href
+      a = ad.parent('a')
+      if a.length > 0
+        absolutize a.attr('href'), host
+      else
+        absolutize ad.find('a').attr('href'), host
+
+absolutize = (url, host) ->
+  if /^http:/.test(url)
+    url
+  else
+    'http://' + host + url
 
 strip = (string) ->
   string.replace(/\s+/g, ' ').replace(/^\s/, '').replace(/\s$/, '')

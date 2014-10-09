@@ -104,6 +104,14 @@ exports.testShouldParseAdUrl = (test) ->
   test.equals ad.url, 'http://site/ad'
   test.done()
 
+exports.testShouldParseAdUrlWhenLinkInside = (test) ->
+  dom = cheerio.load('<ad><a href="http://site/ad"></a></ad>')
+
+  ad = slurp.parse_ad dom('ad')
+
+  test.equals ad.url, 'http://site/ad'
+  test.done()
+
 exports.testShouldExtractUrlFromStrangeAVendreALouerMethod = (test) ->
   ad = parse_ad_from_src '<a class="link-wrapper" href="/ad"></a>'
 
