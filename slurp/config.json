@@ -45,5 +45,20 @@
       "location": ".location",
       "description": ".dataCard"
     }
+  },
+  "immo_street": {
+    "name": "immo-street",
+    "host": "www.immostreet.fr",
+    "url_sequence": [
+      "http://HOST/Listing/Search?search_type=3&REGION&page=PREVIOUSPAGE"
+    ],
+    "region_id": {
+      "aquitaine": "place_id=4815370"
+    },
+    "ads": ".item",
+    "selectors": {
+      "price": ".price_item",
+      "description": ".title_item"
+    }
   }
 }
