@@ -31,12 +31,14 @@
     - risno
     - risno.json
 
+  - name: ensure apt https transport
+    apt: pkg=apt-transport-https
   - name: depose node repo key
-    copy: src=node-repo-key.asc dest=/root/node-repo-key.asc
+    copy: src=nodesource.gpg.key dest=/root/nodesource.gpg.key
   - name: add node repo key
-    apt_key: file=/root/node-repo-key.asc state=present
+    apt_key: file=/root/nodesource.gpg.key state=present
   - name: add node repo
-    apt_repository: repo='deb http://ppa.launchpad.net/chris-lea/node.js/ubuntu oneiric main'
+    apt_repository: repo='deb https://deb.nodesource.com/node wheezy main'
 
   - name: install nodejs
     apt: pkg=nodejs
