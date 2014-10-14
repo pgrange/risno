@@ -73,5 +73,21 @@
       "description": ".item-text",
       "location": ".item-title"
     }
+  },
+  "se_loger": {
+    "name": "se-loger",
+    "host": "www.seloger.com",
+    "url_sequence": [
+      "http://HOST/recherche.htm?idtt=2&idtypebien=1,10,11,12,13,14,2,4,9&tri=d_dt_crea&div=REGION&ANNONCEpg=PAGE"
+    ],
+    "region_id": {
+      "aquitaine": "2229"
+    },
+    "ads": "article.listing",
+    "selectors": {
+      "price": ".amount",
+      "description": ".listing_infos",
+      "location": ".listing_infos h2"
+    }
   }
 }
