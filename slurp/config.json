@@ -60,5 +60,18 @@
       "price": ".price_item",
       "description": ".title_item"
     }
+  },
+  "belle_immobilier": {
+    "name": "belle-immobilier",
+    "host": "www.belle-immobilier.fr",
+    "url_sequence": [
+      "http://HOST/fr/biens-immobiliers/?order_by=created_at&order_direction=DESC&page=PAGE"
+    ],
+    "ads": ".item",
+    "selectors": {
+      "price": ".price",
+      "description": ".item-text",
+      "location": ".item-title"
+    }
   }
 }
