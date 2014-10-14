@@ -22,7 +22,7 @@ class SiteHelper:
     self.date_class = None
     self.date_format = '%d/%m/%Y'
     self.date_regex = '[0-9]{2}/[0-9]{2}/[0-9]{4}'
-    self.fetch_timeout = 10
+    self.fetch_timeout = 20
 
   def _text(self, tag):
     text = tag.get_text() 
