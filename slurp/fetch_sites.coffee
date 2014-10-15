@@ -1,5 +1,7 @@
 require('source-map-support').install()
 
+async = require('async')
+
 require('nconf').defaults({elastic_db: 'localhost:9299'})
 
 fetch = require('./fetch')
@@ -16,12 +18,15 @@ read_config = (handler) ->
     handler JSON.parse(data)
 
 read_config (config) ->
-  console.log config
-  for page in [1..200]
-    for id, site of config
-      do (site, page) ->
+  for id, site of config
+    do (site) ->
+      async.mapLimit [1..200], 10, (page, callback) ->
         console.log ' [_] fetching page ' + page + ' of ' + site.name
         fetch.fetch_store_ads site, 'aquitaine', page, (err) ->
-          console.log ' [x] fetched page ' + page + ' of ' + site.name
-          console.log(err) if err
-
+          if err
+            console.log ' [*] error fetching page ' + page + ' of ' + site.name + err
+          else
+            console.log ' [x] fetched page ' + page + ' of ' + site.name
+          callback()
+      , (err, results) ->
+        console.log 'done'
