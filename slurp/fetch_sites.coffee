@@ -20,7 +20,7 @@ read_config = (handler) ->
 read_config (config) ->
   for id, site of config
     do (site) ->
-      async.mapLimit [1..200], 10, (page, callback) ->
+      async.mapLimit [1..200], 1, (page, callback) ->
         console.log ' [_] fetching page ' + page + ' of ' + site.name
         fetch.fetch_store_ads site, 'aquitaine', page, (err) ->
           if err
