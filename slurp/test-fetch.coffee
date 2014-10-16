@@ -120,7 +120,7 @@ exports.fetching = nodeunit.testCase
       test.equal null, err
       elastic_client.get
         index: 'ads'
-        type: 'ad'
+        type: 'immo'
         id: hash('1')
       .then (result) ->
         ad = result._source

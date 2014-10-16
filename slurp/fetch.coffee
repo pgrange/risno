@@ -76,7 +76,7 @@ exports.fetch_store_ads = (site, region, page, handler) ->
       insert_ad = (ad, handler) ->
         elastic_client.index
           index: "ads"
-          type: "ad"
+          type: "immo"
           id: ad.id
           body: ad
         .then () -> handler()
