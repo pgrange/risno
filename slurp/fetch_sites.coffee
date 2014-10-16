@@ -2,7 +2,10 @@ require('source-map-support').install()
 
 async = require('async')
 
-require('nconf').defaults({elastic_db: 'localhost:9299'})
+nconf.argv()
+     .env()
+     .file({ file: '/etc/opt/risno.json' })
+     .defaults({elastic_db: 'localhost:9200'})
 
 fetch = require('./fetch')
 if process.argv[2]

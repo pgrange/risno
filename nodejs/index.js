@@ -8,7 +8,7 @@ var nodemailer = require('nodemailer')
 nconf.argv()
      .env()
      .file({ file: '/etc/opt/risno.json' })
-     .defaults({ listen_port: 12043})
+     .defaults({ listen_port: 12043, elastic_db: 'localhost:9200'})
 
 
 var app = express()
@@ -221,12 +221,13 @@ app.get('/:user_code', function(req, res) {
 //new elasticsearch client part
 var elasticsearch = require('elasticsearch');
 var client = new elasticsearch.Client({
-  host: 'localhost:9200'
+  host: nconf.get('elastic_db')
 });
 
 //elastic part
 var nc = require('elastic.js/elastic-node-client')
-ejs.client = nc.NodeClient('localhost', 9200);
+var host_port = nconf.get('elastic_db').split(':')
+ejs.client = nc.NodeClient(host_port[0], host_port[1]);
 var e_index = 'ads';
 var e_type = 'immo';
 
