@@ -60,7 +60,7 @@ strip = (string) ->
 clear_price = (price) ->
   price = price.replace /\s/g, ''
   price = /[0-9]+/.exec(price)
-  price[0] if price
+  parseInt price[0] if price
 
 crappy_pages_jaunes_url = (a) ->
   param = /\?idAnnonce=[^']*/.exec(a.attr('data-pjonglet'))

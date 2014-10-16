@@ -43,7 +43,7 @@ exports.testShouldParseAdLocation = (test) ->
 exports.testShouldParseAdPrice = (test) ->
   ad = parse_ad_from_src '<price>12043</price>'
 
-  test.equals ad.price, 12043
+  test.strictEqual ad.price, 12043
   test.done()
 
 exports.testShouldExtractPriceFromCrap = (test) ->
