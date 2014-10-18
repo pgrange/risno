@@ -1,5 +1,6 @@
 require('source-map-support').install()
 
+nconf = require('nconf')
 async = require('async')
 
 nconf.argv()
