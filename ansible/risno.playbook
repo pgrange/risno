@@ -60,22 +60,27 @@
     user: name=risno
           shell=/bin/false createhome=no
   - name: crontab to fetch new pubs
+    cron: name="fetch pubs from sites" cron_file=risno user=risno
+          hour=15 minute=1
+          job="node /opt/risno/slurp/fetch_sites >>/var/opt/risno/fetch.log 2>&1"
+  - name: remove old crontab to fetch new pubs
     cron: name="fetch pubs" cron_file=risno user=risno
           hour=15 minute=1
           job="python /opt/risno/fetch_pubs.py --logic-immo --se-loger --paru-vendu --avendre-alouer --pages-jaunes --immo-street --belle-immobilier --region aquitaine >>/var/opt/risno/risno.log 2>&1"
+          state="absent"
   - name: crontab to update locations
     cron: name="update locations" cron_file=risno user=risno
           hour=17 minute=10
-          job="python /opt/risno/update_locations.py >>/var/opt/risno/risno.log 2>&1" 
+          job="python /opt/risno/update_locations.py >>/var/opt/risno/upd_locations.log 2>&1" 
   - name: crontab to update types
     cron: name="update types" cron_file=risno user=risno
           hour=17 minute=1
-          job="python /opt/risno/update_type.py >>/var/opt/risno/risno.log 2>&1" 
+          job="python /opt/risno/update_type.py >>/var/opt/risno/upd_types.log 2>&1" 
   - name: crontab to check for expired pubs
     cron: name="expire pubs" cron_file=risno user=risno
           hour=1 minute=1
-          job="python /opt/risno/expire_pubs.py --logic-immo --se-loger --paru-vendu --avendre-alouer --pages-jaunes --immo-street --belle-immobilier >>/var/opt/risno/risno.log 2>&1"
+          job="python /opt/risno/expire_pubs.py --logic-immo --se-loger --paru-vendu --avendre-alouer --pages-jaunes --immo-street --belle-immobilier >>/var/opt/risno/expire.log 2>&1"
   - name: crontab to purge expired pubs
     cron: name="purge expired pubs" cron_file=risno user=risno
           hour=14 minute=1
-          job="python /opt/risno/purge_pubs.py >>/var/opt/risno/risno.log 2>&1"
+          job="python /opt/risno/purge_pubs.py >>/var/opt/risno/purge.log 2>&1"
