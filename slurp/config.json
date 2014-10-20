@@ -1,5 +1,6 @@
 {
   "paru_vendu": {
+    "force_encoding": "latin1",
     "name": "paru-vendu",
     "host": "www.paruvendu.fr",
     "url_sequence": [

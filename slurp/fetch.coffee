@@ -1,5 +1,7 @@
 require('source-map-support').install()
 
+require('iconv-lite').extendNodeEncodings()
+
 request = require('request')
 cheerio = require('cheerio')
 async = require('async')
@@ -62,7 +64,10 @@ exports.fetch_ads = (site, region, page, handler) ->
 exports.fetch_page = (site, region, page, handler) ->
   url = slurp.url site, region, page
 
-  client = request.defaults({jar: true})
+  if site.force_encoding
+    client = request.defaults({jar: true, encoding: site.force_encoding})
+  else
+    client = request.defaults({jar: true})
 
   fetch_page client, url, handler
 
