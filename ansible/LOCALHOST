@@ -1,0 +1,7 @@
+[risno]
+localhost ansible_connection=local
+
+[risno:vars]
+smtp_host=host.smtp
+smtp_user=contact@risno.org
+smtp_passwd=none
