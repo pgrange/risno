@@ -1,5 +1,8 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
+#
+# credit : https://github.com/bfmartin/ansible-sshknownhosts
+#
 
 
 import re
