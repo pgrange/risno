@@ -1,0 +1,12 @@
+- name: depose docker repo key
+  copy: src=docker-repo-key.asc dest=/root/docker-repo-key.asc
+- name: add docker repo key
+  apt_key: file=/root/docker-repo-key.asc state=present
+- name: add docker repo
+  apt_repository: repo='deb http://get.docker.io/ubuntu docker main'
+
+- name: install docker
+  apt: pkg=lxc-docker
+
+- name: install elastic risno configuration files
+  copy: src=risno dest=/etc/opt/risno
