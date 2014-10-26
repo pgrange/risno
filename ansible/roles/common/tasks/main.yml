@@ -13,12 +13,6 @@
   apt: pkg=git
 - name: add github.com to known hosts
   sshknownhosts: host=github.com
-#- shell: "[ $(ssh-keygen -F github.com -f /etc/ssh/ssh_known_hosts | wc -l) -ne 0 ]"
-#  ignore_errors: True
-#  register: github_known
-#- name: add github.com to known hosts
-#  shell: ssh-keyscan -H github.com >> /etc/ssh/ssh_known_hosts
-#  when: github_known|failed
 - name: ensure risno git repo present
   git: repo=https://github.com/pgrange/risno.git dest=/opt/risno update=yes force=no
 
