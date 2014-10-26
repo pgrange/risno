@@ -10,3 +10,14 @@
 
 - name: install elastic risno configuration files
   copy: src=risno dest=/etc/opt/risno
+
+- name: install docker-py with pip
+  pip: name=docker-py
+ 
+- name: start elasticsearch database
+  docker:
+    image: pgrange/elasticsearch
+    ports: 9200:9200 
+    volumes:
+    - '/var/opt/risno/elastic-storage/log/:/var/log/elasticsearch'
+    - '/var/opt/risno/elastic-storage/data/:/var/lib/elasticsearch'
