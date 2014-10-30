@@ -1,0 +1,5 @@
+- hosts: risno
+  sudo: yes
+  roles:
+    - common
+    - risno
