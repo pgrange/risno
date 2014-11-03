@@ -21,3 +21,6 @@
     volumes:
     - '/var/opt/risno/elastic-storage/log/:/var/log/elasticsearch'
     - '/var/opt/risno/elastic-storage/data/:/var/lib/elasticsearch'
+
+- name: activate elastic search backup
+  elasticsearchbkp: location=/var/lib/elasticsearch/backup

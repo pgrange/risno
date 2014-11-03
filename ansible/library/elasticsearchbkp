@@ -1,0 +1,108 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+
+import urllib2
+import requests
+import time
+import json
+
+import socket
+import httplib
+
+DOCUMENTATION = """
+---
+module: elasticsearchbkp
+short_description: create a backup repository in elasticsearch.
+description:
+  - TODO
+
+options:
+  location:
+    required: true
+    description:
+      - path where elasticsearch should store its backups
+"""
+
+EXAMPLES = r"""
+Examples:
+
+  - name: set elasticsearch backup
+    action: elasticsearchbkp location=/var/lib/elasticsearch/backup
+"""
+
+def snapshot_repo_present(location, retries=0):
+  def retry(cause, location, retries):
+    if retries < 5:
+      time.sleep(5)
+      return snapshot_repo_present(location, retries + 1)
+    else:
+      raise ElasticError("Unable to contact elastic db after " + str(retries) + " retries")
+  try:
+    response = urllib2.urlopen('http://localhost:9200/_snapshot/backup').read()
+    snapshot = json.loads(response)
+    return location == snapshot['backup']['settings']['location']
+  except urllib2.HTTPError as err:
+    if err.code == 404: return False
+    else: raise err
+  except socket.error as err:
+    retry(err, location, retries)
+  except httplib.BadStatusLine as err:
+    retry(err, location, retries)
+
+class ElasticError:
+  def __init__(self, msg):
+    self.msg = msg
+  def __str__(self):
+    return msg
+
+def create_snapshot_repo(location):
+  r = requests.put("http://localhost:9200/_snapshot/backup",
+      data=json.dumps({"type": "fs", "settings": {"location": location}}))
+  if r.status_code != 200:
+    msg = str(self.response.status_code) + ' / ' + str(self.response.text)
+    raise ElasticError(msg)
+
+def present(module, location):
+  try:
+    changed = False
+    msg = ""
+    to_change = not snapshot_repo_present(location)
+    if to_change:
+      create_snapshot_repo(location)
+      changed = True
+
+    module.exit_json(changed=changed, msg=msg)
+  except ElasticError as err:
+    module.fail_json(changed=False, msg=err.msg)
+
+#TODO support check mode
+def absent(module, location):
+    changed = False
+    msg = ""
+    module.exit_json(changed=changed, msg=msg)
+
+
+def main():
+    module = AnsibleModule(
+        argument_spec=dict(
+            location=dict(required=True),
+            state=dict(default='present', choices=['absent', 'present']),
+        ),
+        supports_check_mode=True
+    )
+
+    location = module.params['location']
+
+    if 'location' not in module.params:
+        module.fail_json(msg='location= is required')
+
+    if module.params['state'] == 'present':
+        present(module, location)
+    else:
+        absent(module, location)
+
+# this is magic, see lib/ansible/module_common.py
+#<<INCLUDE_ANSIBLE_MODULE_COMMON>>
+
+main()
