@@ -49,6 +49,8 @@ def snapshot_repo_present(location, retries=0):
     retry(err, location, retries)
   except httplib.BadStatusLine as err:
     retry(err, location, retries)
+  except urllib2.URLError as err:
+    retry(err, location, retries)
 
 class ElasticError:
   def __init__(self, msg):
