@@ -77,12 +77,13 @@ def present(module, location):
     msg = ""
     to_change = not snapshot_repo_present(location)
     if to_change:
-      create_snapshot_repo(location)
+      if not module.check_mode: create_snapshot_repo(location)
       changed = True
 
     module.exit_json(changed=changed, msg=msg)
   except ElasticError as err:
-    module.fail_json(changed=False, msg=err.msg)
+    if module.check_mode: module.exit_json(changed=True, mmsg=err.msg)
+    else: module.fail_json(changed=False, msg=err.msg)
 
 def absent(module, location):
   try:
@@ -90,14 +91,14 @@ def absent(module, location):
     msg = ""
     to_change = snapshot_repo_present(location)
     if to_change:
-      delete_snapshot_repo(location)
+      if not module.check_mode: delete_snapshot_repo(location)
       changed = True
       msg = "backup snapshot repo with location " + location + " suppressed"
     module.exit_json(changed=changed, msg=msg)
   except ElasticError as err:
+    if module.check_mode: module.exit_json(changed=True, mmsg=err.msg)
     module.fail_json(changed=False, msg=err.msg)
 
-#TODO support check mode
 def main():
     module = AnsibleModule(
         argument_spec=dict(
