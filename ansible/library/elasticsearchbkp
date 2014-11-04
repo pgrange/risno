@@ -63,6 +63,12 @@ def create_snapshot_repo(location):
     msg = str(self.response.status_code) + ' / ' + str(self.response.text)
     raise ElasticError(msg)
 
+def delete_snapshot_repo(location):
+  r = requests.delete("http://localhost:9200/_snapshot/backup")
+  if r.status_code != 200:
+    msg = str(self.response.status_code) + ' / ' + str(self.response.text)
+    raise ElasticError(msg)
+
 def present(module, location):
   try:
     changed = False
@@ -76,13 +82,20 @@ def present(module, location):
   except ElasticError as err:
     module.fail_json(changed=False, msg=err.msg)
 
-#TODO support check mode
 def absent(module, location):
+  try:
     changed = False
     msg = ""
+    to_change = snapshot_repo_present(location)
+    if to_change:
+      delete_snapshot_repo(location)
+      changed = True
+      msg = "backup snapshot repo with location " + location + " suppressed"
     module.exit_json(changed=changed, msg=msg)
+  except ElasticError as err:
+    module.fail_json(changed=False, msg=err.msg)
 
-
+#TODO support check mode
 def main():
     module = AnsibleModule(
         argument_spec=dict(
