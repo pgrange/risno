@@ -24,3 +24,8 @@
 
 - name: activate elastic search backup
   elasticsearchbkp: location=/var/lib/elasticsearch/backup
+
+- name: setup cron to take elastic search snaphot
+  cron: name="snapshot elastic search" cron_file=elastic_snapshot
+        minute=7 user=root
+        job="curl -XPUT localhost:9200/_snapshot/backup/$(date +\%Y\%m\%d\%H\%m\%S) >>/var/opt/risno/snapshot.log 2>&1"
