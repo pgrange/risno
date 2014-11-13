@@ -25,7 +25,7 @@ fetch_page = (client, sequence, handler) ->
       handler(undefined, response.statusCode, body)
   
 
-set_id = (ad, handler) ->
+set_d = (ad, handler) ->
   hash = (value) ->
     md5 = crypto.createHash('md5')
     md5.update value
@@ -37,15 +37,7 @@ set_id = (ad, handler) ->
   if not ad.img
     handler null, set_id_from_description(ad)
   else
-    #TODO fix socket time_wait
-    #Issue resembles https://github.com/request/request/issues/287
-    #I don't understand all the issue but it seems
-    #that performing requests inside a request event handler
-    #results in sockets in TIME_WAIT state.
-    #And here, we are in a request handler and we perform a request...
-    #and we see a lot of connections in TIME_WAIT
-    #When commenting the following code, we do not see TIME_WAIT anymore
-    client = request.defaults({})
+    client = request.defaults({forever: true})
     client ad.img, (err, response, body) ->
       if err or response.statusCode != 200
         console.log('err: ' + err) if err
@@ -73,9 +65,9 @@ exports.fetch_page = (site, region, page, handler) ->
   url = slurp.url site, region, page
 
   if site.force_encoding
-    client = request.defaults({jar: true, encoding: site.force_encoding})
+    client = request.defaults({forever: true, jar: true, encoding: site.force_encoding})
   else
-    client = request.defaults({jar: true})
+    client = request.defaults({forever: true, jar: true})
 
   fetch_page client, url, handler
 
