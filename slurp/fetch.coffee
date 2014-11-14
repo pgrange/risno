@@ -25,7 +25,7 @@ fetch_page = (client, sequence, handler) ->
       handler(undefined, response.statusCode, body)
   
 
-set_d = (ad, handler) ->
+set_id = (ad, handler) ->
   hash = (value) ->
     md5 = crypto.createHash('md5')
     md5.update value
