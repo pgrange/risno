@@ -58,7 +58,7 @@ exports.fetch_ads = (site, region, page, handler) ->
       ads = slurp.find_ads page('body'), site
       parsed_ads = (slurp.parse_ad page(ad), site for ad in ads)
 
-      async.map parsed_ads, set_id, (err, parsed_ads) ->
+      async.mapLimit parsed_ads, 1, set_id, (err, parsed_ads) ->
         handler null, statusCode, parsed_ads
 
 exports.fetch_page = (site, region, page, handler) ->
@@ -76,19 +76,30 @@ exports.fetch_store_ads = (site, region, page, handler) ->
     if not ads
       handler 'Unable to fetch ads: ' + err + statusCode unless ads
     else
-      elastic_client = new elasticsearch.Client
-                           host: nconf.get('elastic_db')
-                           maxSockets: 1
-                           minSockets: 1
-      insert_ad = (ad, handler) ->
-        elastic_client.index
-          index: "ads"
-          type: "immo"
-          id: ad.id
-          body: ad
-        .then () -> handler()
-        .catch (err) -> handler err
+      pool.acquire (err, elastic_client) ->
+        insert_ad = (ad, handler) ->
+          elastic_client.index
+            index: "ads"
+            type: "immo"
+            id: ad.id
+            body: ad
+          .then () -> handler()
+          .catch (err) -> handler err
 
-      async.map ads, insert_ad, (err) ->
-        elastic_client.close()
-        handler err
+        async.map ads, insert_ad, (err) ->
+          pool.release(elastic_client)
+          handler err
+
+poolModule = require('generic-pool')
+pool = poolModule.Pool
+  name     : 'elasticsearch',
+  create   : (callback) ->
+    elastic_client = new elasticsearch.Client
+      host: nconf.get('elastic_db')
+      maxSockets: 1
+    callback(null, elastic_client)
+  destroy  : (client) ->
+    client.close()
+  max      : 1,
+  #specifies how long a resource can stay idle in pool before being removed
+  idleTimeoutMillis : 10000,

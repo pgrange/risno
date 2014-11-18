@@ -30,6 +30,7 @@
     "async": "~0.9.0",
     "elasticsearch": "~2.4.3",
     "nconf": "*",
+    "generic-pool": "*",
     "iconv-lite": "*"
   },
   "devDependencies": {
