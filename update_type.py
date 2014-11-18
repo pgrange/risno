@@ -2,7 +2,7 @@
 
 import os
 
-from pyes import ES, TextQuery, MatchAllQuery, FilteredQuery, BoolQuery
+from pyes import ES, MatchQuery, MatchAllQuery, FilteredQuery, BoolQuery
 from pyes.filters import MissingFilter, TermFilter, ORFilter, MatchAllFilter
 
 elastic_url=os.environ.get('ELASTIC_URL', '127.0.0.1:9200')
@@ -35,7 +35,7 @@ def normalize_query_string(query_string):
 def search_type(text):
   q = BoolQuery(minimum_number_should_match=0)
   #TODO add synonyms instead of relying on 'french'
-  q.add_must(TextQuery('french', normalize_query_string(text)))
+  q.add_must(MatchQuery('french', normalize_query_string(text)))
   types = conn.search(query=q, indices="types")
   if len(types) < 1:
     log("KO", text)

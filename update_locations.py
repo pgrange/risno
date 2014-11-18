@@ -2,7 +2,7 @@
 
 import os
 
-from pyes import ES, TextQuery, MatchAllQuery, FilteredQuery, BoolQuery
+from pyes import ES, MatchQuery, MatchAllQuery, FilteredQuery, BoolQuery
 from pyes.filters import MissingFilter, TermFilter, ORFilter, MatchAllFilter
 
 elastic_url=os.environ.get('ELASTIC_URL', '127.0.0.1:9200')
@@ -33,8 +33,8 @@ def normalize_query_string(query_string):
 
 def search_city(text):
   q = BoolQuery(minimum_number_should_match=0)
-  q.add_must(TextQuery('name', normalize_query_string(text)))
-  q.add_should(TextQuery('zipcode', normalize_query_string(text)))
+  q.add_must(MatchQuery('name', normalize_query_string(text)))
+  q.add_should(MatchQuery('zipcode', normalize_query_string(text)))
   cities = conn.search(query=q, indices="cities")
   if len(cities) < 1:
     log("KO", text)
