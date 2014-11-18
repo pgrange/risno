@@ -78,6 +78,8 @@ exports.fetch_store_ads = (site, region, page, handler) ->
     else
       elastic_client = new elasticsearch.Client
                            host: nconf.get('elastic_db')
+                           maxSockets: 1
+                           minSockets: 1
       insert_ad = (ad, handler) ->
         elastic_client.index
           index: "ads"
