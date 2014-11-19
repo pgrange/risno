@@ -1,0 +1,46 @@
+#!/bin/bash
+
+install_dir=$(cd $(dirname $0) && pwd)
+
+old_index="ads_2.1"
+new_index="ads_2.2"
+alias="ads"
+
+curl -XPUT localhost:9200/${new_index} -d '
+{
+ "mappings": {
+  "immo": {
+   "_timestamp" : { 
+    "enabled" : true,
+    "store": true
+   },
+   "properties": {
+    "url": {"index": "not_analyzed", "type": "string"},
+    "img": {"index": "not_analyzed", "type": "string"},
+    "location": {"type": "string"},
+    "description": {"type": "string"},
+    "cities": {"type": "string"},
+    "price": {"type": "integer"},
+    "date": {"type": "date"},
+    "site_name": {"index": "not_analyzed", "type": "string"}
+   }
+  },
+  "opinion" : {
+   "_parent": {"type": "immo"},
+   "properties": {
+    "user_code" : { "type" : "string"},
+    "opinion": {"type": "string"}
+   }
+  }
+ }
+}'
+
+${install_dir}/../tools/copy_index.sh ${old_index} ${new_index}
+
+curl -XPOST 'http://localhost:9200/_aliases' -d "
+{
+    \"actions\" : [
+        { \"remove\" : { \"index\" : \"${old_index}\", \"alias\" : \"${alias}\" } },
+        { \"add\" : { \"index\" : \"${new_index}\", \"alias\" : \"${alias}\" } }
+    ]
+}"
