@@ -1,0 +1,13 @@
+#!/bin/bash
+
+curl -XPUT http://localhost:9200/utils -d '{
+ "mappings": {
+  "fetch_info": {
+   "properties": {
+    "last_fetch": {
+     "type": "date"
+    }
+   }
+  }
+ }
+}'

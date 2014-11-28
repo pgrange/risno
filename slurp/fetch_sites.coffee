@@ -3,6 +3,8 @@ require('source-map-support').install()
 nconf = require('nconf')
 async = require('async')
 
+elasticsearch = require('elasticsearch')
+
 nconf.argv()
      .env()
      .file({ file: '/etc/opt/risno.json' })
@@ -23,7 +25,8 @@ read_config = (handler) ->
 
 read_config (config) ->
   for id, site of config
-    do (site) ->
+    last_fetch_timestamp = Date.now()
+    do (site, last_fetch_timestamp) ->
       async.mapLimit [1..200], 2, (page, callback) ->
         console.log ' [_] fetching page ' + page + ' of ' + site.name
         fetch.fetch_store_ads site, 'aquitaine', page, (err) ->
@@ -31,6 +34,29 @@ read_config (config) ->
             console.log ' [*] error fetching page ' + page + ' of ' + site.name + err
           else
             console.log ' [x] fetched page ' + page + ' of ' + site.name
-          callback()
+          callback(null, err)
       , (err, results) ->
-        console.log 'done'
+          for fetch_err in results
+            errors = true if fetch_err
+          if errors
+            console.log site.name + " errors while fetching site. Not updating last fetch date"
+          else
+            update_last_fetch site, last_fetch_timestamp, () ->
+              console.log site.name + " fetched at " + last_fetch_timestamp
+
+update_last_fetch = (site, last_fetch_timestamp, handler) ->
+  client = new elasticsearch.Client
+    host: nconf.get('elastic_db')
+  client.index
+    index: "utils"
+    type: "fetch_info"
+    body:
+      site: site.name
+      last_fetch: last_fetch_timestamp
+  .then () ->
+    client.close()
+    handler()
+  .catch (err) ->
+    console.log err
+    client.close()
+    handler()
