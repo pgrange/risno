@@ -26,10 +26,11 @@ read_config = (handler) ->
 read_config (config) ->
   for id, site of config
     last_fetch_timestamp = Date.now()
-    do (site, last_fetch_timestamp) ->
+    region = 'aquitaine'
+    do (site, region, last_fetch_timestamp) ->
       async.mapLimit [1..200], 2, (page, callback) ->
         console.log ' [_] fetching page ' + page + ' of ' + site.name
-        fetch.fetch_store_ads site, 'aquitaine', page, (err) ->
+        fetch.fetch_store_ads site, region, page, (err) ->
           if err
             console.log ' [*] error fetching page ' + page + ' of ' + site.name + err
           else
@@ -41,10 +42,10 @@ read_config (config) ->
           if errors
             console.log site.name + " errors while fetching site. Not updating last fetch date"
           else
-            update_last_fetch site, last_fetch_timestamp, () ->
+            update_last_fetch site, region, last_fetch_timestamp, () ->
               console.log site.name + " fetched at " + last_fetch_timestamp
 
-update_last_fetch = (site, last_fetch_timestamp, handler) ->
+update_last_fetch = (site, region, last_fetch_timestamp, handler) ->
   client = new elasticsearch.Client
     host: nconf.get('elastic_db')
   client.index
@@ -52,6 +53,7 @@ update_last_fetch = (site, last_fetch_timestamp, handler) ->
     type: "fetch_info"
     body:
       site: site.name
+      region: region
       last_fetch: last_fetch_timestamp
   .then () ->
     client.close()
