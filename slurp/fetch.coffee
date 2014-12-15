@@ -88,7 +88,7 @@ exports.fetch_store_ads = (site, region, page, handler) ->
 
         async.map ads, insert_ad, (err) ->
           pool.release(elastic_client)
-          handler err
+          handler err, ads
 
 poolModule = require('generic-pool')
 pool = poolModule.Pool

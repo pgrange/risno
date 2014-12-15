@@ -134,3 +134,9 @@ exports.fetching = nodeunit.testCase
       .catch (err) ->
         test.fail "elastic request failed", err
         test.done()
+
+  testFetchAndStoreAdsShouldGiveListOfAdsToHandler: (test) ->
+    fetch.fetch_store_ads test_site, 'aquitaine', 2, (err, ads) ->
+      test.equal null, err
+      test.equal 3, ads.length
+      test.done()
