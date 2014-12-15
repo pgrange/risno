@@ -1,5 +1,6 @@
 export ELASTIC_PORT=9299
 export ELASTIC_URL=localhost:$(ELASTIC_PORT)
+export BLUEBIRD_DEBUG=1
 
 SRC=$(wildcard *.coffee)
 JS=$(SRC:.coffee=.js)
