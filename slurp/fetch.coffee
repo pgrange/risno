@@ -83,8 +83,8 @@ exports.fetch_store_ads = (site, region, page, handler) ->
             type: "immo"
             id: ad.id
             body: ad
+          .catch (err) -> handler(err)
           .then () -> handler()
-          .catch (err) -> handler err
 
         async.map ads, insert_ad, (err) ->
           pool.release(elastic_client)
