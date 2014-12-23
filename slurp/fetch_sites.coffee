@@ -27,15 +27,28 @@ read_config (config) ->
   for id, site of config
     last_fetch_timestamp = Date.now()
     region = 'aquitaine'
+    stop_after_page = 0
     do (site, region, last_fetch_timestamp) ->
       async.mapLimit [1..200], 2, (page, callback) ->
-        console.log ' [_] fetching page ' + page + ' of ' + site.name
-        fetch.fetch_store_ads site, region, page, (err) ->
-          if err
-            console.log ' [*] error fetching page ' + page + ' of ' + site.name + err
-          else
-            console.log ' [x] fetched page ' + page + ' of ' + site.name
-          callback(null, err)
+        if stop_after_page and page > stop_after_page
+          console.log ' [X] cancel (stopping) page ' + page + ' of ' + site.name
+          callback(null, null)
+        else
+          console.log ' [_] fetching page ' + page + ' of ' + site.name
+          fetch.fetch_store_ads site, region, page, (err) ->
+            #TODO add ads and replaced ads parameter
+            #     1. if one of replaced ads is "younger"
+            #     than last_fetch_timestamp, we suppose
+            #     that we are starting to loop
+            #     throug ads and we stop.
+            #     2. or if there were no ads in the page
+            #     we should also stop...
+            #     to stop : stop_after_page=page
+            if err
+              console.log ' [*] error fetching page ' + page + ' of ' + site.name + err
+            else
+              console.log ' [x] fetched page ' + page + ' of ' + site.name
+            callback(null, err)
       , (err, results) ->
           for fetch_err in results
             errors = true if fetch_err

@@ -81,9 +81,16 @@ exports.fetching = nodeunit.testCase
     nconf.defaults {elastic_db: 'localhost:9299'}
     this.elastic_client = new elasticsearch.Client
                       host: 'localhost:9299'
-    this.elastic_client.indices.delete index: 'ads'
-      .then () -> done()
-      .catch () -> done()
+    do (elastic_client = this.elastic_client) ->
+      elastic_client.indices.delete
+        index: 'ads'
+        refresh: true
+      .finally () ->
+        elastic_client.indices.create
+          index: 'ads'
+          refresh: true
+        .finally () ->
+          done()
   tearDown: (done) ->
     restore_http_client()
     this.elastic_client.close()
@@ -134,9 +141,32 @@ exports.fetching = nodeunit.testCase
       .catch (err) ->
         test.fail "elastic request failed", err
         test.done()
-
+ 
   testFetchAndStoreAdsShouldGiveListOfAdsToHandler: (test) ->
     fetch.fetch_store_ads test_site, 'aquitaine', 2, (err, ads) ->
       test.equal null, err
       test.equal 3, ads.length
+      test.done()
+
+  testFetchAndStoreAdsShouldGiveOldValuesOfUpdatedAdsToHandler: (test) ->
+    this.elastic_client.index
+      index: "ads"
+      type: "immo"
+      id: hash("1")
+      body:
+        description: "old description"
+        localtion: "old location"
+        price: 12043
+        img: "http://test.com/img1"
+        url: "http://test.com/pub"
+        site_name: "test"
+    .then () ->
+      fetch.fetch_store_ads test_site, 'aquitaine', 2,
+        (err, ads, replaced_ads) ->
+          test.equal null, err
+          test.equal 1, replaced_ads.length
+          test.equal "old description", replaced_ads[0].description
+          test.done()
+    .catch (err) ->
+      test.fail err
       test.done()

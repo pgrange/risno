@@ -74,21 +74,32 @@ exports.fetch_page = (site, region, page, handler) ->
 exports.fetch_store_ads = (site, region, page, handler) ->
   exports.fetch_ads site, region, page, (err, statusCode, ads) ->
     if not ads
-      handler 'Unable to fetch ads: ' + err + statusCode unless ads
+      handler 'Unable to fetch ads: ' + err + statusCode
     else
       pool.acquire (err, elastic_client) ->
-        insert_ad = (ad, handler) ->
+        insert_or_update_ad = (ad, handler) ->
+          #try to fetch old ad from db
+          elastic_client.get
+            index: "ads"
+            type: "immo"
+            id: ad.id
+          .then (result) ->
+            insert_ad ad, result._source, handler
+          .catch (err) ->
+            insert_ad ad, null, handler
+
+        insert_ad = (ad, old_ad, handler) ->
           elastic_client.index
             index: "ads"
             type: "immo"
             id: ad.id
             body: ad
-          .catch (err) -> handler(err)
-          .then () -> handler()
+          .catch (err) -> handler err
+          .then () -> handler null, old_ad
 
-        async.map ads, insert_ad, (err) ->
-          pool.release(elastic_client)
-          handler err, ads
+        async.map ads, insert_or_update_ad, (err, replaced_ads) ->
+          pool.release elastic_client
+          handler err, ads, (ad for ad in replaced_ads when ad)
 
 poolModule = require('generic-pool')
 pool = poolModule.Pool
