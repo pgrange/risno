@@ -83,8 +83,9 @@ exports.fetch_store_ads = (site, region, page, handler) ->
             index: "ads"
             type: "immo"
             id: ad.id
+            fields: ['_source', '_timestamp']
           .then (result) ->
-            insert_ad ad, result._source, handler
+            insert_ad ad, result, handler
           .catch (err) ->
             insert_ad ad, null, handler
 

@@ -88,6 +88,12 @@ exports.fetching = nodeunit.testCase
       .finally () ->
         elastic_client.indices.create
           index: 'ads'
+          body:
+            mappings:
+              immo:
+                _timestamp:
+                  enabled: true
+                  store: true
           refresh: true
         .finally () ->
           done()
@@ -155,7 +161,7 @@ exports.fetching = nodeunit.testCase
       id: hash("1")
       body:
         description: "old description"
-        localtion: "old location"
+        location: "old location"
         price: 12043
         img: "http://test.com/img1"
         url: "http://test.com/pub"
@@ -163,9 +169,11 @@ exports.fetching = nodeunit.testCase
     .then () ->
       fetch.fetch_store_ads test_site, 'aquitaine', 2,
         (err, ads, replaced_ads) ->
+          console.log replaced_ads
           test.equal null, err
           test.equal 1, replaced_ads.length
-          test.equal "old description", replaced_ads[0].description
+          test.equal "old description", replaced_ads[0]._source.description
+          test.notEqual null, replaced_ads[0].fields._timestamp
           test.done()
     .catch (err) ->
       test.fail err

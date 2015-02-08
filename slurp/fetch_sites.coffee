@@ -35,7 +35,7 @@ read_config (config) ->
           callback(null, null)
         else
           console.log ' [_] fetching page ' + page + ' of ' + site.name
-          fetch.fetch_store_ads site, region, page, (err) ->
+          fetch.fetch_store_ads site, region, page, (err, ads, old_ads) ->
             #TODO add ads and replaced ads parameter
             #     1. if one of replaced ads is "younger"
             #     than last_fetch_timestamp, we suppose
@@ -48,6 +48,9 @@ read_config (config) ->
               console.log ' [*] error fetching page ' + page + ' of ' + site.name + err
             else
               console.log ' [x] fetched page ' + page + ' of ' + site.name
+              if one_is_younger last_fetch_timestamp, old_ads
+                console.log ' [X] we are looping through ads, stopping fetch of ' + site.name + ' after ' + page + ' pages.'
+                stop_after_page = page
             callback(null, err)
       , (err, results) ->
           for fetch_err in results
@@ -75,3 +78,8 @@ update_last_fetch = (site, region, last_fetch_timestamp, handler) ->
     console.log err
     client.close()
     handler()
+
+
+one_is_younger = (timestamp, ads) ->
+  youngers = (ad for ad in ads when ad.fields and ad.fields._timestamp > timestamp)
+  youngers.length
