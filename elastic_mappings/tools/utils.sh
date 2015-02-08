@@ -6,7 +6,7 @@ function init_scroll() {
   local index=$1
   curl -fs -XGET "${ELASTIC_DB}/${index}/_search?search_type=scan&pretty&size=1000&scroll=10m" -d '
   {
-   "fields": ["_parent", "_source"],
+   "fields": ["_parent", "_source", "_timestamp"],
    "query": {"match_all" : {}}
   }' \
   | jq -r "._scroll_id,.hits.total"
