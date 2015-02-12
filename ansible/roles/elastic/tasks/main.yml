@@ -27,5 +27,10 @@
 
 - name: setup cron to take elastic search snaphot
   cron: name="snapshot elastic search" cron_file=elastic_snapshot
-        minute=7 user=root
+        minute=7 user=risno
         job="curl -XPUT localhost:9200/_snapshot/backup/$(date +\%Y\%m\%d\%H\%m\%S) >>/var/opt/risno/snapshot.log 2>&1"
+
+- name: setup cron to remove a month older elasticsearch backups
+  cron: name="snaphot elastic search purge" cron_file=elastic_snapshot
+        weekday=5 user=risno
+        job="/opt/risno/elastic_backup_purge.sh >>/var/opt/risno/snapshot_purge.log 2>&1"
