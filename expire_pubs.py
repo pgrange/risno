@@ -2,12 +2,12 @@
 
 import os
 
-from pyes import ES, TermQuery, TextQuery, MatchAllQuery, FilteredQuery, BoolQuery
-from pyes.filters import MissingFilter, TermFilter, ORFilter, MatchAllFilter
+from pyes import ES, MatchQuery, TermQuery, TextQuery, MatchAllQuery, FilteredQuery, BoolQuery, ESRange
+from pyes.filters import MissingFilter, TermFilter, ORFilter, MatchAllFilter, RangeFilter
 
 elastic_url=os.environ.get('ELASTIC_URL', '127.0.0.1:9200')
 conn = ES(elastic_url) # Use HTTP
-e_index = "ads_2.1"
+e_index = "ads_2.2"
 
 log_context = ""
 def log(status, message = ""):
@@ -26,25 +26,24 @@ def check_index_version():
 def insert_to_db(pub):
   conn.update(e_index, "immo", pub.get_id(), document=pub, upsert=pub)
 
-def get_pubs(site):
+def get_to_expire_pubs(site, last_fetch):
   q = TermQuery('site_name', site.name)
   q = FilteredQuery(q, MissingFilter('expired'))
+  q = FilteredQuery(q, RangeFilter(qrange=ESRange('_timestamp', to_value=last_fetch)))
+
   pubs = conn.search(query=q, indices=e_index, doc_types="immo")
   return pubs
 
 def show_pub(pub):
   print pub
 
+def last_fetch_timestamp(site):
+  q = MatchQuery('site', site.name)
+  pubs = conn.search(query=q, indices='utils', doc_types="fetch_info", sort='last_fetch:desc')
+  return pubs[0]['last_fetch']
+
 def expire(pub, site):
-  try:
-    if site.expired(pub['url']):
-      pub['expired'] = True
-      return True
-    else:
-      return False
-  except:
-    log("KO", "unable to check expiration of " + pub['url'] + " err: " + traceback.format_exc())
-    return False
+  pub['expired'] = True
 
 if __name__ == '__main__':
   import traceback
@@ -88,17 +87,17 @@ if __name__ == '__main__':
   if args.belle_immobilier: sites.append(BelleImmobilier())
 
   for site in sites:
-    pubs = get_pubs(site)
+    pubs = get_to_expire_pubs(site, last_fetch_timestamp(site))
 
     count = 0
     expired = 0
     total = pubs.total
-    log('OK', str(total) + ' pubs to update')
+    log('OK', str(total) + ' pubs to expire')
     for pub in pubs:
-      if expire(pub, site):
-        expired = expired + 1
-        if args.test: show_pub(pub)
-        else: insert_to_db(pub)
+      expire(pub, site)
+      expired = expired + 1
+      if args.test: show_pub(pub)
+      else: insert_to_db(pub)
       count = count + 1
       if count % 20 == 0:
         log('OK', str(count) + ' / ' + str(total) + ' updated')

@@ -28,29 +28,35 @@ read_config (config) ->
     last_fetch_timestamp = Date.now()
     region = 'aquitaine'
     stop_after_page = 0
+    found_duplicate_on_page = []
     do (site, region, last_fetch_timestamp) ->
-      async.mapLimit [1..200], 2, (page, callback) ->
+      async.mapLimit [1..3000], 2, (page, callback) ->
         if stop_after_page and page > stop_after_page
-          console.log ' [X] cancel (stopping) page ' + page + ' of ' + site.name
           callback(null, null)
         else
           console.log ' [_] fetching page ' + page + ' of ' + site.name
           fetch.fetch_store_ads site, region, page, (err, ads, old_ads) ->
-            #TODO add ads and replaced ads parameter
-            #     1. if one of replaced ads is "younger"
-            #     than last_fetch_timestamp, we suppose
-            #     that we are starting to loop
-            #     throug ads and we stop.
-            #     2. or if there were no ads in the page
-            #     we should also stop...
-            #     to stop : stop_after_page=page
+            # 1. if one of replaced ads is "younger"
+            # than last_fetch_timestamp, we suppose
+            # that we are starting to loop
+            # throug ads and we should stop (after
+            # three consecutive pages where "younger"
+            # ads are found... juste to be sure.
+            # 2. or if there were no ads in the page
+            # we should also stop...
+            # to stop : stop_after_page=page
             if err
               console.log ' [*] error fetching page ' + page + ' of ' + site.name + err
             else
               console.log ' [x] fetched page ' + page + ' of ' + site.name
-              if one_is_younger last_fetch_timestamp, old_ads
-                console.log ' [X] we are looping through ads, stopping fetch of ' + site.name + ' after ' + page + ' pages.'
+              if ads.length == 0
+                console.log ' [X] No more ads on this page, signaling to stop fetching of ' + site.name + ' after ' + page + ' pages.'
                 stop_after_page = page
+              else if one_is_younger last_fetch_timestamp, old_ads, ads
+                found_duplicate_on_page.push page
+                if we_should_stop found_duplicate_on_page
+                  console.log ' [X] we are looping through ads, signaling to stop fetching of ' + site.name + ' after ' + page + ' pages.'
+                  stop_after_page = page
             callback(null, err)
       , (err, results) ->
           for fetch_err in results
@@ -80,6 +86,31 @@ update_last_fetch = (site, region, last_fetch_timestamp, handler) ->
     handler()
 
 
-one_is_younger = (timestamp, ads) ->
-  youngers = (ad for ad in ads when ad.fields and ad.fields._timestamp > timestamp)
-  youngers.length
+one_is_younger = (timestamp, old_ads, ads) ->
+  # If we have more than one ad with the same picture...
+  # then we might stop too ealy :(
+  # happens with this two ads :
+  # http://www.leboncoin.fr/ventes_immobilieres/759968711.htm
+  # http://www.leboncoin.fr/ventes_immobilieres/759970099.htm
+  # Changing way of computing ads id is not enough because
+  # we may have several times the same ad since le bon coin
+  # republishes ads...
+  # Hence we must rely only on the ad URL for this part of code
+  # to recognize that it really already has fetched this only ad
+  # and is looping...
+  youngers = (ad for ad in old_ads when ad.fields and ad.fields._timestamp > timestamp)
+  for from_db in youngers
+    new_version = (ad for ad in ads when ad.id == from_db._source.id)[0]
+    if from_db._source.url == new_version.url
+      return true
+  return false
+
+we_should_stop = (found_duplicate_on_page) ->
+  if found_duplicate_on_page.length < 3
+    false
+  else
+    found_duplicate_on_page.sort((a,b) -> a-b)
+    a = found_duplicate_on_page[found_duplicate_on_page.length - 3]
+    b = found_duplicate_on_page[found_duplicate_on_page.length - 2]
+    c = found_duplicate_on_page[found_duplicate_on_page.length - 1]
+    (b == a+1) and (c == b+1)
