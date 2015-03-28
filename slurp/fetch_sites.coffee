@@ -52,7 +52,7 @@ read_config (config) ->
               if ads.length == 0
                 console.log ' [X] No more ads on this page, signaling to stop fetching of ' + site.name + ' after ' + page + ' pages.'
                 stop_after_page = page
-              else if one_is_younger last_fetch_timestamp, old_ads, ads
+              else if fetching_duplicates last_fetch_timestamp, old_ads, ads
                 found_duplicate_on_page.push page
                 if we_should_stop found_duplicate_on_page
                   console.log ' [X] we are looping through ads, signaling to stop fetching of ' + site.name + ' after ' + page + ' pages.'
@@ -86,24 +86,12 @@ update_last_fetch = (site, region, last_fetch_timestamp, handler) ->
     handler()
 
 
-one_is_younger = (timestamp, old_ads, ads) ->
-  # If we have more than one ad with the same picture...
-  # then we might stop too ealy :(
-  # happens with this two ads :
-  # http://www.leboncoin.fr/ventes_immobilieres/759968711.htm
-  # http://www.leboncoin.fr/ventes_immobilieres/759970099.htm
-  # Changing way of computing ads id is not enough because
-  # we may have several times the same ad since le bon coin
-  # republishes ads...
-  # Hence we must rely only on the ad URL for this part of code
-  # to recognize that it really already has fetched this only ad
-  # and is looping...
+fetching_duplicates = (timestamp, old_ads, ads) ->
+  # we have to find at least three ads that
+  # have been fetched after this fetching started
+  # to consider having found duplicates on the page.
   youngers = (ad for ad in old_ads when ad.fields and ad.fields._timestamp > timestamp)
-  for from_db in youngers
-    new_version = (ad for ad in ads when ad.id == from_db._source.id)[0]
-    if from_db._source.url == new_version.url
-      return true
-  return false
+  youngers > 3
 
 we_should_stop = (found_duplicate_on_page) ->
   if found_duplicate_on_page.length < 3
