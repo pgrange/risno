@@ -32,19 +32,20 @@
       "location": ".loca"
     }
   },
-  "pages_jaunes": {
-    "name": "pages-jaunes",
-    "host": "www.pagesjaunes.fr",
+  "annonces_jaunes": {
+    "name": "annonces-jaunes",
+    "host": "www.annoncesjaunes.fr",
     "url_sequence": [
-      "http://HOST/verticales/immo/rechercherPA.do?transactionSimple=achat&typeBien=&ou=REGION\r",
-      "http://HOST/verticales/immo/trierListeReponses.do?valeurTriImmo=DATE_PUBLICATION\r",
-      "http://HOST/verticales/immo/changerPageListeReponses.do?numPage=PAGE"
+      "http://HOST/recherche.html?pageIndex=PAGE&sortPropertyName=ReleaseDate&sortDirection=Descending&searchTypeID=1&typeGroupCategoryID=1&transactionId=1&localityIds=REGION&typeGroupIds=1,2,3,4,5,7,9,10,11,12,98,105"
     ],
-    "ads": ".visitCardContent",
+    "region_id": {
+      "aquitaine": "2-72"
+    },
+    "ads": "ul.search-results > li",
     "selectors": {
       "price": ".price",
-      "location": ".location",
-      "description": ".dataCard"
+      "description": ".wrapper,.more-content",
+      "location": ".loca"
     }
   },
   "immo_street": {
