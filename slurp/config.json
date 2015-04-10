@@ -25,10 +25,10 @@
     "region_id": {
       "aquitaine": "2-72"
     },
-    "ads": "ul.search-results li",
+    "ads": "ul.mode-list > li",
     "selectors": {
       "price": ".price",
-      "description": ".wrapper",
+      "description": ".details ul",
       "location": ".loca"
     }
   },

@@ -124,6 +124,18 @@ exports.testShouldExtractUrlFromStrangePagesJaunesMethod = (test) ->
   test.equals ad.url, 'http://www.pagesjaunes.fr/verticales/immo/afficherFicheDetaillee.do?idAnnonce=2d7ff5b1-1165-e211-86f2-5cf3fc6a23ca'
   test.done()
 
+exports.testShouldExtractUrlFromParuVenduMethod = (test) ->
+  ad = parse_ad_from_src '<li>
+                            <a class="picCntr" href="#goFD">not this one</a>
+                            <div class="details">
+                              <a href="http://site/ad">this one !</a>
+                            </div>
+                            <a class="picCntr" href="#goFD">not this one</a>
+                          </li>'
+
+  test.equals ad.url, 'http://site/ad'
+  test.done()
+
 parse_ad_from_src = (src) ->
   ad = cheerio.load('<ad>' + src + '</ad>')('ad')
   slurp.parse_ad ad, 

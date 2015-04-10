@@ -46,7 +46,7 @@ find_url = (ad, host) ->
       if a.length > 0
         absolutize a.attr('href'), host
       else
-        absolutize ad.find('a').attr('href'), host
+        absolutize ad.find('a:not([href^=#])').attr('href'), host
 
 absolutize = (url, host) ->
   if /^http:/.test(url)
