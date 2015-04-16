@@ -37,7 +37,7 @@ set_id = (ad, handler) ->
   if not ad.img
     handler null, set_id_from_description(ad)
   else
-    client = request.defaults({forever: true})
+    client = request.defaults({})
     client ad.img, (err, response, body) ->
       if err or response.statusCode != 200
         console.log('err: ' + err) if err
@@ -47,8 +47,8 @@ set_id = (ad, handler) ->
         ad.id = hash body
         handler null, ad
 
-exports.fetch_ads = (site, region, page, handler) ->
-  exports.fetch_page site, region, page, (error, statusCode, body) ->
+exports.fetch_ads = (site, region, page_num, handler) ->
+  exports.fetch_page site, region, page_num, (error, statusCode, body) ->
     if error
       handler error
     else if statusCode != 200
@@ -65,9 +65,9 @@ exports.fetch_page = (site, region, page, handler) ->
   url = slurp.url site, region, page
 
   if site.force_encoding
-    client = request.defaults({forever: true, jar: true, encoding: site.force_encoding})
+    client = request.defaults({jar: true, encoding: site.force_encoding})
   else
-    client = request.defaults({forever: true, jar: true})
+    client = request.defaults({jar: true})
 
   fetch_page client, url, handler
 
