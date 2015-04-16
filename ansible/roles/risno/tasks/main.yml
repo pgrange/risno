@@ -52,7 +52,7 @@
 - name: crontab to check for expired pubs
   cron: name="expire pubs" cron_file=risno user=risno
         hour=1 minute=1
-        job="python /opt/risno/expire_pubs.py --logic-immo --se-loger --paru-vendu --avendre-alouer --pages-jaunes --immo-street --belle-immobilier >>/var/opt/risno/expire.log 2>&1"
+        job="python /opt/risno/expire_pubs.py --logic-immo --se-loger --paru-vendu --avendre-alouer --pages-jaunes --immo-street --belle-immobilier --le-bon-coin >>/var/opt/risno/expire.log 2>&1"
 - name: crontab to purge expired pubs
   cron: name="purge expired pubs" cron_file=risno user=risno
         hour=14 minute=1
