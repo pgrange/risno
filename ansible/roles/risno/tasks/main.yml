@@ -34,7 +34,7 @@
         shell=/bin/false createhome=no
 - name: crontab to fetch new pubs
   cron: name="fetch pubs from sites" cron_file=risno user=risno
-        hour=15 minute=1
+        hour=11 minute=1
         job="node /opt/risno/slurp/fetch_sites >>/var/opt/risno/fetch.log 2>&1"
 - name: remove old crontab to fetch new pubs
   cron: name="fetch pubs" cron_file=risno user=risno
@@ -55,5 +55,5 @@
         job="python /opt/risno/expire_pubs.py --logic-immo --se-loger --paru-vendu --avendre-alouer --pages-jaunes --immo-street --belle-immobilier --le-bon-coin --annonces-jaunes >>/var/opt/risno/expire.log 2>&1"
 - name: crontab to purge expired pubs
   cron: name="purge expired pubs" cron_file=risno user=risno
-        hour=14 minute=1
+        hour=2 minute=1
         job="python /opt/risno/purge_pubs.py >>/var/opt/risno/purge.log 2>&1"
