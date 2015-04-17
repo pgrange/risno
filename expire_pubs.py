@@ -40,7 +40,9 @@ def show_pub(pub):
 def last_fetch_timestamp(site):
   q = MatchQuery('site', site.name)
   pubs = conn.search(query=q, indices='utils', doc_types="fetch_info", sort='last_fetch:desc')
-  return pubs[0]['last_fetch']
+  if len(pubs) > 0: return pubs[0]['last_fetch']
+  #FIXME this is the future bug of 2038 january the 19th 3:14:7
+  return 21474836470
 
 def expire(pub, site):
   pub['expired'] = True
@@ -59,6 +61,7 @@ if __name__ == '__main__':
   parser.add_argument('--paru-vendu',  const=True, action='store_const', help='recherche sur paru vendu')
   parser.add_argument('--avendre-alouer',  const=True, action='store_const', help='recherche sur à vendre à louer')
   parser.add_argument('--pages-jaunes',  const=True, action='store_const', help='recherche sur pages jaunes')
+  parser.add_argument('--annonces-jaunes',  const=True, action='store_const', help='recherche sur annonces jaunes')
   parser.add_argument('--immo-street',  const=True, action='store_const', help='recherche sur immo street')
   parser.add_argument('--belle-immobilier',  const=True, action='store_const', help='recherche sur belle-immobilier.fr')
 
@@ -74,6 +77,7 @@ if __name__ == '__main__':
   from sites_helper import SeLoger
   from sites_helper import AVendreALouer
   from sites_helper import PagesJaunes
+  from sites_helper import AnnoncesJaunes
   from sites_helper import ImmoStreet
   from sites_helper import BelleImmobilier
   
@@ -83,6 +87,7 @@ if __name__ == '__main__':
   if args.se_loger: sites.append(SeLoger())
   if args.avendre_alouer: sites.append(AVendreALouer())
   if args.pages_jaunes: sites.append(PagesJaunes())
+  if args.annonces_jaunes: sites.append(AnnoncesJaunes())
   if args.immo_street: sites.append(ImmoStreet())
   if args.belle_immobilier: sites.append(BelleImmobilier())
 

@@ -394,6 +394,12 @@ class LogicImmo(SiteHelper):
     header = soup.find("div", id = "detail")
     return header == None
 
+class AnnoncesJaunes(SiteHelper):
+  def __init__(self):
+    SiteHelper.__init__(self)
+    self.name = 'annonces-jaunes'
+    self.site = 'www.annoncesjaunes.fr'
+ 
 from cookielib import CookieJar
 class PagesJaunes(SiteHelper):
   def __init__(self):
