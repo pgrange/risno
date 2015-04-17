@@ -30,7 +30,7 @@ read_config (config) ->
     stop_after_page = 0
     found_duplicate_on_page = []
     do (site, region, last_fetch_timestamp, stop_after_page, found_duplicate_on_page) ->
-      async.mapLimit [1..3000], 2, (page, callback) ->
+      async.mapLimit [1..3000], 10, (page, callback) ->
         if stop_after_page and page > stop_after_page
           callback(null, null)
         else
