@@ -238,6 +238,7 @@ function new_query(user_code) {
 function new_filter(user_code) {
   return ejs.AndFilter([
     ejs.TypeFilter('immo'),
+    ejs.MissingFilter('expired'),
     ejs.NotFilter(ejs.HasChildFilter(
       ejs.TermQuery('user_code', user_code), "opinion"))
   ])
