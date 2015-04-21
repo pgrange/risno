@@ -20,6 +20,9 @@ def log(status, message = ""):
   print color + status + " " + Fore.BLUE + log_context +  ' [' + str(datetime.now()) + ']' + Fore.RESET + " " + message.encode('UTF-8')
 
 def insert_to_db(pub):
+  if len(pub['cities']) < 1:
+    #Ugly hack to avoid updating ads timestamp when no type found
+    return
   conn.update(e_index, "immo", pub.get_id(), document=pub, upsert=pub)
 
 def normalize_query_string(query_string):
