@@ -25,6 +25,8 @@
     "request": "*",
     "tough-cookie": "*",
     "express": "*",
+    "body-parser": "*",
+    "morgan": "*",
     "jade": "*",
     "browserify": "*",
     "async": "*",

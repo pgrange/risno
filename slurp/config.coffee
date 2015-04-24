@@ -2,6 +2,8 @@ require('source-map-support').install()
 
 path = require('path')
 express = require('express')
+body_parser = require('body-parser')
+morgan = require('morgan')
 
 fetch = require('./fetch')
 
@@ -12,9 +14,9 @@ else
   config_file = __dirname + '/config.json'
 
 app = express()
-app.use express.bodyParser()
+app.use body_parser.urlencoded({extended: false})
 app.use express.static(path.join(__dirname, 'public'))
-app.use express.logger()
+app.use morgan('combined')
 
 app.get '/', (req, res) ->
   res.render 'index.jade', sites: config
