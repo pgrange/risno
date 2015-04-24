@@ -5,9 +5,9 @@
     "url_sequence": [
       "http://HOST/ventes_immobilieres/offres/REGION/?o=PAGE"
     ],
-    "ads": ".lbc",
+    "ads": ".lbc,a .gallery-block",
     "selectors": {
-      "price": ".price",
+      "price": ".price,.price-or-urgent",
       "location": ".placement",
       "description": ".title"
     }
