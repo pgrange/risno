@@ -28,8 +28,8 @@ read_config (config) ->
     last_fetch_timestamp = Date.now()
     region = 'aquitaine'
     stop_after_page = 0
-    found_duplicate_on_page = []
-    do (site, region, last_fetch_timestamp, stop_after_page, found_duplicate_on_page) ->
+    last_page_candidates = []
+    do (site, region, last_fetch_timestamp, stop_after_page, last_page_candidates) ->
       async.mapLimit [1..3000], 10, (page, callback) ->
         if stop_after_page and page > stop_after_page
           callback(null, null)
@@ -49,13 +49,12 @@ read_config (config) ->
               console.log ' [*] error fetching page ' + page + ' of ' + site.name + err
             else
               console.log ' [x] fetched page ' + page + ' of ' + site.name
-              if ads.length == 0
-                console.log ' [X] No more ads on this page, signaling to stop fetching of ' + site.name + ' after ' + page + ' pages.'
-                stop_after_page = page
-              else if fetching_duplicates last_fetch_timestamp, old_ads, ads
-                found_duplicate_on_page.push page
-                if we_should_stop found_duplicate_on_page
-                  console.log ' [X] we are looping through ads, signaling to stop fetching of ' + site.name + ' after ' + page + ' pages.'
+              if ads.length == 0 or (fetching_duplicates last_fetch_timestamp, old_ads, ads)
+                msg =  if ads.length == 0 then 'No ad' else 'Found duplicated ads'
+                console.log ' [_] ' + msg + ' on page ' + page + ' for ' + site.name + '. Adding this to stop page candidates'
+                last_page_candidates.push page
+                if we_should_stop last_page_candidates
+                  console.log ' [X] Enough last page candidates. Signaling to stop fetching of ' + site.name + ' after ' + page + ' pages.'
                   stop_after_page = page
             callback(null, err)
       , (err, results) ->
@@ -93,12 +92,12 @@ fetching_duplicates = (timestamp, old_ads, ads) ->
   youngers = (ad for ad in old_ads when ad.fields and ad.fields._timestamp > timestamp)
   youngers > 3
 
-we_should_stop = (found_duplicate_on_page) ->
-  if found_duplicate_on_page.length < 3
+we_should_stop = (last_page_candidates) ->
+  if last_page_candidates.length < 3
     false
   else
-    found_duplicate_on_page.sort((a,b) -> a-b)
-    a = found_duplicate_on_page[found_duplicate_on_page.length - 3]
-    b = found_duplicate_on_page[found_duplicate_on_page.length - 2]
-    c = found_duplicate_on_page[found_duplicate_on_page.length - 1]
+    last_page_candidates.sort((a,b) -> a-b)
+    a = last_page_candidates[last_page_candidates.length - 3]
+    b = last_page_candidates[last_page_candidates.length - 2]
+    c = last_page_candidates[last_page_candidates.length - 1]
     (b == a+1) and (c == b+1)
