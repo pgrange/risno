@@ -52,7 +52,7 @@
     "name": "immo-street",
     "host": "www.immostreet.fr",
     "url_sequence": [
-      "http://HOST/Listing/Search?search_type=3&REGION&page=PREVIOUSPAGE"
+      "http://HOST/Listing/Search?search_type=3&REGION&page=PAGE"
     ],
     "region_id": {
       "aquitaine": "place_id=4815370"
