@@ -86,11 +86,10 @@ update_last_fetch = (site, region, last_fetch_timestamp, handler) ->
 
 
 fetching_duplicates = (timestamp, old_ads, ads) ->
-  # we have to find at least three ads that
-  # have been fetched after this fetching started
-  # to consider having found duplicates on the page.
-  youngers = (ad for ad in old_ads when ad.fields and ad.fields._timestamp > timestamp)
-  youngers > 3
+  duplicates = (ad for ad in old_ads when ad.fields and ad.fields._timestamp > timestamp)
+  # We consider duplicates on a page only if at least 
+  # three ads are duplicates or all ads are duplicates.
+  duplicates.length == ads.length or duplicates.length > 3
 
 we_should_stop = (last_page_candidates) ->
   if last_page_candidates.length < 3
