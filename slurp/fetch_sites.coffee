@@ -86,7 +86,23 @@ update_last_fetch = (site, region, last_fetch_timestamp, handler) ->
 
 
 fetching_duplicates = (timestamp, old_ads, ads) ->
-  duplicates = (ad for ad in old_ads when ad.fields and ad.fields._timestamp > timestamp)
+  duplicate_candidates = (ad for ad in old_ads when ad.fields and ad.fields._timestamp > timestamp)
+
+  # Crappy filter to ensure we do not base duplication detection
+  # only from the fact that the same image is used for two
+  # different ads... this is a problem since we base our id
+  # generation algorithm on the image associated with the add
+  # and sometimes missing pictures ads are associated with a
+  # generic picture that leads to ids collision.
+  # Ids collision is an issue to address but at least here,
+  # we do not want to stop the whole fetching of a site
+  # because of this issue.
+  duplicates = []
+  for candidate in duplicate_candidates
+    just_fetched = (ad for ad in ads when ad.id == candidate._source.id)[0]
+    if candidate._source.price == just_fetched.price
+      duplicates.push candidate
+
   # We consider duplicates on a page only if at least 
   # three ads are duplicates or all ads are duplicates.
   duplicates.length == ads.length or duplicates.length > 3
