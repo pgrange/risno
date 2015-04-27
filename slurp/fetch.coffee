@@ -42,6 +42,7 @@ set_id = (ad, handler) ->
       if err or response.statusCode != 200
         console.log('err: ' + err) if err
         console.log('http status code: ' + response.statusCode) if response
+        console.log('unable to fetch ' + ad.img)
         handler null, set_id_from_description(ad)
       else
         ad.id = hash body
