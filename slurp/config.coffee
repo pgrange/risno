@@ -37,9 +37,11 @@ app.get '/:site', (req, res) ->
 app.get '/remote/:site', (req, res) ->
   site = clone_site config[req.params.site]
   site.url_sequence = req.query.url_sequence.split('\n')
+  page_number = req.query.page_number or 2
   console.log(site.url_sequence)
+  console.log(page_number)
 
-  fetch.fetch_page site, 'aquitaine', 2, (error, statusCode, body) ->
+  fetch.fetch_page site, 'aquitaine', page_number, (error, statusCode, body) ->
     res.send error if error
     res.send 'invalid HTTP status code: ' + statusCode if statusCode != 200
     res.send(body)
