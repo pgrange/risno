@@ -20,7 +20,7 @@
     "name": "a-vendre-a-louer",
     "host": "www.avendrealouer.fr",
     "url_sequence": [
-      "http://HOST/recherche.html?pageIndex=PAGE&sortPropertyName=ReleaseDate&sortDirection=Descending&searchTypeID=1&typeGroupCategoryID=1&transactionId=1&localityIds=REGION&typeGroupIds=1,2,3,4,5,7,9,10,11,12,98,105"
+      "http://HOST/vente/region/b-maison/loc-REGION.html?page=PAGE"
     ],
     "region_id": {
       "aquitaine": "2-72"
