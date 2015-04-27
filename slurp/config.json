@@ -80,7 +80,7 @@
     "name": "se-loger",
     "host": "www.seloger.com",
     "url_sequence": [
-      "http://HOST/recherche.htm?idtt=2&idtypebien=1,10,11,12,13,14,2,4,9&tri=d_dt_crea&div=REGION&ANNONCEpg=PAGE"
+      "http://HOST/list.htm?idtt=2&idtypebien=1,10,11,12,13,14,2,4,9&tri=d_dt_crea&div=REGION&LISTING-LISTpg=PAGE"
     ],
     "region_id": {
       "aquitaine": "2229"
