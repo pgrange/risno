@@ -89,6 +89,12 @@ exports.testShouldConvertImageRelativeURIToAbsolute = (test) ->
   test.equals ad.img, 'http://site/image'
   test.done()
 
+exports.testShouldConvertImageRelativeURIToAbsoluteEvenIfMissingSlash = (test) ->
+  ad = parse_ad_from_src '<img src="image"></img>'
+
+  test.equals ad.img, 'http://site/image'
+  test.done()
+
 exports.testShouldNotGuessImageIfNoneFound = (test) ->
   ad = parse_ad_from_src '<ad></ad>'
 

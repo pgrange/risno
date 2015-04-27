@@ -52,7 +52,7 @@ absolutize = (url, host) ->
   if /^http:/.test(url)
     url
   else
-    'http://' + host + url
+    'http://' + host + (if /^\//.test(url) then '' else '/') + url
 
 strip = (string) ->
   string.replace(/\s+/g, ' ').replace(/^\s/, '').replace(/\s$/, '')
