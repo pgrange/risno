@@ -21,9 +21,13 @@ app.use morgan('combined')
 app.get '/', (req, res) ->
   res.render 'index.jade', sites: config
 
-#TODO Filter requests so that we are not polluted by
-#     css, images and js needed by the navigator for
-#     the fetched page.
+# TODO is there a way to merge params, query and body
+#      with new version of express, instead of searching
+#      in every possible places ;( ?
+#
+# TODO Filter requests so that we are not polluted by
+#      css, images and js needed by the navigator for
+#      the fetched page.
 #
 app.get '/:site', (req, res) ->
   res.render 'config.jade',
@@ -32,9 +36,8 @@ app.get '/:site', (req, res) ->
 
 app.get '/remote/:site', (req, res) ->
   site = clone_site config[req.params.site]
-  # Commenting out next line. What was this about ???!
-  #site.url_sequence = req.params.url_sequence.split('\n')
-  #console.log(site.url_sequence)
+  site.url_sequence = req.query.url_sequence.split('\n')
+  console.log(site.url_sequence)
 
   fetch.fetch_page site, 'aquitaine', 2, (error, statusCode, body) ->
     res.send error if error
@@ -44,11 +47,11 @@ app.get '/remote/:site', (req, res) ->
 app.post '/save/:site', (req, res) ->
   site_id = req.params.site
   site = config[site_id]
-  site.url_sequence = req.params.url_sequence.split('\n')
-  site.ads = req.params.ad_selector
-  site.selectors.price = req.params.price_selector
-  site.selectors.description = req.params.description_selector
-  site.selectors.location = req.params.location_selector
+  site.url_sequence = req.body.url_sequence.split('\n')
+  site.ads = req.body.ad_selector
+  site.selectors.price = req.body.price_selector
+  site.selectors.description = req.body.description_selector
+  site.selectors.location = req.body.location_selector
 
   save_config config, () ->
     console.log 'new configuration saved: ' + config
