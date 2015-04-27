@@ -32,8 +32,9 @@ app.get '/:site', (req, res) ->
 
 app.get '/remote/:site', (req, res) ->
   site = clone_site config[req.params.site]
-  site.url_sequence = req.params.url_sequence.split('\n')
-  console.log(site.url_sequence)
+  # Commenting out next line. What was this about ???!
+  #site.url_sequence = req.params.url_sequence.split('\n')
+  #console.log(site.url_sequence)
 
   fetch.fetch_page site, 'aquitaine', 2, (error, statusCode, body) ->
     res.send error if error
