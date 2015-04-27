@@ -58,13 +58,8 @@ read_config (config) ->
                   stop_after_page = page
             callback(null, err)
       , (err, results) ->
-          for fetch_err in results
-            errors = true if fetch_err
-          if errors
-            console.log site.name + " errors while fetching site. Not updating last fetch date"
-          else
-            update_last_fetch site, region, last_fetch_timestamp, () ->
-              console.log site.name + " fetched at " + last_fetch_timestamp
+          update_last_fetch site, region, last_fetch_timestamp, () ->
+            console.log site.name + " fetched at " + last_fetch_timestamp
 
 update_last_fetch = (site, region, last_fetch_timestamp, handler) ->
   client = new elasticsearch.Client
