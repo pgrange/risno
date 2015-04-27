@@ -27,12 +27,12 @@ app.get '/', (req, res) ->
 #
 app.get '/:site', (req, res) ->
   res.render 'config.jade',
-    site: config[req.param('site')]
-    site_id: req.param('site')
+    site: config[req.params.site]
+    site_id: req.params.site
 
 app.get '/remote/:site', (req, res) ->
-  site = clone_site config[req.param('site')]
-  site.url_sequence = req.param('url_sequence').split('\n')
+  site = clone_site config[req.params.site]
+  site.url_sequence = req.params.url_sequence.split('\n')
   console.log(site.url_sequence)
 
   fetch.fetch_page site, 'aquitaine', 2, (error, statusCode, body) ->
@@ -41,13 +41,13 @@ app.get '/remote/:site', (req, res) ->
     res.send(body)
 
 app.post '/save/:site', (req, res) ->
-  site_id = req.param('site')
+  site_id = req.params.site
   site = config[site_id]
-  site.url_sequence = req.param('url_sequence').split('\n')
-  site.ads = req.param('ad_selector')
-  site.selectors.price = req.param('price_selector')
-  site.selectors.description = req.param('description_selector')
-  site.selectors.location = req.param('location_selector')
+  site.url_sequence = req.params.url_sequence.split('\n')
+  site.ads = req.params.ad_selector
+  site.selectors.price = req.params.price_selector
+  site.selectors.description = req.params.description_selector
+  site.selectors.location = req.params.location_selector
 
   save_config config, () ->
     console.log 'new configuration saved: ' + config
