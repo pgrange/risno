@@ -160,7 +160,7 @@ app.post('/send_new_id', function(req, res) {
 })
 app.get('/check_mail', function(req, res) {
   var mail = req.param('email')
-  var query = ejs.FieldQuery('mail', mail)
+  var query = ejs.TermQuery('mail', mail)
   ejs.Request({indices: 'users', types: 'user'})
   .query(query).size(1000)
   .doSearch(function(result) {
@@ -176,7 +176,7 @@ app.get('/check_mail', function(req, res) {
 })
 app.post('/send_id', function(req, res) {
   var mail = req.param('email')
-  var query = ejs.FieldQuery('mail', mail)
+  var query = ejs.TermQuery('mail', mail)
   ejs.Request({indices: 'users', types: 'user'})
   .query(query).size(1000)
   .doSearch(function(result) {
@@ -185,7 +185,7 @@ app.post('/send_id', function(req, res) {
       res.send(500, '')
     }
     else if (result.hits.hits.length <= 0) {
-      console.log("unknown email")
+      console.log("unknown email " + mail)
       res.send(404, '')
     } else {
       var user_codes = []
