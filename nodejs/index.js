@@ -1,5 +1,6 @@
 var path = require('path');
 var express = require('express')
+//TODO get rid of ejs, replace it with elasticsearch
 var ejs = require('elastic.js')
 var crypto = require('crypto')
 var nconf = require('nconf')
@@ -106,7 +107,7 @@ app.post('/:user_code/pub/:id', function(req, res) {
 })
 app.get('/suggest', function(req, res) {
   var prefix = req.param('prefix')
-  client.suggest({
+  elastic_client.suggest({
     index: "cities",
     body: {
       city: {
@@ -124,7 +125,7 @@ app.get('/suggest', function(req, res) {
 
 app.get('/suggest/:prefix', function(req, res) {
   var prefix = req.param('prefix')
-  client.suggest({
+  elastic_client.suggest({
     index: "cities",
     body: {
       city: {
@@ -220,7 +221,7 @@ app.get('/:user_code', function(req, res) {
 
 //new elasticsearch client part
 var elasticsearch = require('elasticsearch');
-var client = new elasticsearch.Client({
+var elastic_client = new elasticsearch.Client({
   host: nconf.get('elastic_db')
 });
 
