@@ -170,6 +170,7 @@ app.get('/check_mail', function(req, res) {
     } else if (result.hits.hits.length > 0) {
       res.send(true)
     } else {
+      console.log("unknown email " + mail)
       res.send(false)
     }
   })
