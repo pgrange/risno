@@ -431,6 +431,6 @@ function prepare_send_id_mail(mail, user_codes) {
 }
 
 var smtp_config = nconf.get('smtp')
-var smtp_transport = nodemailer.createTransport("SMTP", smtp_config)
+var smtp_transport = nodemailer.createTransport(smtp_config)
 app.listen(nconf.get('listen_port'))
 console.log("Server started")
