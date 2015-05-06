@@ -110,7 +110,7 @@ pool = poolModule.Pool
   create   : (callback) ->
     elastic_client = new elasticsearch.Client
       host: nconf.get('elastic_db')
-      maxSockets: 1
+      #maxSockets: 1
     callback(null, elastic_client)
   destroy  : (client) ->
     client.close()
