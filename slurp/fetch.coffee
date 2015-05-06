@@ -97,8 +97,8 @@ exports.fetch_store_ads = (site, region, page, handler) ->
             type: "immo"
             id: ad.id
             body: ad
-          .catch (err) -> handler err
           .then () -> handler null, old_ad
+          .catch (err) -> handler err
 
         async.map ads, insert_or_update_ad, (err, replaced_ads) ->
           pool.release elastic_client
