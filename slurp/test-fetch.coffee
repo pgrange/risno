@@ -169,7 +169,6 @@ exports.fetching = nodeunit.testCase
     .then () ->
       fetch.fetch_store_ads test_site, 'aquitaine', 2,
         (err, ads, replaced_ads) ->
-          console.log replaced_ads
           test.equal null, err
           test.equal 1, replaced_ads.length
           test.equal "old description", replaced_ads[0]._source.description
