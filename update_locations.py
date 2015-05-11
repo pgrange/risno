@@ -28,6 +28,7 @@ def insert_to_db(pub):
 def normalize_query_string(query_string):
   return query_string\
     .replace('/', ' ')\
+    .replace('"', ' ')\
     .replace('!', ' ')\
     .replace('~', ' ')\
     .replace(':', ' ')\
@@ -72,7 +73,7 @@ if __name__ == '__main__':
 
   log_context = "upd_location"
 
-  parser = argparse.ArgumentParser(description='récupère les annonces pour le site et le code postal précisé')
+  parser = argparse.ArgumentParser(description='met à jour le lieux des annonces en base')
   parser.add_argument('--test', const=True, action='store_const', help='affiche les annonces mises à jour sans les stocker en base')
   parser.add_argument('--all', const=True, action='store_const', help='met à jour toutes les annonces, et pas seulement celles associées à aucune ville')
   parser.add_argument('--term', action='store', help='met à jour uniquement les annonces correspondant au terme précisé')
