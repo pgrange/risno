@@ -14,7 +14,7 @@ cat "$data_file" | grep -v '^#' \
     location=$(echo $line | cut -d';' -f4)
     description=$(echo $line | cut -d';' -f5-)
     cat <<EOF
-{"index":{"_index":"ads_2.0","_type":"immo","_id":"${id}"}}
+{"index":{"_index":"ads","_type":"immo","_id":"${id}"}}
 {"location":"${location}","description":"${description}"}
 EOF
   done \

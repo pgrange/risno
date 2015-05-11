@@ -14,7 +14,7 @@ cat "$data_file" | grep -v '^#' \
   do
     id=$(echo $line | cut -d';' -f1)
     expected_city=$(echo $line | cut -d';' -f3)
-    actual_city=$(curl -sf $ELASTIC_URL/ads_2.0/immo/$id | jq -r '._source.cities[0]')
+    actual_city=$(curl -sf $ELASTIC_URL/ads/immo/$id | jq -r '._source.cities[0]')
     if [ "$actual_city" != "$expected_city" ]
     then
       echo 1 >$STATUS
