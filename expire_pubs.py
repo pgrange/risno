@@ -27,7 +27,7 @@ def insert_to_db(pub):
   conn.update(e_index, "immo", pub.get_id(), document=pub, upsert=pub)
 
 def get_to_expire_pubs(site, last_fetch):
-  q = TermQuery('site_name', site.name)
+  q = TermQuery('site_name', site)
   q = FilteredQuery(q, MissingFilter('expired'))
   q = FilteredQuery(q, RangeFilter(qrange=ESRange('_timestamp', to_value=last_fetch)))
 
@@ -38,13 +38,13 @@ def show_pub(pub):
   print pub
 
 def last_fetch_timestamp(site):
-  q = MatchQuery('site', site.name)
+  q = MatchQuery('site', site)
   pubs = conn.search(query=q, indices='utils', doc_types="fetch_info", sort='last_fetch:desc')
   if len(pubs) > 0: return pubs[0]['last_fetch']
   #FIXME this is the future bug of 2038 january the 19th 3:14:7
   return 21474836470
 
-def expire(pub, site):
+def expire(pub):
   pub['expired'] = True
 
 if __name__ == '__main__':
@@ -71,25 +71,15 @@ if __name__ == '__main__':
 
   sites = []
 
-  from sites_helper import LogicImmo
-  from sites_helper import LeBonCoin
-  from sites_helper import ParuVendu
-  from sites_helper import SeLoger
-  from sites_helper import AVendreALouer
-  from sites_helper import PagesJaunes
-  from sites_helper import AnnoncesJaunes
-  from sites_helper import ImmoStreet
-  from sites_helper import BelleImmobilier
-  
-  if args.logic_immo: sites.append(LogicImmo())
-  if args.le_bon_coin: sites.append(LeBonCoin())
-  if args.paru_vendu: sites.append(ParuVendu())
-  if args.se_loger: sites.append(SeLoger())
-  if args.avendre_alouer: sites.append(AVendreALouer())
-  if args.pages_jaunes: sites.append(PagesJaunes())
-  if args.annonces_jaunes: sites.append(AnnoncesJaunes())
-  if args.immo_street: sites.append(ImmoStreet())
-  if args.belle_immobilier: sites.append(BelleImmobilier())
+  if args.logic_immo: sites.append('logic-immo')
+  if args.le_bon_coin: sites.append('le-bon-coin')
+  if args.paru_vendu: sites.append('paru-vendu')
+  if args.se_loger: sites.append('se-loger')
+  if args.avendre_alouer: sites.append('a-vendre-a-louer')
+  if args.pages_jaunes: sites.append('pages-jaunes')
+  if args.annonces_jaunes: sites.append('annonces-jaunes')
+  if args.immo_street: sites.append('immo-street')
+  if args.belle_immobilier: sites.append('belle-immobilier')
 
   for site in sites:
     previous_total = -1
@@ -106,11 +96,11 @@ if __name__ == '__main__':
       total = pubs.total
       log('OK', str(total) + ' pubs to expire')
       for pub in pubs:
-        expire(pub, site)
+        expire(pub)
         expired = expired + 1
         if args.test: show_pub(pub)
         else: insert_to_db(pub)
         count = count + 1
         if count % 20 == 0:
           log('OK', str(count) + ' / ' + str(total) + ' updated')
-    log('OK', str(expired) + ' pubs expired for ' + site.name)
+    log('OK', str(expired) + ' pubs expired for ' + site)
