@@ -27,7 +27,7 @@ cities_injected: elastic.id ../../elastic_mappings/cities/inject_cities_in_elast
 %.tst.inserted: %.csv types_injected cities_injected elastic.id
 	./insert_sample_data $<
 	touch $@
-%.tst.type.updated: %.tst.inserted types_injected elastic.id
+%.tst.type.updated: %.tst.inserted types_injected elastic.id ../../update_type.py
 	@curl -sf $(ELASTIC_URL)/_all/_refresh
 	python ../../update_type.py
 	@touch $@
@@ -35,7 +35,7 @@ cities_injected: elastic.id ../../elastic_mappings/cities/inject_cities_in_elast
 	@curl -sf $(ELASTIC_URL)/_all/_refresh >/dev/null
 	./validate_types $<
 	@touch $@
-%.tst.city.updated: %.tst.inserted cities_injected elastic.id
+%.tst.city.updated: %.tst.inserted cities_injected elastic.id ../../update_locations.py
 	@curl -sf $(ELASTIC_URL)/_all/_refresh
 	python ../../update_locations.py
 	@touch $@

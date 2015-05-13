@@ -13,7 +13,7 @@
   apt: pkg=git
 - name: add github.com to known hosts
   sshknownhosts: host=github.com
-- name: ensure risno git repo present
-  git: repo=https://github.com/pgrange/risno.git dest=/opt/risno update=yes force=no
+#- name: ensure risno git repo present
+#  git: repo=https://github.com/pgrange/risno.git dest=/opt/risno update=yes force=no
 
 
