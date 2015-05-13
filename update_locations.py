@@ -47,8 +47,10 @@ def search_city(text):
   return result
  
 def search_for_locations(pub):
-  location = pub['location']
-  description = pub['description']
+  if 'location' in pub:
+    location = pub['location']
+  if 'description' in pub:
+    description = pub['description']
   cities = []
   if location:
     cities.extend(search_city(location))

@@ -45,8 +45,12 @@ def search_type(text):
   return [t.get_id() for t in types[:1]]
  
 def search_for_types(pub):
-  location = pub['location']
-  description = pub['description']
+  if 'location' in pub:
+    location = pub['location']
+  if 'description' in pub:
+    description = pub['description']
+  else:
+    description = ''
   text = description
   if location: text = text + " " + location
   types = []
