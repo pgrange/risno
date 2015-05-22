@@ -4,6 +4,7 @@ import os
 
 from pyes import ES, MatchQuery, TermQuery, TextQuery, MatchAllQuery, FilteredQuery, BoolQuery, ESRange
 from pyes.filters import MissingFilter, TermFilter, ORFilter, MatchAllFilter, RangeFilter
+from datetime import datetime, timedelta
 
 elastic_url=os.environ.get('ELASTIC_URL', '127.0.0.1:9200')
 conn = ES(elastic_url) # Use HTTP
@@ -38,11 +39,13 @@ def show_pub(pub):
   print pub
 
 def expired_before_timestamp(site):
-  q = MatchQuery('site', site)
-  fetch_info = conn.search(query=q, indices='utils', doc_types="fetch_info", sort='last_fetch:desc')
-  if len(fetch_info) > 0: return fetch_info[0]['last_fetch']
-  #FIXME this is the future bug of 2038 january the 19th 3:14:7
-  return 21474836470
+  twentyfour_hours_ago = int((datetime.now()-timedelta(days=1)).strftime("%s"))*1000
+  return twentyfour_hours_ago
+  #q = MatchQuery('site', site)
+  #fetch_info = conn.search(query=q, indices='utils', doc_types="fetch_info", sort='last_fetch:desc')
+  #if len(fetch_info) > 0: return fetch_info[0]['last_fetch']
+  ##FIXME this is the future bug of 2038 january the 19th 3:14:7
+  #return 21474836470
 
 def expire(pub):
   pub['expired'] = True
@@ -53,7 +56,7 @@ if __name__ == '__main__':
 
   log_context = "expire"
 
-  parser = argparse.ArgumentParser(description='Détecte et marque en base les annonces périmée')
+  parser = argparse.ArgumentParser(description='Détecte et marque en base les annonces périmée (dernière récupération il y a plus de 24h)')
   parser.add_argument('--test', const=True, action='store_const', help='affiche les annonces mises à jour sans les stocker en base')
   parser.add_argument('--le-bon-coin', const=True, action='store_const', help='recherche sur le bon coin')
   parser.add_argument('--logic-immo',  const=True, action='store_const', help='recherche sur logic immo')
