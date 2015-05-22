@@ -35,7 +35,7 @@
 - name: crontab to fetch new pubs
   cron: name="fetch pubs from sites" cron_file=risno user=risno
         hour=11 minute=1
-        job="node /opt/risno/slurp/fetch_sites >>/var/opt/risno/fetch.log 2>&1"
+        job="node /opt/risno/slurp/fetch_sites aquitaine >>/var/opt/risno/fetch.log 2>&1"
 - name: remove old crontab to fetch new pubs
   cron: name="fetch pubs" cron_file=risno user=risno
         hour=15 minute=1

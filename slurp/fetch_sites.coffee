@@ -11,8 +11,14 @@ nconf.argv()
      .defaults({elastic_db: 'localhost:9200'})
 
 fetch = require('./fetch')
-if process.argv[2]
-  config_file = process.argv[2]
+
+if process.argv.length < 3 or process.argv.length > 4
+  console.log ("node fetch_sites <region> [config_file]")
+  process.exit(1)
+
+region = process.argv[2]
+if process.argv[3]
+  config_file = process.argv[3]
 else
   config_file = __dirname + '/config.json'
 
@@ -26,7 +32,6 @@ read_config = (handler) ->
 read_config (config) ->
   for id, site of config
     last_fetch_timestamp = Date.now()
-    region = 'aquitaine'
     stop_after_page = 0
     last_page_candidates = []
     do (site, region, last_fetch_timestamp, stop_after_page, last_page_candidates) ->
