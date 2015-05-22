@@ -37,10 +37,10 @@ def get_to_expire_pubs(site, last_fetch):
 def show_pub(pub):
   print pub
 
-def last_fetch_timestamp(site):
+def expired_before_timestamp(site):
   q = MatchQuery('site', site)
-  pubs = conn.search(query=q, indices='utils', doc_types="fetch_info", sort='last_fetch:desc')
-  if len(pubs) > 0: return pubs[0]['last_fetch']
+  fetch_info = conn.search(query=q, indices='utils', doc_types="fetch_info", sort='last_fetch:desc')
+  if len(fetch_info) > 0: return fetch_info[0]['last_fetch']
   #FIXME this is the future bug of 2038 january the 19th 3:14:7
   return 21474836470
 
@@ -89,7 +89,7 @@ if __name__ == '__main__':
       # found pubs... so adding this while loop :(
       previous_total = total
 
-      pubs = get_to_expire_pubs(site, last_fetch_timestamp(site))
+      pubs = get_to_expire_pubs(site, expired_before_timestamp(site))
 
       count = 0
       expired = 0
