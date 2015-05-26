@@ -7,7 +7,8 @@
       "http://HOST/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbApp=1&tbDup=1&tbChb=1&tbLof=1&tbAtl=1&tbPla=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&pa=FR&lo=REGION&p=PAGE"
     ],
     "region_id": {
-      "aquitaine": "24,33,40,47,64"
+      "aquitaine": "24,33,40,47,64",
+      "midi_pyrenees": "09,12,31,32,46,65,81,82"
     },
     "ads": ".annonce",
     "selectors": {
@@ -23,7 +24,8 @@
       "http://HOST/vente/region/b-maison/loc-REGION.html?page=PAGE"
     ],
     "region_id": {
-      "aquitaine": "2-72"
+      "aquitaine": "2-72",
+      "midi_pyrenees": "2-73"
     },
     "ads": "ul.mode-list > li",
     "selectors": {
@@ -39,7 +41,8 @@
       "http://HOST/recherche.html?pageIndex=PAGE&sortPropertyName=ReleaseDate&sortDirection=Descending&searchTypeID=1&typeGroupCategoryID=1&transactionId=1&localityIds=REGION&typeGroupIds=1,2,3,4,5,7,9,10,11,12,98,105"
     ],
     "region_id": {
-      "aquitaine": "2-72"
+      "aquitaine": "2-72",
+      "midi_pyrenees": "2-73"
     },
     "ads": "ul.search-results > li",
     "selectors": {
@@ -55,7 +58,8 @@
       "http://HOST/Listing/Search?search_type=3&REGION&page=PAGE"
     ],
     "region_id": {
-      "aquitaine": "place_id=4815370"
+      "aquitaine": "place_id=4815370",
+      "midi_pyrenees": "place_id=4838333"
     },
     "ads": ".item",
     "selectors": {
@@ -83,7 +87,8 @@
       "http://HOST/list.htm?idtt=2&idtypebien=1,10,11,12,13,14,2,4,9&tri=d_dt_crea&div=REGION&LISTING-LISTpg=PAGE"
     ],
     "region_id": {
-      "aquitaine": "2229"
+      "aquitaine": "2229",
+      "midi_pyrenees": "2242"
     },
     "ads": "article.listing",
     "selectors": {
