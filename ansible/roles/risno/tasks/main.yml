@@ -32,10 +32,14 @@
 - name: create risno user to run crons
   user: name=risno
         shell=/bin/false createhome=no
-- name: crontab to fetch new pubs
-  cron: name="fetch pubs from sites" cron_file=risno user=risno
+- name: crontab to fetch new pubs for Aquitaine
+  cron: name="fetch pubs from sites for aquitaine" cron_file=risno user=risno
         hour=11 minute=1
-        job="node /opt/risno/slurp/fetch_sites aquitaine >>/var/opt/risno/fetch.log 2>&1"
+        job="node /opt/risno/slurp/fetch_sites aquitaine >>/var/opt/risno/fetch_aquitaine.log 2>&1"
+- name: crontab to fetch new pubs for Midi-Pyrenees
+  cron: name="fetch pubs from sites for midi_pyrenees" cron_file=risno user=risno
+        hour=10 minute=1
+        job="node /opt/risno/slurp/fetch_sites midi_pyrenees >>/var/opt/risno/fetch_midi_pyrenees.log 2>&1"
 - name: remove old crontab to fetch new pubs
   cron: name="fetch pubs" cron_file=risno user=risno
         hour=15 minute=1
