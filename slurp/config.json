@@ -1,100 +1,107 @@
 {
-  "paru_vendu": {
-    "force_encoding": "latin1",
-    "name": "paru-vendu",
-    "host": "www.paruvendu.fr",
-    "url_sequence": [
-      "http://HOST/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbApp=1&tbDup=1&tbChb=1&tbLof=1&tbAtl=1&tbPla=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&pa=FR&lo=REGION&p=PAGE"
-    ],
-    "region_id": {
-      "aquitaine": "24,33,40,47,64",
-      "midi_pyrenees": "09,12,31,32,46,65,81,82"
+  "regions": [
+    "aquitaine",
+    "midi_pyrenees"
+  ],
+  "sites": {
+    "paru_vendu": {
+      "force_encoding": "latin1",
+      "name": "paru-vendu",
+      "host": "www.paruvendu.fr",
+      "url_sequence": [
+        "http://HOST/immobilier/annonceimmofo/liste/listeAnnonces?tt=1&tbApp=1&tbDup=1&tbChb=1&tbLof=1&tbAtl=1&tbPla=1&tbMai=1&tbVil=1&tbCha=1&tbPro=1&tbHot=1&tbMou=1&tbFer=1&pa=FR&lo=REGION&p=PAGE"
+      ],
+      "region_id": {
+        "aquitaine": "24,33,40,47,64",
+        "midi_pyrenees": "09,12,31,32,46,65,81,82"
+      },
+      "ads": ".annonce",
+      "selectors": {
+        "price": ".price",
+        "description": ".desc",
+        "location": ".desc cite"
+      }
     },
-    "ads": ".annonce",
-    "selectors": {
-      "price": ".price",
-      "description": ".desc",
-      "location": ".desc cite"
-    }
-  },
-  "a_vendre_a_louer": {
-    "name": "a-vendre-a-louer",
-    "host": "www.avendrealouer.fr",
-    "url_sequence": [
-      "http://HOST/vente/region/b-maison/loc-REGION.html?page=PAGE"
-    ],
-    "region_id": {
-      "aquitaine": "2-72",
-      "midi_pyrenees": "2-73"
+    "a_vendre_a_louer": {
+      "name": "a-vendre-a-louer",
+      "host": "www.avendrealouer.fr",
+      "url_sequence": [
+        "http://HOST/vente/region/b-maison/loc-REGION.html?page=PAGE"
+      ],
+      "region_id": {
+        "aquitaine": "2-72",
+        "midi_pyrenees": "2-73"
+      },
+      "ads": "ul.mode-list > li",
+      "selectors": {
+        "price": ".price",
+        "description": ".details ul",
+        "location": ".loca"
+      }
     },
-    "ads": "ul.mode-list > li",
-    "selectors": {
-      "price": ".price",
-      "description": ".details ul",
-      "location": ".loca"
-    }
-  },
-  "annonces_jaunes": {
-    "name": "annonces-jaunes",
-    "host": "www.annoncesjaunes.fr",
-    "url_sequence": [
-      "http://HOST/recherche.html?pageIndex=PAGE&sortPropertyName=ReleaseDate&sortDirection=Descending&searchTypeID=1&typeGroupCategoryID=1&transactionId=1&localityIds=REGION&typeGroupIds=1,2,3,4,5,7,9,10,11,12,98,105"
-    ],
-    "region_id": {
-      "aquitaine": "2-72",
-      "midi_pyrenees": "2-73"
+    "annonces_jaunes": {
+      "name": "annonces-jaunes",
+      "host": "www.annoncesjaunes.fr",
+      "url_sequence": [
+        "http://HOST/recherche.html?pageIndex=PAGE&sortPropertyName=ReleaseDate&sortDirection=Descending&searchTypeID=1&typeGroupCategoryID=1&transactionId=1&localityIds=REGION&typeGroupIds=1,2,3,4,5,7,9,10,11,12,98,105"
+      ],
+      "region_id": {
+        "aquitaine": "2-72",
+        "midi_pyrenees": "2-73"
+      },
+      "ads": "ul.search-results > li",
+      "selectors": {
+        "price": ".price",
+        "description": ".wrapper,.more-content",
+        "location": ".loca"
+      }
     },
-    "ads": "ul.search-results > li",
-    "selectors": {
-      "price": ".price",
-      "description": ".wrapper,.more-content",
-      "location": ".loca"
-    }
-  },
-  "immo_street": {
-    "name": "immo-street",
-    "host": "www.immostreet.fr",
-    "url_sequence": [
-      "http://HOST/Listing/Search?search_type=3&REGION&page=PAGE"
-    ],
-    "region_id": {
-      "aquitaine": "place_id=4815370",
-      "midi_pyrenees": "place_id=4838333"
+    "immo_street": {
+      "name": "immo-street",
+      "host": "www.immostreet.fr",
+      "url_sequence": [
+        "http://HOST/Listing/Search?search_type=3&REGION&page=PAGE"
+      ],
+      "region_id": {
+        "aquitaine": "place_id=4815370",
+        "midi_pyrenees": "place_id=4838333"
+      },
+      "ads": ".item",
+      "selectors": {
+        "price": ".price_item",
+        "description": ".title_item",
+        "location": ""
+      }
     },
-    "ads": ".item",
-    "selectors": {
-      "price": ".price_item",
-      "description": ".title_item"
-    }
-  },
-  "belle_immobilier": {
-    "name": "belle-immobilier",
-    "host": "www.belle-immobilier.fr",
-    "url_sequence": [
-      "http://HOST/fr/biens-immobiliers/?order_by=created_at&order_direction=DESC&page=PAGE"
-    ],
-    "ads": ".item",
-    "selectors": {
-      "price": ".price",
-      "description": ".item-text",
-      "location": ".item-title"
-    }
-  },
-  "se_loger": {
-    "name": "se-loger",
-    "host": "www.seloger.com",
-    "url_sequence": [
-      "http://HOST/list.htm?idtt=2&idtypebien=1,10,11,12,13,14,2,4,9&tri=d_dt_crea&div=REGION&LISTING-LISTpg=PAGE"
-    ],
-    "region_id": {
-      "aquitaine": "2229",
-      "midi_pyrenees": "2242"
+    "belle_immobilier": {
+      "name": "belle-immobilier",
+      "host": "www.belle-immobilier.fr",
+      "url_sequence": [
+        "http://HOST/fr/biens-immobiliers/?order_by=created_at&order_direction=DESC&page=PAGE"
+      ],
+      "ads": ".item",
+      "selectors": {
+        "price": ".price",
+        "description": ".item-text",
+        "location": ".item-title"
+      }
     },
-    "ads": "article.listing",
-    "selectors": {
-      "price": ".amount",
-      "description": ".listing_infos",
-      "location": ".listing_infos h2"
+    "se_loger": {
+      "name": "se-loger",
+      "host": "www.seloger.com",
+      "url_sequence": [
+        "http://HOST/list.htm?idtt=2&idtypebien=1,10,11,12,13,14,2,4,9&tri=d_dt_crea&div=REGION&LISTING-LISTpg=PAGE"
+      ],
+      "region_id": {
+        "aquitaine": "2229",
+        "midi_pyrenees": "2242"
+      },
+      "ads": "article.listing",
+      "selectors": {
+        "price": ".amount",
+        "description": ".listing_infos",
+        "location": ".listing_infos h2"
+      }
     }
   }
 }

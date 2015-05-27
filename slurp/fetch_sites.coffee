@@ -30,7 +30,7 @@ read_config = (handler) ->
     handler JSON.parse(data)
 
 read_config (config) ->
-  for id, site of config
+  for id, site of config.sites
     last_fetch_timestamp = Date.now()
     stop_after_page = 0
     last_page_candidates = []

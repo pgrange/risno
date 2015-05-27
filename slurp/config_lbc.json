@@ -1,15 +1,21 @@
 {
-  "leboncoin": {
-    "name": "le-bon-coin",
-    "host": "www.leboncoin.fr",
-    "url_sequence": [
-      "http://HOST/ventes_immobilieres/offres/REGION/?o=PAGE"
-    ],
-    "ads": ".lbc",
-    "selectors": {
-      "price": ".price",
-      "location": ".placement",
-      "description": ".title"
+  "regions": [
+    "aquitaine",
+    "midi_pyrenees"
+  ],
+  "sites": {
+    "leboncoin": {
+      "name": "le-bon-coin",
+      "host": "www.leboncoin.fr",
+      "url_sequence": [
+        "http://HOST/ventes_immobilieres/offres/REGION/?o=PAGE"
+      ],
+      "ads": ".lbc",
+      "selectors": {
+        "price": ".price",
+        "location": ".placement",
+        "description": ".title"
+      }
     }
   }
 }

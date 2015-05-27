@@ -19,7 +19,7 @@ app.use express.static(path.join(__dirname, 'public'))
 app.use morgan('combined')
 
 app.get '/', (req, res) ->
-  res.render 'index.jade', sites: config
+  res.render 'index.jade', sites: config.sites
 
 # TODO is there a way to merge params, query and body
 #      with new version of express, instead of searching
@@ -31,11 +31,11 @@ app.get '/', (req, res) ->
 #
 app.get '/:site', (req, res) ->
   res.render 'config.jade',
-    site: config[req.params.site]
+    site: config.sites[req.params.site]
     site_id: req.params.site
 
 app.get '/remote/:site', (req, res) ->
-  site = clone_site config[req.params.site]
+  site = clone_site config.sites[req.params.site]
   site.url_sequence = req.query.url_sequence.split('\n')
   page_number = req.query.page_number or 2
   console.log(site.url_sequence)
@@ -48,7 +48,7 @@ app.get '/remote/:site', (req, res) ->
 
 app.post '/save/:site', (req, res) ->
   site_id = req.params.site
-  site = config[site_id]
+  site = config.sites[site_id]
   site.url_sequence = req.body.url_sequence.split('\n')
   site.ads = req.body.ad_selector
   site.selectors.price = req.body.price_selector
