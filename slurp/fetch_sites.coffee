@@ -30,6 +30,9 @@ read_config = (handler) ->
     handler JSON.parse(data)
 
 read_config (config) ->
+  if config.regions.indexOf(region) == -1 
+    console.log "Uknown region " + region + ". Known regions: " + config.regions
+    process.exit 1
   for id, site of config.sites
     last_fetch_timestamp = Date.now()
     stop_after_page = 0
