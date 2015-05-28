@@ -26,4 +26,3 @@ curl -XPUT localhost:9200/${new_index} -d '
 ${install_dir}/tools/copy_index.sh ${old_index} ${new_index}
 
 curl -XPUT localhost:9200/${new_index}/_alias/${alias}
-

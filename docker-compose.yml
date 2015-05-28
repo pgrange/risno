@@ -1,5 +1,5 @@
 elasticsearch:
-  image: pgrange/elasticsearch
+  build: elasticsearch
   ports:
     - "9200:9200"
     - "9300:9300"
@@ -7,11 +7,11 @@ elasticsearch:
     - /opt/risno/elastic-storage/log/:/var/log/elasticsearch
     - /opt/risno/elastic-storage/data/:/var/lib/elasticsearch
 
-web:
+node:
   build: nodejs
   volumes:
     - /opt/risno/:/opt/risno
   ports:
     - "12043:12043"
-  # links:
-  #   - elasticsearch
+  links:
+    - elasticsearch
