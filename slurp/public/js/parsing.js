@@ -3,6 +3,7 @@ var slurp = require('../../slurp')
 $(document).ready(function() {
   $('#url_sequence').change(refresh_remote)
   $('#page_number').change(refresh_remote)
+  $('#region').change(refresh_remote)
   $('#ad_selector').change(show_ads)
   $('#price_selector').change(show_ads)
   $('#description_selector').change(show_ads)
@@ -21,9 +22,10 @@ function wait_for_ads () {
 
 function refresh_remote() {
   var page_number = $('#page_number').val()
+  var region = $('#region').val()
   var url_sequence = $('#url_sequence').val()
   url_sequence = encodeURIComponent(url_sequence)
-  $('#remote').attr('src', 'remote' + window.location.pathname + '?url_sequence=' + url_sequence + '&page_number=' + page_number)
+  $('#remote').attr('src', 'remote' + window.location.pathname + '?url_sequence=' + url_sequence + '&page_number=' + page_number + '&region=' + region)
   wait_for_ads()
 }
 

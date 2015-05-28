@@ -31,8 +31,15 @@ html
     label.location_parsing(for="location_selector") location selector
     input#location_selector(name="location_selector",type="text",autocomplete="off", value=site.selectors.location)
 
+   p
     label(for="page_number") page number to test
     input#page_number(name="page_number",type="text",autocomplete="off", value=2)
+
+    label(for="region") region to test
+    select#region(name="region")
+     each region in regions
+      option(value=region)
+       =region
 
    p
     button(type="submit") save

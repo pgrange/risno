@@ -33,15 +33,18 @@ app.get '/:site', (req, res) ->
   res.render 'config.jade',
     site: config.sites[req.params.site]
     site_id: req.params.site
+    regions: config.regions
 
 app.get '/remote/:site', (req, res) ->
   site = clone_site config.sites[req.params.site]
   site.url_sequence = req.query.url_sequence.split('\n')
   page_number = req.query.page_number or 2
+  region = req.query.region
   console.log(site.url_sequence)
   console.log(page_number)
+  console.log(region)
 
-  fetch.fetch_page site, 'aquitaine', page_number, (error, statusCode, body) ->
+  fetch.fetch_page site, region, page_number, (error, statusCode, body) ->
     res.send error if error
     res.send 'invalid HTTP status code: ' + statusCode if statusCode != 200
     res.send(body)
