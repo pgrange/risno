@@ -9,4 +9,4 @@ RUN npm install
 
 EXPOSE 12043
 
-CMD ["/usr/bin/node", "src/index.js"]
+CMD ["/usr/local/bin/node", "/src/index.js"]
