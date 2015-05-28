@@ -111,11 +111,13 @@ fetching_duplicates = (timestamp, old_ads, ads) ->
   duplicates.length == ads.length or duplicates.length > 3
 
 we_should_stop = (last_page_candidates) ->
-  if last_page_candidates.length < 3
+  max = 10
+  if last_page_candidates.length < max
     false
   else
     last_page_candidates.sort((a,b) -> a-b)
-    a = last_page_candidates[last_page_candidates.length - 3]
-    b = last_page_candidates[last_page_candidates.length - 2]
-    c = last_page_candidates[last_page_candidates.length - 1]
-    (b == a+1) and (c == b+1)
+    for i in [1..max]
+      a = last_page_candidates[last_page_candidates.length - i - 1]
+      b = last_page_candidates[last_page_candidates.length - i]
+      return false if a != b-1
+    return true
