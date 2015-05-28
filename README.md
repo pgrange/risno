@@ -9,14 +9,33 @@ Hardly ! Not still mature enough to be used ealily. But if you still want to try
 
 Copy *risnorc_sample* into a file named *risno* in the directory *$HOME/.config*, and edit values.
 
-## Elasticsearch
+## Development
 
-risno use an elasticsearch database running in a docker container. If you have [Docker](http://www.docker.io) installed,
-take a look at start_elastic.sh and make the appropriate changes so that it will store its data in a secure adapted directory.
-Then run :
+How install *risno* on localhost :
 
-    $ start_elastic.sh
+### Tools
 
+* Install tools [machine][] and [compose][]:
+
+        $ make init
+
+* Creates a virtual machine for the development environment :
+
+        $ ./machine create -d virtualbox risno
+        $ eval "$(./machine env risno)"
+
+* Check *risno* machine runnning :
+
+        $ ./machine ls
+
+* Launch *risno* :
+
+        $ ./compose up
+
+
+### Elasticsearch
+
+*risno* use an elasticsearch database running in a docker container.
 Then you have to initialize indexes. To do that you need to install jq :
 
     $ apt-get install jq
@@ -27,23 +46,23 @@ Know, initialize french cities index this may take as long as 15 minutes, by run
 
 After that you can initialize the index where risno stores the ads, by running :
 
-    $ ./elastic_mappings/ads/ads_1.0 
-    $ ./elastic_mappings/ads/ads_2.0 
-    $ ./elastic_mappings/ads/ads_2.1 
+    $ ./elastic_mappings/ads/ads_1.0
+    $ ./elastic_mappings/ads/ads_2.0
+    $ ./elastic_mappings/ads/ads_2.1
 
 Elasticsearch is now ready for risno.
 
-## Fetch pubs
+### Fetch pubs
 
 Install Python tools:
 
-    $ apt-get install python-pip
-	$ pip install virtualenvwrapper
-	$ source /usr/local/bin/virtualenvwrapper.sh
+    $ wget https://bootstrap.pypa.io/get-pip.py
+    $ python get-pip.py
 
 Install dependencies :
 
-    $ mkvirtualenv risno
+    $ virtualenv --python=/usr/bin/python2.7 venv
+    $ . venv/bin/activate
 	$ pip install -r requirements.txt
 
 You are now ready to fetch pubs from several sites by running :
@@ -72,3 +91,7 @@ WARNING ! If you used risno before ads_2.0 model, go to this url to find your
 liked and dislikes opinions :
 
     http://localhost:12043/12043/new
+
+
+[machine]: https://github.com/docker/machine/
+[compose]: https://github.com/docker/compose
