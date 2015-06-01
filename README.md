@@ -2,73 +2,95 @@ risno
 =====
 
 Real-estate search engine. You can try it here : http://risno.org
+*risno* stack is based on :
+
+* [elasticsearch][] (v1.5.2)
+* [nodejs][] (v0.10.38)
+
 
 # How to use
 
 Hardly ! Not still mature enough to be used ealily. But if you still want to try something, read on.
 
-Copy *risnorc_sample* into a file named *risno* in the directory *$HOME/.config*, and edit values.
+## Development
 
-## Elasticsearch
+A development environment is provided based on [machine][] and [compose][].
 
-risno use an elasticsearch database running in a docker container. If you have [Docker](http://www.docker.io) installed,
-take a look at start_elastic.sh and make the appropriate changes so that it will store its data in a secure adapted directory.
-Then run :
+### Tools
 
-    $ start_elastic.sh
+* Install tools:
 
+        $ make init
+
+* Creates directory for *risno* data on host :
+
+        $ mkdir /opt/risno
+
+* Creates a virtual machine for the development environment :
+
+        $ ./machine create -d virtualbox risno
+        $ eval "$(./machine env risno)"
+
+* Check *risno* machine runnning :
+
+        $ ./machine ls
+
+* Launch *risno* :
+
+        $ ./compose up
+
+* Open your browser and navigate to the IP address associated with the *risno* virtual machine :
+
+        $ ./machine ip
+
+* To see which environment variables are available to the **web** service, run:
+
+        $ ./compose run web env
+
+
+### Initialization
+
+*risno* use an elasticsearch database running in a docker container.
 Then you have to initialize indexes. To do that you need to install jq :
 
     $ apt-get install jq
 
 Know, initialize french cities index this may take as long as 15 minutes, by running :
 
-    $ ./elastic_mappings/cities/inject_cities_in_elasticsearch.sh
+    $ ./elasticsearch/mappings/cities/inject_cities_in_elasticsearch.sh
 
 After that you can initialize the index where risno stores the ads, by running :
 
-    $ ./elastic_mappings/ads/ads_1.0 
-    $ ./elastic_mappings/ads/ads_2.0 
-    $ ./elastic_mappings/ads/ads_2.1 
+    $ ./elasticsearch/mappings/ads/ads_1.0
+    $ ./elasticsearch/mappings/ads/ads_2.0
+    $ ./elasticsearch/mappings/ads/ads_2.1
 
-Elasticsearch is now ready for risno.
+Elasticsearch is now ready for *risno*.
 
-## Fetch pubs
 
-Install Python tools:
 
-    $ apt-get install python-pip
-	$ pip install virtualenvwrapper
-	$ source /usr/local/bin/virtualenvwrapper.sh
+## Contributing
 
-Install dependencies :
+See [CONTRIBUTING](CONTRIBUTING.md).
 
-    $ mkvirtualenv risno
-	$ pip install -r requirements.txt
 
-You are now ready to fetch pubs from several sites by running :
+## License
 
-    $ fetch_all.sh
+See [LICENSE][] for the complete license.
 
-## Consult pubs
 
-Install [NodeJS](http://nodejs.org/) and [Npm](https://npmjs.org/) :
+## Changelog
 
-    $ apt-get install nodejs npm
+TODO.
 
-Install dependencies :
 
-    $ cd nodejs && npm install
+## Contact
 
-Start the node web server. To do that, go inside nodejs subdirectory and run :
+Pascal Grange
 
-    $ node index.js
 
-You can now browse this url and take a look at the pubs :
+[elasticsearch]: https://www.elastic.co
+[nodejs]: https://nodejs.org
 
-    http://localhost:12043/
-
-WARNING ! If you used risno before ads_2.0 model, go to this url to find your
-liked and dislikes opinions :
-
-    http://localhost:12043/12043/new
+[machine]: https://github.com/docker/machine
+[compose]: https://github.com/docker/compose
