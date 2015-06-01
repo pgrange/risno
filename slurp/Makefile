@@ -9,10 +9,10 @@ COFFEE=./node_modules/coffee-script/bin/coffee
 BROWSERIFY=./node_modules/browserify/bin/cmd.js
 
 help:
-	@echo "\tmake config: start web configuration tool"
-	@echo "\tmake test: run tests"
-	@echo "\tmake clean: clean all build files"
-	@echo "\tmake dist-clean: purge all generated file, node modules..."
+	@echo -e "\tmake config: start web configuration tool"
+	@echo -e "\tmake test: run tests"
+	@echo -e "\tmake clean: clean all build files"
+	@echo -e "\tmake dist-clean: purge all generated file, node modules..."
 
 config: compile public/js/bundle.js
 	node config

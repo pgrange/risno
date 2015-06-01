@@ -1,4 +1,11 @@
+# Python
+venv/
 *.pyc
+
 etc/risnorc
 nodejs/node_modules/
 TODO
+
+# Docker tools
+compose
+machine

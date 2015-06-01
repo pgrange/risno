@@ -8,9 +8,15 @@ var nodemailer = require('nodemailer')
 
 nconf.argv()
      .env()
-     .file({ file: '/etc/opt/risno.json' })
-     .defaults({ listen_port: 12043, elastic_db: 'localhost:9200'})
+     .file({ file: '/etc/risno.json' })
+     .defaults({ listen_port: 12043,
+                 // elastic_db: '9200'})
+                 elastic_db: process.env.ELASTICSEARCH_1_PORT_9200_TCP_PORT
+                          || 'http://localhost:9200'})
 
+// Debug
+console.log('ES: ' + nconf.get('elastic_db'));
+console.log('Port: ' + nconf.get('listen_port'));
 
 var app = express()
 app.locals.pretty = true
@@ -26,7 +32,7 @@ function price_filter(req) {
 app.get('/', function(req, res) {
   var user_code = req.param('user_code')
   if (user_code) res.redirect(user_code)
-  else { 
+  else {
     user_code = crypto.randomBytes(10).toString('hex')
     res.render('welcome.jade', {user_code: user_code})
   }
@@ -91,9 +97,9 @@ app.post('/:user_code/pub/:id', function(req, res) {
   var user_code = req.param('user_code')
   var id = req.param('id')
   var opinion = req.param('opinion')
-  console.log("vote for " + 
-              id + ": " + 
-              opinion + 
+  console.log("vote for " +
+              id + ": " +
+              opinion +
               " by user_code: " + user_code)
   if (opinion != "like" && opinion != "dislike") {
     var msg = "That's not an opinion: " + opinion
@@ -198,12 +204,12 @@ app.post('/send_id', function(req, res) {
         function(error, response) {
           if (error) {
             console.log("Unable to send ids " +
-                        "[" + mail + "]" + 
+                        "[" + mail + "]" +
                         " " + error)
             res.send(500, '')
           } else {
             console.log("ids sent " +
-                        "[" + mail + "]" + 
+                        "[" + mail + "]" +
                         " " + response.message);
             res.send(200, '')
           }
@@ -223,7 +229,8 @@ app.get('/:user_code', function(req, res) {
 //new elasticsearch client part
 var elasticsearch = require('elasticsearch');
 var elastic_client = new elasticsearch.Client({
-  host: nconf.get('elastic_db')
+    host: nconf.get('elastic_db'),
+    log: 'trace'
 });
 
 //elastic part
@@ -270,7 +277,7 @@ function dislike_query(user_code) {
 function get_pubs(handle_results, query, filter) {
   if (! query) query = ejs.QueryStringQuery('*')
   if (! filter) filter = ejs.TypeFilter(e_type)
-  
+
   // generates the elastic.js query and executes the search
   ejs.Request({indices: e_index, types: e_type})
     .query(query).size(100).filter(filter)
@@ -406,11 +413,11 @@ smtp_transport.sendMail(
  function(error, response) {
    if (error) {
      console.log("Unable to send new id " +
-                 "[" + id + "]" + "[" + to + "]" + 
+                 "[" + id + "]" + "[" + to + "]" +
                  " " + error)
    } else {
      console.log("New id sent " +
-                 "[" + id + "]" + "[" + to + "]" + 
+                 "[" + id + "]" + "[" + to + "]" +
                  " " + response.message);
    }
  })
