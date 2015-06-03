@@ -18,7 +18,7 @@ RUN mkdir -p /src/elasticsearch && cd /src/elasticsearch && \
     /src/elasticsearch/bin/plugin -v -i royrusso/elasticsearch-HQ && \
     /src/elasticsearch/bin/plugin -v -i lmenezes/elasticsearch-kopf
 
-ADD ./elasticsearch.yml /src/elasticsearch/elasticsearch.yml
+ADD ./elasticsearch.yml /src/elasticsearch/config/elasticsearch.yml
 
 VOLUME ["/var/lib/elasticsearch"]
 VOLUME ["/var/log/elasticsearch"]
