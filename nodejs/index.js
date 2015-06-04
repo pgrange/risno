@@ -10,9 +10,7 @@ nconf.argv()
      .env()
      .file({ file: '/etc/risno.json' })
      .defaults({ listen_port: 12043,
-                 // elastic_db: '9200'})
-                 elastic_db: process.env.ELASTICSEARCH_1_PORT_9200_TCP_PORT
-                          || 'http://localhost:9200'})
+                 elastic_db: 'elasticsearch:9200'})
 
 // Debug
 console.log('ES: ' + nconf.get('elastic_db'));
