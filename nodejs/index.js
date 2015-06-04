@@ -17,14 +17,11 @@ var es_port = 'http://'
 nconf.argv()
      .env()
      .file({ file: '/etc/risno.json' })
-     .defaults({ listen_port: 12043, elastic_db: es_port})
+     .defaults({ listen_port: 12043,
+                 elastic_db: 'elasticsearch:9200'})
 
 // Debug
 console.log(process.env)
-console.log("Environment Elasticsearch :" +
-            process.env.ELASTICSEARCH_PORT_9200_TCP)
-console.log('ES: ' + nconf.get('elastic_db'));
-console.log('Port: ' + nconf.get('listen_port'));
 
 var app = express()
 app.locals.pretty = true
@@ -97,8 +94,8 @@ app.post('/:user_code/criteria', function(req, res) {
   doc.source(criteria).upsert(criteria)
   doc.doUpdate(function() {
     res.redirect("/" + user_code + "/new")
-  }, function() {
-    console.log("KATASTROPH")
+  }, function(e) {
+    console.log("KATASTROPH" + e)
   })
 })
 app.post('/:user_code/pub/:id', function(req, res) {
@@ -168,8 +165,8 @@ app.post('/send_new_id', function(req, res) {
         send_new_id(mail, user_code)
         res.redirect(user_code + '/criteria')
       },
-      function() {
-        console.log("KATASTROPH")
+      function(e) {
+        console.log("KATASTROPH" + e)
       })
 })
 app.get('/check_mail', function(req, res) {
@@ -325,8 +322,8 @@ function get_criteria(user_code, handle_results) {
   console.log('criteria: ' + criteria_id)
   doc.doGet(function(result) {
     handle_results(result._source)
-  }, function() {
-    console.log("KATASTROPH")
+  }, function(e) {
+    console.log("KATASTROPH" + e)
   })
 }
 
