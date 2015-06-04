@@ -1,5 +1,5 @@
 elasticsearch:
-  build: elasticsearch
+  build: risno/elasticsearch:1.0
   ports:
     - "9200:9200"
     - "9300:9300"
@@ -8,7 +8,7 @@ elasticsearch:
     - /var/opt/risno/elastic-storage/data/:/var/lib/elasticsearch
 
 node:
-  build: nodejs
+  build: risno/nodejs:1.0
   volumes:
     - /opt/risno/:/opt/risno
   ports:
