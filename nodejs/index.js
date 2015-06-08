@@ -7,12 +7,11 @@ var nconf = require('nconf')
 var nodemailer = require('nodemailer')
 
 
-
-var es_port = 'http://'
-            + process.env.ELASTICSEARCH_PORT_9200_TCP_ADDR
-            + ':'
-            + process.env.ELASTICSEARCH_PORT_9200_TCP_PORT
-           || 'http://localhost:9200'
+var es_port = 'localhost:9200'
+if process.env.ELASTICSEARCH_PORT_9200_TCP_ADDR
+  es_port = process.env.ELASTICSEARCH_PORT_9200_TCP_ADDR
+          + ':'
+          + process.env.ELASTICSEARCH_PORT_9200_TCP_PORT
 
 nconf.argv()
      .env()
