@@ -1,9 +1,9 @@
 # VERSION 1.0
-# AUTHOR:         Nicolas Lamirault <nicolas.lamirault@gmail.com>
+# AUTHOR:         Pascal Grange <pascal@grange.nom.fr>
 # DESCRIPTION:    risno/elasticsearch
 
 FROM java:7
-MAINTAINER Nicolas Lamirault <nicolas.lamirault@gmail.com>
+MAINTAINER Pascal Grange <pascal@grange.nom.fr>
 
 ENV ES_VERSION 1.5.2
 

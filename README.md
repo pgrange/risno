@@ -26,26 +26,28 @@ A development environment is provided based on [machine][] and [compose][].
 
         $ mkdir /opt/risno
 
-* Creates a virtual machine for the development environment :
+* Creates a virtual machine called *risno-dev* for the development environment :
 
-        $ ./machine create -d virtualbox risno
-        $ eval "$(./machine env risno)"
+        $ ./docker-machine create -d virtualbox risno-dev
+        $ eval "$(./docker-machine env risno-dev)"
 
 * Check *risno* machine runnning :
 
-        $ ./machine ls
+        $ ./docker-machine ls
 
 * Launch *risno* :
 
-        $ ./compose up
+        $ ./docker-compose up
 
-* Open your browser and navigate to the IP address associated with the *risno* virtual machine :
+* Open your browser and navigate to the IP address associated with the
+*risno* virtual machine :
 
-        $ ./machine ip
+        $ ./docker-machine ip
 
-* To see which environment variables are available to the **web** service, run:
+* To see which environment variables are available to the **web** service,
+run:
 
-        $ ./compose run web env
+        $ ./docker-compose run web env
 
 
 ### Initialization
@@ -67,6 +69,49 @@ After that you can initialize the index where risno stores the ads, by running :
 
 Elasticsearch is now ready for *risno*.
 
+
+## Deployment
+
+### Cloud
+
+With our app running locally, we can now push this exact same environment
+to a cloud hosting provider with Docker Machine (Like [RunAbove][]).
+
+Set your credentials in your environment using the [OpenRC file][] that
+you can download using the OpenStack Horizon dashboard.
+
+    $ source XXXXXXX-openrc.sh
+
+You need to set the availability zone where you want to deploy your new
+instance (SBG-1 or BHS-1) using the following environment variable:
+
+    $ export OS_REGION_NAME=SBG-1
+
+Deploy a new instance :
+
+    $ docker-machine create -d openstack \
+        --openstack-flavor-name="ra.intel.ha.s" \
+        --openstack-image-name="Ubuntu 14.04" \
+        --openstack-net-name="Ext-Net" \
+        --openstack-ssh-user="admin" \
+        risno-prod
+
+Now we have two Machines running, one locally and one on Digital Ocean:
+
+    $ docker-machine ls
+    NAME           ACTIVE     DRIVER         STATE     URL
+    risno-dev      *          virtualbox     Running   tcp://w.x.y.z:2376
+    risno-prod                openstack      Running   tcp://a.b.c.d:2376
+
+Set *risno-prod* as the active machine and load the Docker environment :
+
+    $ ./docker-machine active risno-prod
+    $ eval "$(./docker-machine env risno-prod)"
+
+Finally, let's build the application in the Cloud :
+
+    $ ./docker-compose build
+    $ ./docker-compose up -d -f production.yml
 
 
 ## Contributing
@@ -94,3 +139,5 @@ Pascal Grange
 
 [machine]: https://github.com/docker/machine
 [compose]: https://github.com/docker/compose
+
+[OpenRC file]: https://manager.runabove.com/horizon/project/access_and_security/api_access/openrc/

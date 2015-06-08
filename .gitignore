@@ -7,5 +7,5 @@ nodejs/node_modules/
 TODO
 
 # Docker tools
-compose
-machine
+docker-compose
+docker-machine

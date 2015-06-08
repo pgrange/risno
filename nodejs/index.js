@@ -6,15 +6,22 @@ var crypto = require('crypto')
 var nconf = require('nconf')
 var nodemailer = require('nodemailer')
 
+
+
+var es_port = 'http://'
+            + process.env.ELASTICSEARCH_PORT_9200_TCP_ADDR
+            + ':'
+            + process.env.ELASTICSEARCH_PORT_9200_TCP_PORT
+           || 'http://localhost:9200'
+
 nconf.argv()
      .env()
      .file({ file: '/etc/risno.json' })
      .defaults({ listen_port: 12043,
-                 elastic_db: 'elasticsearch:9200'})
+                 elastic_db: es_port})
 
 // Debug
-console.log('ES: ' + nconf.get('elastic_db'));
-console.log('Port: ' + nconf.get('listen_port'));
+console.log(process.env)
 
 var app = express()
 app.locals.pretty = true
