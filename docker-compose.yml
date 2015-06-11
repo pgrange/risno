@@ -15,4 +15,3 @@ node:
     - "12043:12043"
   links:
     - elasticsearch
-  env_file: .env
