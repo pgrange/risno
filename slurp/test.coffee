@@ -46,6 +46,13 @@ exports.testShouldParseAdPrice = (test) ->
   test.strictEqual ad.price, 12043
   test.done()
 
+exports.testShouldExtractPriceDotForThousandFormated = (test) ->
+  ad = parse_ad_from_src '<price>310.000&nbsp;€</price>'
+
+  test.equals ad.price, 310000
+  test.done()
+
+
 exports.testShouldExtractPriceFromCrap = (test) ->
   ad = parse_ad_from_src '<price>only 12 043 595euro</price>'
 

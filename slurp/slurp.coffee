@@ -59,6 +59,7 @@ strip = (string) ->
 
 clear_price = (price) ->
   price = price.replace /\s/g, ''
+  price = price.replace /\./g, ''
   price = /[0-9]+/.exec(price)
   parseInt price[0] if price
 
