@@ -5,6 +5,8 @@ exports.url = (site, region, page_num) ->
   replace = (format) ->
     format = format.replace /HOST/, site.host
     format = format.replace /REGION/, region
+    format = format.replace /\(.*PAGE.*\)/, (operation) ->
+      eval operation.replace /PAGE/, page_num
     format = format.replace /PAGE/, page_num
 
   if Array.isArray site.url_sequence

@@ -170,6 +170,15 @@ exports.testForgeSimpleUrl = (test) ->
   test.deepEqual url, ['http://www.exemple.com/ads/aquitaine?p=2']
   test.done()
 
+exports.testForgeUrlWithPageArithmetic = (test) ->
+  url = slurp.url
+    host: 'www.exemple.com'
+    url_sequence: 'http://HOST/ads/REGION?p=((PAGE-1)*12)',
+    'aquitaine', 2
+
+  test.deepEqual url, ['http://www.exemple.com/ads/aquitaine?p=12']
+  test.done()
+
 exports.testForgeUrlWithSiteSpecificRegionIds = (test) ->
   url = slurp.url
     host: 'www.exemple.com'
