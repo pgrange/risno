@@ -35,7 +35,7 @@
       "ads": "ul.mode-list > li",
       "selectors": {
         "price": ".price",
-        "description": ".details ul",
+        "description": "a.linkCtnr p",
         "location": ".loca"
       }
     },

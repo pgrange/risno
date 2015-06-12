@@ -40,7 +40,7 @@ find_url = (ad, host) ->
   if a.length > 0
     crappy_pages_jaunes_url(a)
   else
-    a = ad.find('.link-wrapper') #avendrealouer specific
+    a = ad.find('.linkCtnr') #avendrealouer specific
     if a.length > 0
       absolutize a.attr('href'), host
     else

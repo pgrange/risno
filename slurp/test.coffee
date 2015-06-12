@@ -126,7 +126,8 @@ exports.testShouldParseAdUrlWhenLinkInside = (test) ->
   test.done()
 
 exports.testShouldExtractUrlFromStrangeAVendreALouerMethod = (test) ->
-  ad = parse_ad_from_src '<a class="link-wrapper" href="/ad"></a>'
+  ad = parse_ad_from_src '<a href="/crap"></a>
+                          <a class="linkCtnr" href="/ad"></a>'
 
   test.equals ad.url, 'http://site/ad'
   test.done()
