@@ -61,3 +61,9 @@
   cron: name="purge expired pubs" cron_file=risno user=risno
         hour=2 minute=1
         job="python /opt/risno/purge_pubs.py >>/var/opt/risno/purge.log 2>&1"
+
+- name: install logrotate
+  apt: pkg=logrotate
+
+- name: setup risno/slurp logrotate policy
+  copy: src=slurp dest=/etc/logrotate.d
