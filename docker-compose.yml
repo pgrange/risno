@@ -1,11 +1,12 @@
 elasticsearch:
-  build: elasticsearch
+  image: elasticsearch
   ports:
     - "9200:9200"
     - "9300:9300"
   volumes:
-    - /var/opt/risno/elastic-storage/log/:/var/log/elasticsearch
-    - /var/opt/risno/elastic-storage/data/:/var/lib/elasticsearch
+    - /var/opt/risno/elastic-storage/data:/usr/share/elasticsearch/data
+    - /var/opt/risno/elastic-storage/config:/usr/share/elasticsearch/config
+    - /var/opt/risno/elastic-storage/log:/usr/share/elasticsearch/logs/
   restart: always
 
 node:

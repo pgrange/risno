@@ -23,7 +23,7 @@
     - '/var/opt/risno/elastic-storage/data/:/var/lib/elasticsearch'
 
 - name: activate elastic search backup
-  elasticsearchbkp: location=/var/lib/elasticsearch/backup
+  elasticsearchbkp: location=/usr/share/elasticsearch/data/backup
 
 - name: setup cron to take elastic search snaphot
   cron: name="snapshot elastic search" cron_file=elastic_snapshot
