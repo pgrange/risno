@@ -8,19 +8,31 @@
 - name: install docker
   apt: pkg=lxc-docker
 
-- name: install elastic risno configuration files
+- name: install elastic risno configuration files #TODO remove ?
   copy: src=risno dest=/etc/opt/risno
+
+- name: prepare elasticsearch configuration directory
+  file: path=/var/opt/risno/elastic-storage/config/
+        state=directory
+        mode=0755
+
+- name: install elasticsearch configuration files
+  copy: src={{ item }} dest=/var/opt/risno/elastic-storage/config/
+  with_items:
+    - elasticsearch.yml
+    - logging.yml
 
 - name: install docker-py with pip
   pip: name=docker-py
  
 - name: start elasticsearch database
   docker:
-    image: pgrange/elasticsearch
+    image: elasticsearch
     ports: 9200:9200 
     volumes:
-    - '/var/opt/risno/elastic-storage/log/:/var/log/elasticsearch'
-    - '/var/opt/risno/elastic-storage/data/:/var/lib/elasticsearch'
+    - '/var/opt/risno/elastic-storage/log:/usr/share/elasticsearch/logs/'
+    - '/var/opt/risno/elastic-storage/data:/usr/share/elasticsearch/data'
+    - '/var/opt/risno/elastic-storage/config:/usr/share/elasticsearch/config'
 
 - name: activate elastic search backup
   elasticsearchbkp: location=/usr/share/elasticsearch/data/backup
