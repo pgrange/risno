@@ -16,4 +16,16 @@
 #- name: ensure risno git repo present
 #  git: repo=https://github.com/pgrange/risno.git dest=/opt/risno update=yes force=no
 
-
+- name: prepare docker-compose directory
+  file: path=/opt/docker-compose/ state=directory mode=0755
+- name: install docker-compose
+  get_url: url=https://github.com/docker/compose/releases/download/1.2.0/docker-machine_linux-amd64
+    dest=/opt/docker-compose/docker-compose mode=0755
+- name: configure docker-compose
+  copy: src=docker-compose.yml dest=/opt/docker-compose mode=0755
+  #TODO should know if there has been change in container states or not
+  #     no action -> no output from command
+  #     if starting container -> ^Starting .* on each line of output
+  #     if creating container -> ^Creating .* on each line of output
+- name: start composed containers
+  shell: ./docker-compose up -d --no-recreate chdir=/opt/docker-compose
