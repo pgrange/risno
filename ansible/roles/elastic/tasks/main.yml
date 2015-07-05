@@ -30,6 +30,9 @@
         minute=7 user=risno
         job="curl -XPUT localhost:9200/_snapshot/backup/$(date +\%Y\%m\%d\%H\%m\%S) >>/var/opt/risno/snapshot.log 2>&1"
 
+- name: install jq dependency for purge
+  apt: pkg=jq
+
 - name: setup cron to remove a month older elasticsearch backups
   cron: name="snaphot elastic search purge" cron_file=elastic_snapshot
         weekday=5 user=risno
