@@ -62,7 +62,7 @@ def create_snapshot_repo(location):
   r = requests.put("http://localhost:9200/_snapshot/backup",
       data=json.dumps({"type": "fs", "settings": {"location": location}}))
   if r.status_code != 200:
-    msg = str(self.response.status_code) + ' / ' + str(self.response.text)
+    msg = str(r.status_code) + ' / ' + str(r.text)
     raise ElasticError(msg)
 
 def delete_snapshot_repo(location):
