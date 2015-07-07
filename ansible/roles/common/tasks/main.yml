@@ -27,7 +27,5 @@
   #     no action -> no output from command
   #     if starting container -> ^Starting .* on each line of output
   #     if creating container -> ^Creating .* on each line of output
-  #- name: start composed containers
-  #  shell: ./docker-compose up -d --no-recreate chdir=/opt/docker-compose
-- name: initialize docker compose containers
-  dockercompose: path=/opt/docker-compose/
+- name: start composed containers
+  shell: ./docker-compose up -d --no-recreate chdir=/opt/docker-compose
