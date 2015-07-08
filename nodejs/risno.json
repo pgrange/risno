@@ -1,0 +1,9 @@
+{
+    "smtp": {
+        "host": "smtp.host",
+        "auth": {
+            "user": "contact@risno.org",
+            "pass": "none"
+        }
+    }
+}
