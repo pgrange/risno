@@ -1,9 +1,0 @@
-/var/opt/risno/*.log {
-	daily
-	missingok
-	rotate 52
-	compress
-	delaycompress
-	notifempty
-	create 644 risno risno
-}
