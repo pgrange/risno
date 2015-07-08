@@ -27,12 +27,15 @@
  
 - name: start elasticsearch database
   docker:
+    name: risno_elasticsearch
     image: elasticsearch
+    restart_policy: always
     ports: 9200:9200 
     volumes:
-    - '/var/opt/risno/elastic-storage/log:/usr/share/elasticsearch/logs/'
     - '/var/opt/risno/elastic-storage/data:/usr/share/elasticsearch/data'
     - '/var/opt/risno/elastic-storage/config:/usr/share/elasticsearch/config'
+    - '/var/opt/risno/elastic-storage/log:/usr/share/elasticsearch/logs/'
+    state: reloaded
 
 - name: activate elastic search backup
   elasticsearchbkp: location=/var/lib/elasticsearch/backup
