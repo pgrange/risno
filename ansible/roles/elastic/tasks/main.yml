@@ -3,7 +3,7 @@
 - name: add docker repo key
   apt_key: file=/root/docker-repo-key.asc state=present
 - name: add docker repo
-  apt_repository: repo='deb http://get.docker.io/ubuntu docker main'
+  apt_repository: repo='deb https://get.docker.com/ubuntu docker main'
 
 - name: install docker
   apt: pkg=lxc-docker
@@ -35,10 +35,9 @@
     - '/var/opt/risno/elastic-storage/data:/usr/share/elasticsearch/data'
     - '/var/opt/risno/elastic-storage/config:/usr/share/elasticsearch/config'
     - '/var/opt/risno/elastic-storage/log:/usr/share/elasticsearch/logs/'
-    state: reloaded
 
 - name: activate elastic search backup
-  elasticsearchbkp: location=/var/lib/elasticsearch/backup
+  elasticsearchbkp: location=/usr/share/elasticsearch/data/backup
 
 - name: setup cron to take elastic search snaphot
   cron: name="snapshot elastic search" cron_file=elastic_snapshot
