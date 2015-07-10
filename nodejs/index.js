@@ -8,7 +8,7 @@ var nodemailer = require('nodemailer')
 
 
 var es_port = 'localhost:9200'
-if process.env.ELASTICSEARCH_PORT_9200_TCP_ADDR
+if (process.env.ELASTICSEARCH_PORT_9200_TCP_ADDR)
   es_port = process.env.ELASTICSEARCH_PORT_9200_TCP_ADDR
           + ':'
           + process.env.ELASTICSEARCH_PORT_9200_TCP_PORT
@@ -18,7 +18,6 @@ nconf.argv()
      .file({ file: '/etc/opt/risno.json' })
      .defaults({ listen_port: 12043,
                  elastic_db: es_port})
-
 
 var app = express()
 app.locals.pretty = true
@@ -441,6 +440,8 @@ function prepare_send_id_mail(mail, user_codes) {
 }
 
 var smtp_config = nconf.get('smtp')
+if (! smtp_config.host)
+  smtp_config = JSON.parse(smtp_config)
 var smtp_transport = nodemailer.createTransport(smtp_config)
 app.listen(nconf.get('listen_port'))
 console.log("Server started")
