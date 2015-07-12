@@ -441,6 +441,13 @@ function prepare_send_id_mail(mail, user_codes) {
 
 var smtp_config = nconf.get('smtp')
 if (! smtp_config.host)
+  smtp_config = {
+    "host": nconf.get('smtp_host'),
+    "auth": {
+      "user": nconf.get('smtp_user'),
+      "pass": nconf.get('smtp_pass'),
+    }
+  }
   smtp_config = JSON.parse(smtp_config)
 var smtp_transport = nodemailer.createTransport(smtp_config)
 app.listen(nconf.get('listen_port'))
