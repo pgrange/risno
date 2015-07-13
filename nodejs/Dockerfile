@@ -7,7 +7,6 @@ MAINTAINER Pascal Grange <pascal@grange.nom.fr>
 
 RUN mkdir /src
 
-ADD risno.json /etc/opt/risno.json
 ADD . /src
 WORKDIR /src
 RUN npm install
