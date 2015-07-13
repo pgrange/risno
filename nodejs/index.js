@@ -433,7 +433,7 @@ function prepare_send_id_mail(mail, user_codes) {
 }
 
 var smtp_config = nconf.get('smtp')
-if (! smtp_config.host)
+if (! smtp_config || ! smtp_config.host)
   smtp_config = {
     "host": nconf.get('smtp_host'),
     "auth": {
