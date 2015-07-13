@@ -442,7 +442,7 @@ if (! smtp_config || ! smtp_config.host)
     }
   }
   smtp_port=nconf.get('smtp_port')
-  if (smtp_port) smtp_config.smtp_port = smtp_port
+  if (smtp_port) smtp_config.port = smtp_port
 console.log("smtp_config: " + JSON.stringify(smtp_config))
 var smtp_transport = nodemailer.createTransport(smtp_config)
 app.listen(nconf.get('listen_port'))
