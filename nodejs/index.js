@@ -441,6 +441,8 @@ if (! smtp_config.host)
       "pass": nconf.get('smtp_pass')
     }
   }
+  smtp_port=nconf.get('smtp_port')
+  if (smtp_port) smtp_config.smtp_port = smtp_port
 var smtp_transport = nodemailer.createTransport(smtp_config)
 app.listen(nconf.get('listen_port'))
 console.log("Server started")
