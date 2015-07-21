@@ -42,7 +42,7 @@
 
 - name: setup cron to take elastic search snaphot
   cron: name="snapshot elastic search" cron_file=elastic_snapshot
-        minute=7 user=risno
+        minute=7 hour="3,15" user=risno
         job="curl -XPUT localhost:9200/_snapshot/backup/$(date +\%Y\%m\%d\%H\%m\%S) >>/var/opt/risno/snapshot.log 2>&1"
 
 - name: install jq dependency for purge
