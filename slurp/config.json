@@ -106,6 +106,7 @@
     "sud-ouest": {
       "name": "sud-ouest",
       "host": "www.sudouest-annonces.com",
+      "force_encoding": "latin1",
       "url_sequence": [
         "http://HOST/annonce/liste.html?from=((PAGE-1)*12)&rub=IMO003&r%5B0%5D=IMO003001007&r%5B1%5D=IMO003001002&r%5B2%5D=IMO003001003&r%5B3%5D=IMO003001004&r%5B4%5D=IMO003001005&r%5B5%5D=IMO003002001&r%5B6%5D=IMO003002004&r%5B7%5D=IMO003003003&r%5B8%5D=IMO003003005&r%5B9%5D=IMO003003002&r%5B10%5D=IMO003004&r%5B11%5D=IMO003005002&r%5B12%5D=IMO003005001"
       ],
