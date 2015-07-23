@@ -1,6 +1,3 @@
-- name: install elastic risno configuration files #TODO remove ?
-  copy: src=risno dest=/etc/opt/risno
-
 - name: prepare elasticsearch configuration directory
   file: path=/var/opt/risno/elastic-storage/config/
         state=directory
