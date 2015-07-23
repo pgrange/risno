@@ -16,4 +16,13 @@
 - name: ensure risno git repo present
   git: repo=https://github.com/pgrange/risno.git dest=/opt/risno update=yes force=no
 
+- name: depose docker repo key
+  copy: src=docker-repo-key.asc dest=/root/docker-repo-key.asc
+- name: add docker repo key
+  apt_key: file=/root/docker-repo-key.asc state=present
+- name: add docker repo
+  apt_repository: repo='deb https://get.docker.com/ubuntu docker main'
+- name: install docker
+  apt: pkg=lxc-docker
+
 
