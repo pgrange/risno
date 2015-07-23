@@ -8,10 +8,11 @@
     links:
       - risno_elasticsearch
     ports:
-      - 12043:12043
+      - 80:12043
     env:
       listen_port: 12043
       elastic_db: risno_elasticsearch:9200
       smtp_host: "{{smtp_host}}"
+      smtp_port: "{{smtp_port}}"
       smtp_user: "{{smtp_user}}"
       smtp_pass: "{{smtp_pass}}"
