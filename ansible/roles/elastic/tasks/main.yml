@@ -9,9 +9,6 @@
     - elasticsearch.yml
     - logging.yml
 
-- name: install docker-py with pip
-  pip: name=docker-py
- 
 - name: start elasticsearch database
   docker:
     name: risno_elasticsearch

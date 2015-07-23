@@ -25,4 +25,7 @@
 - name: install docker
   apt: pkg=lxc-docker
 
+- name: install docker-py with pip
+  pip: name=docker-py
+ 
 
