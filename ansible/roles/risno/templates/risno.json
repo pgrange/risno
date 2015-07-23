@@ -4,7 +4,7 @@
   "host": "{{smtp_host}}",
   "auth": {
    "user": "{{smtp_user}}",
-   "pass": "{{smtp_passwd}}"
+   "pass": "{{smtp_pass}}"
    }
  }
 }
