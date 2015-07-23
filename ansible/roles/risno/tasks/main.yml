@@ -40,11 +40,6 @@
   cron: name="fetch pubs from sites for midi_pyrenees" cron_file=risno user=risno
         hour=9 minute=1
         job="node /opt/risno/slurp/fetch_sites midi_pyrenees >>/var/opt/risno/fetch_midi_pyrenees.log 2>&1"
-- name: remove old crontab to fetch new pubs
-  cron: name="fetch pubs" cron_file=risno user=risno
-        hour=15 minute=1
-        job="python /opt/risno/fetch_pubs.py --logic-immo --se-loger --paru-vendu --avendre-alouer --pages-jaunes --immo-street --belle-immobilier --region aquitaine >>/var/opt/risno/risno.log 2>&1"
-        state="absent"
 - name: crontab to update locations
   cron: name="update locations" cron_file=risno user=risno
         hour=17 minute=10
