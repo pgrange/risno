@@ -18,3 +18,10 @@ node:
   links:
     - elasticsearch
   restart: always
+  environment:
+    listen_port: 12043
+    elastic_db: elasticsearch:9200
+    smtp_host: "smtp.host"
+    smtp_port: "smtp.port"
+    smtp_user: "smtp.user"
+    smtp_pass: "smtp.pass"
