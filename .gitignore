@@ -1,7 +1,6 @@
 # Python
 *.pyc
 
-nodejs/node_modules/
 TODO
 
 # Docker tools
