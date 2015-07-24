@@ -34,8 +34,7 @@ all: help
 help:
 	@echo -e "$(OK_COLOR)==== $(APP) [$(VERSION)] ====$(NO_COLOR)"
 	@echo -e "$(WARN_COLOR)- init               : Download dependencies used by Risno"
-	@echo -e "$(WARN_COLOR)- build image=xxx    : Make the Docker image"
-	@echo -e "$(WARN_COLOR)- clean              : Cleanup environment"
+	@echo -e "$(WARN_COLOR)- clean              : Cleanup environment$(NO_COLOR)"
 
 machine-linux:
 	@echo -e "$(OK_COLOR)[$(APP)] Installation Docker machine Linux $(NO_COLOR)"
@@ -68,7 +67,3 @@ init: machine-$(OS) compose-$(OS)
 .PHONY: clean
 clean:
 	@rm ./docker-compose ./docker-machine
-
-.PHONY: build
-build:
-	@echo -e "$(OK_COLOR)[$(APP)] Build $(NAMESPACE)/$(image):$(IMAGE_VERSION)$(NO_COLOR)"
