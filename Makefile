@@ -32,12 +32,12 @@ endif
 all: help
 
 help:
-	@echo -e "$(OK_COLOR)==== $(APP) [$(VERSION)] ====$(NO_COLOR)"
-	@echo -e "$(WARN_COLOR)- init               : Download dependencies used by Risno"
-	@echo -e "$(WARN_COLOR)- clean              : Cleanup environment$(NO_COLOR)"
+	@echo "$(OK_COLOR)==== $(APP) [$(VERSION)] ====$(NO_COLOR)"
+	@echo "$(WARN_COLOR)- init               : Download dependencies used by Risno"
+	@echo "$(WARN_COLOR)- clean              : Cleanup environment$(NO_COLOR)"
 
 machine-linux:
-	@echo -e "$(OK_COLOR)[$(APP)] Installation Docker machine Linux $(NO_COLOR)"
+	@echo "$(OK_COLOR)[$(APP)] Installation Docker machine Linux $(NO_COLOR)"
 	@wget $(DOCKER_MACHINE_URI)/$(DOCKER_MACHINE_VERSION)/docker-machine_linux-amd64 -O docker-machine
 	@chmod +x ./docker-machine
 
