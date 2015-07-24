@@ -1,4 +1,4 @@
----
+#TODO remove when slurp package correctly
 - name: ensure apt https transport
   apt: pkg=apt-transport-https
 - name: depose node repo key
@@ -7,11 +7,6 @@
   apt_key: file=/root/nodesource.gpg.key state=present
 - name: add node repo
   apt_repository: repo='deb https://deb.nodesource.com/node_0.12 wheezy main'
-
-- name: install risno configuration files
-  template: src={{item}} dest=/etc/opt/{{item}}
-  with_items:
-  - risno.json
 
 - name: install nodejs
   apt: pkg=nodejs
