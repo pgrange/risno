@@ -7,7 +7,6 @@ elasticsearch = require('elasticsearch')
 
 nconf.argv()
      .env()
-     .file({ file: '/etc/opt/risno.json' })
      .defaults({elastic_db: 'localhost:9200'})
 
 fetch = require('./fetch')
