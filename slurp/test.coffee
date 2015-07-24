@@ -46,6 +46,13 @@ exports.testShouldParseAdPrice = (test) ->
   test.strictEqual ad.price, 12043
   test.done()
 
+exports.testShouldExtractPriceDotForThousandFormated = (test) ->
+  ad = parse_ad_from_src '<price>310.000&nbsp;€</price>'
+
+  test.equals ad.price, 310000
+  test.done()
+
+
 exports.testShouldExtractPriceFromCrap = (test) ->
   ad = parse_ad_from_src '<price>only 12 043 595euro</price>'
 
@@ -119,7 +126,8 @@ exports.testShouldParseAdUrlWhenLinkInside = (test) ->
   test.done()
 
 exports.testShouldExtractUrlFromStrangeAVendreALouerMethod = (test) ->
-  ad = parse_ad_from_src '<a class="link-wrapper" href="/ad"></a>'
+  ad = parse_ad_from_src '<a href="/crap"></a>
+                          <a class="linkCtnr" href="/ad"></a>'
 
   test.equals ad.url, 'http://site/ad'
   test.done()
@@ -161,6 +169,15 @@ exports.testForgeSimpleUrl = (test) ->
     'aquitaine', 2
 
   test.deepEqual url, ['http://www.exemple.com/ads/aquitaine?p=2']
+  test.done()
+
+exports.testForgeUrlWithPageArithmetic = (test) ->
+  url = slurp.url
+    host: 'www.exemple.com'
+    url_sequence: 'http://HOST/ads/REGION?p=((PAGE-1)*12)',
+    'aquitaine', 2
+
+  test.deepEqual url, ['http://www.exemple.com/ads/aquitaine?p=12']
   test.done()
 
 exports.testForgeUrlWithSiteSpecificRegionIds = (test) ->

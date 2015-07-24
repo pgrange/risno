@@ -1,16 +1,3 @@
-- name: depose docker repo key
-  copy: src=docker-repo-key.asc dest=/root/docker-repo-key.asc
-- name: add docker repo key
-  apt_key: file=/root/docker-repo-key.asc state=present
-- name: add docker repo
-  apt_repository: repo='deb http://get.docker.io/ubuntu docker main'
-
-- name: install docker
-  apt: pkg=lxc-docker
-
-- name: install elastic risno configuration files #TODO remove ?
-  copy: src=risno dest=/etc/opt/risno
-
 - name: prepare elasticsearch configuration directory
   file: path=/var/opt/risno/elastic-storage/config/
         state=directory
@@ -22,29 +9,30 @@
     - elasticsearch.yml
     - logging.yml
 
-- name: install docker-py with pip
-  pip: name=docker-py
- 
 - name: start elasticsearch database
   docker:
     name: risno_elasticsearch
     image: elasticsearch
     restart_policy: always
+    net: bridge
     ports: 9200:9200 
     volumes:
     - '/var/opt/risno/elastic-storage/data:/usr/share/elasticsearch/data'
     - '/var/opt/risno/elastic-storage/config:/usr/share/elasticsearch/config'
     - '/var/opt/risno/elastic-storage/log:/usr/share/elasticsearch/logs/'
-    state: reloaded
 
 - name: activate elastic search backup
   elasticsearchbkp: location=/usr/share/elasticsearch/data/backup
 
-- name: setup cron to take elastic search snaphot
+- name: setup cron to take elastic search snaphot twice a day
   cron: name="snapshot elastic search" cron_file=elastic_snapshot
-        minute=7 user=risno
+        minute=7 hour="3,15" user=risno
         job="curl -XPUT localhost:9200/_snapshot/backup/$(date +\%Y\%m\%d\%H\%m\%S) >>/var/opt/risno/snapshot.log 2>&1"
 
+- name: install jq dependency for purge
+  apt: pkg=jq
+
+#TODO avoid installing purge script with git... install it with ansible
 - name: setup cron to remove a month older elasticsearch backups
   cron: name="snaphot elastic search purge" cron_file=elastic_snapshot
         weekday=5 user=risno

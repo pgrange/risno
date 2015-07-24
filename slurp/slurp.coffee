@@ -5,6 +5,8 @@ exports.url = (site, region, page_num) ->
   replace = (format) ->
     format = format.replace /HOST/, site.host
     format = format.replace /REGION/, region
+    format = format.replace /\(.*PAGE.*\)/, (operation) ->
+      eval operation.replace /PAGE/, page_num
     format = format.replace /PAGE/, page_num
 
   if Array.isArray site.url_sequence
@@ -38,7 +40,7 @@ find_url = (ad, host) ->
   if a.length > 0
     crappy_pages_jaunes_url(a)
   else
-    a = ad.find('.link-wrapper') #avendrealouer specific
+    a = ad.find('.linkCtnr') #avendrealouer specific
     if a.length > 0
       absolutize a.attr('href'), host
     else
@@ -59,6 +61,7 @@ strip = (string) ->
 
 clear_price = (price) ->
   price = price.replace /\s/g, ''
+  price = price.replace /\./g, ''
   price = /[0-9]+/.exec(price)
   parseInt price[0] if price
 
