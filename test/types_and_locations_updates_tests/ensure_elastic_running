@@ -3,8 +3,6 @@
 [[ -z $ELASTIC_PORT ]] && exit 1
 [[ -z $ELASTIC_URL  ]] && exit 1
 
-DOCKER_IMAGE="risno/elasticsearch"
-
 if [ -f elastic.id ]
 then
   container=$(cat elastic.id)
@@ -14,7 +12,7 @@ then
   fi
 fi
 
-docker run -d -p $ELASTIC_PORT:9200 $DOCKER_IMAGE >elastic.id
+docker run -d -p $ELASTIC_PORT:9200 pgrange/elasticsearch >elastic.id
 while true
 do
   curl -f $ELASTIC_URL >/tmp/$$.curl 2>&1
