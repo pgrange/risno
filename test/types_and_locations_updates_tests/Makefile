@@ -7,7 +7,7 @@ TYPE_TST=$(TYPE_CSV:.csv=.tst.type)
 CITY_CSV=$(wildcard test_city/*.csv)
 CITY_TST=$(CITY_CSV:.csv=.tst.city)
 
-.PHONY: elastic_running stop all clean distclean types_updated test type
+.PHONY: elastic_running stop all clean distclean test type
 
 all: test
 
@@ -20,7 +20,9 @@ types_injected: elastic.id ../../elasticsearch/mappings/types/types
 	../../elasticsearch/mappings/types/types
 	@touch types_injected
 cities_injected: elastic.id ../../elasticsearch/mappings/cities/inject_cities_in_elasticsearch.sh ../../elasticsearch/mappings/cities/cp-france.csv ../../elasticsearch/mappings/cities/city_unboost_terms.txt
+	@echo
 	@echo injecting cities... please be patient
+	@echo ... really patient !!!!
 	../../elasticsearch/mappings/cities/inject_cities_in_elasticsearch.sh
 	@touch cities_injected
 

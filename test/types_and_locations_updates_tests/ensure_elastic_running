@@ -12,7 +12,7 @@ then
   fi
 fi
 
-docker run -d -p $ELASTIC_PORT:9200 pgrange/elasticsearch >elastic.id
+docker run -d -p $ELASTIC_PORT:9200 elasticsearch >elastic.id
 while true
 do
   curl -f $ELASTIC_URL >/tmp/$$.curl 2>&1
