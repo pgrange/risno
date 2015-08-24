@@ -6,3 +6,6 @@ TODO
 # Docker tools
 docker-compose
 docker-machine
+
+# Node modules installation dir
+node_modules
