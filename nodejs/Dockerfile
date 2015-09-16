@@ -7,9 +7,11 @@ MAINTAINER Pascal Grange <pascal@grange.nom.fr>
 
 RUN mkdir /src
 
-ADD . /src
+COPY package.json /src/
 WORKDIR /src
 RUN npm install
+
+COPY . /src
 
 EXPOSE 12043
 

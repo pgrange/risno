@@ -1,0 +1,33 @@
+#!/bin/bash
+
+[[ -z $ELASTIC_PORT ]] && ELASTIC_PORT=9200
+[[ -z $ELASTIC_URL  ]] && ELASTIC_URL=localhost:$ELASTIC_PORT
+
+elastic_ready() {
+  curl -f $ELASTIC_URL >/tmp/$$.curl 2>&1
+  exit_code=$?
+  case $exit_code in
+        0) echo "elasticsearch ready" >&2
+           return 0
+           ;;
+         7|52|56) echo "waiting for elasticsearch to start (code $exit_code)" >&2
+           return 1
+           ;;
+        *) echo $exit_code >&2
+           cat /tmp/$$.curl >&2
+           exit 1
+           ;;
+  esac
+}
+
+# Start elasticsearch in background
+if ! elastic_ready
+then
+  /usr/share/elasticsearch/bin/elasticsearch &
+fi
+
+# Wait until elasticsearch starts to answer
+while ! elastic_ready
+do
+  sleep 1
+done

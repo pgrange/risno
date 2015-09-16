@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[[ -z ELASTIC_URL ]] && ELASTIC_URL="localhost:9200"
+[[ -z $ELASTIC_URL ]] && ELASTIC_URL="localhost:9200"
 
 echo $ELASTIC_URL
 
