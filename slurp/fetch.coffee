@@ -43,7 +43,10 @@ set_id = (ad, handler) ->
         console.log('err: ' + err) if err
         console.log('http status code: ' + response.statusCode) if response
         console.log('unable to fetch ' + ad.img)
-        handler null, set_id_from_description(ad)
+        console.log('desc for ' + ad.img + ' "' + ad.description + '"')
+        set_id_from_description(ad)
+        console.log('id   for ' + ad.img + ' "' + ad.id + '"')
+        handler null, ad
       else
         ad.id = hash body
         handler null, ad
