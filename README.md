@@ -2,73 +2,70 @@ risno
 =====
 
 Real-estate search engine. You can try it here : http://risno.org
+*risno* stack is based on :
+
+* [elasticsearch][] (v1.5.2)
+* [nodejs][] (v0.10.38)
 
 # How to use
 
-Hardly ! Not still mature enough to be used ealily. But if you still want to try something, read on.
+Just go to http://risno.org and give it a try.
 
-Copy *risnorc_sample* into a file named *risno* in the directory *$HOME/.config*, and edit values.
+## Development
 
-## Elasticsearch
+A development environment is provided based on [docker][https://www.docker.com/]. You will first have to [install docker][https://docs.docker.com/installation/].
 
-risno use an elasticsearch database running in a docker container. If you have [Docker](http://www.docker.io) installed,
-take a look at start_elastic.sh and make the appropriate changes so that it will store its data in a secure adapted directory.
-Then run :
+You will also need GNU Make.
 
-    $ start_elastic.sh
+Then clone the git repository. Please prepare your contributions in the develop branch.
 
-Then you have to initialize indexes. To do that you need to install jq :
+    # git clone https://github.com/pgrange/risno.git
+    # cd risno
+    # git checkout develop
 
-    $ apt-get install jq
+### Start web application
 
-Know, initialize french cities index this may take as long as 15 minutes, by running :
+You may want to try the web application with its elasticsearch database using docker and compose.
 
-    $ ./elastic_mappings/cities/inject_cities_in_elasticsearch.sh
+* Install compose (and machine):
 
-After that you can initialize the index where risno stores the ads, by running :
+    # make init
 
-    $ ./elastic_mappings/ads/ads_1.0 
-    $ ./elastic_mappings/ads/ads_2.0 
-    $ ./elastic_mappings/ads/ads_2.1 
+* Launch *risno* and its elasticsearch database:
 
-Elasticsearch is now ready for risno.
+    # ./docker-compose up
 
-## Fetch pubs
+This command will start an elasticsearch database and the risno web application. Please note that this may take a whiiiiiiile the first time the elasticsearch database container is built since it indexes all french cities and that action takes time.
 
-Install Python tools:
+See docker-compose.yml for details of the containers built and started.
 
-    $ apt-get install python-pip
-	$ pip install virtualenvwrapper
-	$ source /usr/local/bin/virtualenvwrapper.sh
+* Open your browser and navigate to http://localhost:12043 to test the application. Please note that, at this moment, you have no ad indexed so you will not see lot of things.
 
-Install dependencies :
+### Indexing new ads
 
-    $ mkvirtualenv risno
-	$ pip install -r requirements.txt
+To index new ads, you may run the *slurp* tool manually. This is not deockerized so it will need some dependencies.
 
-You are now ready to fetch pubs from several sites by running :
+Slurp depends on [Node.js][https://nodejs.org/] at least version 0.12.
 
-    $ fetch_all.sh
+To fetch new ads for the supported sites:
 
-## Consult pubs
+    # cd slurp
+    # make compile
+    # node fetch_sites aquitaine
 
-Install [NodeJS](http://nodejs.org/) and [Npm](https://npmjs.org/) :
+This will fetch all supported sites for the ads for the french region Aquitaine and index them inside the previously started elasticsearch instance.
 
-    $ apt-get install nodejs npm
+Go back to your web browser and see if you can see new ads here http://localhost:12043/
 
-Install dependencies :
+### Deployment
 
-    $ cd nodejs && npm install
+You can deploy the whole risno solution with ansible. See ansible sudirectory for details.
 
-Start the node web server. To do that, go inside nodejs subdirectory and run :
+## Contributing
 
-    $ node index.js
+See [CONTRIBUTING](CONTRIBUTING.md).
 
-You can now browse this url and take a look at the pubs :
 
-    http://localhost:12043/
+## License
 
-WARNING ! If you used risno before ads_2.0 model, go to this url to find your
-liked and dislikes opinions :
-
-    http://localhost:12043/12043/new
+See [LICENSE][LICENSE] for the complete license.

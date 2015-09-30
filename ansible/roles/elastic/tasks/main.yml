@@ -36,4 +36,4 @@
 - name: setup cron to remove a month older elasticsearch backups
   cron: name="snaphot elastic search purge" cron_file=elastic_snapshot
         weekday=5 user=risno
-        job="/opt/risno/elastic_backup_purge.sh >>/var/opt/risno/snapshot_purge.log 2>&1"
+        job="/opt/risno/tools/elastic_backup_purge.sh >>/var/opt/risno/snapshot_purge.log 2>&1"

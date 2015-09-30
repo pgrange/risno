@@ -1,12 +1,8 @@
 elasticsearch:
-  image: elasticsearch
+  build: elasticsearch
   ports:
     - "9200:9200"
     - "9300:9300"
-  volumes:
-    - /var/opt/risno/elastic-storage/data:/usr/share/elasticsearch/data
-    - /var/opt/risno/elastic-storage/config:/usr/share/elasticsearch/config
-    - /var/opt/risno/elastic-storage/log:/usr/share/elasticsearch/logs/
   restart: always
 
 node:
@@ -17,5 +13,11 @@ node:
     - "12043:12043"
   links:
     - elasticsearch
-  env_file: .env
   restart: always
+  environment:
+    listen_port: 12043
+    elastic_db: elasticsearch:9200
+    smtp_host: "smtp.host"
+    smtp_port: "smtp.port"
+    smtp_user: "smtp.user"
+    smtp_pass: "smtp.pass"

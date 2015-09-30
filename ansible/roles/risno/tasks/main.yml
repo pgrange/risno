@@ -38,19 +38,19 @@
 - name: crontab to update locations
   cron: name="update locations" cron_file=risno user=risno
         hour=17 minute=10
-        job="python /opt/risno/update_locations.py >>/var/opt/risno/upd_locations.log 2>&1" 
+        job="python /opt/risno/tools/update_locations.py >>/var/opt/risno/upd_locations.log 2>&1" 
 - name: crontab to update types
   cron: name="update types" cron_file=risno user=risno
         hour=17 minute=1
-        job="python /opt/risno/update_type.py >>/var/opt/risno/upd_types.log 2>&1" 
+        job="python /opt/risno/tools/update_type.py >>/var/opt/risno/upd_types.log 2>&1" 
 - name: crontab to check for expired pubs
   cron: name="expire pubs" cron_file=risno user=risno
         hour=1 minute=1
-        job="python /opt/risno/expire_pubs.py --logic-immo --se-loger --paru-vendu --avendre-alouer --pages-jaunes --immo-street --belle-immobilier --le-bon-coin --annonces-jaunes >>/var/opt/risno/expire.log 2>&1"
+        job="python /opt/risno/tools/expire_pubs.py --logic-immo --se-loger --paru-vendu --avendre-alouer --pages-jaunes --immo-street --belle-immobilier --le-bon-coin --annonces-jaunes >>/var/opt/risno/expire.log 2>&1"
 - name: crontab to purge expired pubs
   cron: name="purge expired pubs" cron_file=risno user=risno
         hour=2 minute=1
-        job="python /opt/risno/purge_pubs.py >>/var/opt/risno/purge.log 2>&1"
+        job="python /opt/risno/tools/purge_pubs.py >>/var/opt/risno/purge.log 2>&1"
 
 - name: install logrotate
   apt: pkg=logrotate

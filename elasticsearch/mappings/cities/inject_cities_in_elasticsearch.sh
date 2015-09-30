@@ -1,6 +1,8 @@
 #!/bin/bash
 
-[[ -z ELASTIC_URL ]] && ELASTIC_URL=localhost:9200
+[[ -z $ELASTIC_URL ]] && ELASTIC_URL="localhost:9200"
+
+echo $ELASTIC_URL
 
 install_dir=$(cd $(dirname $0) && pwd)
 
@@ -41,7 +43,7 @@ function bulk_insert() {
 curl -X DELETE $ELASTIC_URL/cities
 
 curl -X PUT $ELASTIC_URL/cities -d '
-{ 
+{
  "settings" : {
   "analysis" : {
    "analyzer" : {
@@ -78,7 +80,7 @@ curl -X PUT $ELASTIC_URL/cities -d '
    "properties" : {
     "name" : { "type" : "string", "analyzer" : "city_name"},
     "zipcode": {"type": "string", "boost": 2.0},
-    "name_suggest" : { 
+    "name_suggest" : {
      "type" : "completion", "payloads" : true,
      "index_analyzer" :  "city_name",
      "search_analyzer" : "city_name",
@@ -91,4 +93,3 @@ curl -X PUT $ELASTIC_URL/cities -d '
 }'
 
 cat ${install_dir}/cp-france.csv | csv2bulk | bulk_insert
-

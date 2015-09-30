@@ -83,8 +83,8 @@ app.post('/:user_code/criteria', function(req, res) {
   doc.source(criteria).upsert(criteria)
   doc.doUpdate(function() {
     res.redirect("/" + user_code + "/new")
-  }, function() {
-    console.log("KATASTROPH")
+  }, function(e) {
+    console.log("KATASTROPH" + e)
   })
 })
 app.post('/:user_code/pub/:id', function(req, res) {
@@ -154,8 +154,8 @@ app.post('/send_new_id', function(req, res) {
         send_new_id(mail, user_code)
         res.redirect(user_code + '/criteria')
       },
-      function() {
-        console.log("KATASTROPH")
+      function(e) {
+        console.log("KATASTROPH" + e)
       })
 })
 app.get('/check_mail', function(req, res) {
@@ -310,8 +310,8 @@ function get_criteria(user_code, handle_results) {
   console.log('criteria: ' + criteria_id)
   doc.doGet(function(result) {
     handle_results(result._source)
-  }, function() {
-    console.log("KATASTROPH")
+  }, function(e) {
+    console.log("KATASTROPH" + e)
   })
 }
 
