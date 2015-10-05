@@ -27,9 +27,8 @@ def check_index_version():
 def insert_to_db(pub):
   conn.update(e_index, "immo", pub.get_id(), document=pub, upsert=pub)
 
-def get_to_expire_pubs(site, last_fetch):
-  q = TermQuery('site_name', site)
-  q = FilteredQuery(q, MissingFilter('expired'))
+def get_to_expire_pubs(last_fetch):
+  q = FilteredQuery(MatchAllQuery(), MissingFilter('expired'))
   q = FilteredQuery(q, RangeFilter(qrange=ESRange('_timestamp', to_value=last_fetch)))
 
   pubs = conn.search(query=q, indices=e_index, doc_types="immo")
@@ -38,7 +37,7 @@ def get_to_expire_pubs(site, last_fetch):
 def show_pub(pub):
   print pub
 
-def expired_before_timestamp(site):
+def expired_before_timestamp():
   twentyfour_hours_ago = int((datetime.now()-timedelta(days=1)).strftime("%s"))*1000
   return twentyfour_hours_ago
   #q = MatchQuery('site', site)
@@ -56,54 +55,24 @@ if __name__ == '__main__':
 
   log_context = "expire"
 
-  parser = argparse.ArgumentParser(description='Détecte et marque en base les annonces périmée (dernière récupération il y a plus de 24h)')
-  parser.add_argument('--test', const=True, action='store_const', help='affiche les annonces mises à jour sans les stocker en base')
-  parser.add_argument('--le-bon-coin', const=True, action='store_const', help='recherche sur le bon coin')
-  parser.add_argument('--logic-immo',  const=True, action='store_const', help='recherche sur logic immo')
-  parser.add_argument('--se-loger',    const=True, action='store_const', help='recherche sur se loger')
-  parser.add_argument('--paru-vendu',  const=True, action='store_const', help='recherche sur paru vendu')
-  parser.add_argument('--avendre-alouer',  const=True, action='store_const', help='recherche sur à vendre à louer')
-  parser.add_argument('--pages-jaunes',  const=True, action='store_const', help='recherche sur pages jaunes')
-  parser.add_argument('--annonces-jaunes',  const=True, action='store_const', help='recherche sur annonces jaunes')
-  parser.add_argument('--immo-street',  const=True, action='store_const', help='recherche sur immo street')
-  parser.add_argument('--belle-immobilier',  const=True, action='store_const', help='recherche sur belle-immobilier.fr')
+  previous_total = -1
+  total = 0
+  while previous_total != total:
+    # That's odd but it seems we do not update all
+    # found pubs... so adding this while loop :(
+    previous_total = total
 
-  args = parser.parse_args()
-  
-  if not args.test: check_index_version()
+    pubs = get_to_expire_pubs(expired_before_timestamp())
 
-  sites = []
-
-  if args.logic_immo: sites.append('logic-immo')
-  if args.le_bon_coin: sites.append('le-bon-coin')
-  if args.paru_vendu: sites.append('paru-vendu')
-  if args.se_loger: sites.append('se-loger')
-  if args.avendre_alouer: sites.append('a-vendre-a-louer')
-  if args.pages_jaunes: sites.append('pages-jaunes')
-  if args.annonces_jaunes: sites.append('annonces-jaunes')
-  if args.immo_street: sites.append('immo-street')
-  if args.belle_immobilier: sites.append('belle-immobilier')
-
-  for site in sites:
-    previous_total = -1
-    total = 0
-    while previous_total != total:
-      # That's odd but it seems we do not update all
-      # found pubs... so adding this while loop :(
-      previous_total = total
-
-      pubs = get_to_expire_pubs(site, expired_before_timestamp(site))
-
-      count = 0
-      expired = 0
-      total = pubs.total
-      log('OK', str(total) + ' pubs to expire')
-      for pub in pubs:
-        expire(pub)
-        expired = expired + 1
-        if args.test: show_pub(pub)
-        else: insert_to_db(pub)
-        count = count + 1
-        if count % 20 == 0:
-          log('OK', str(count) + ' / ' + str(total) + ' updated')
-    log('OK', str(expired) + ' pubs expired for ' + site)
+    count = 0
+    expired = 0
+    total = pubs.total
+    log('OK', str(total) + ' pubs to expire')
+    for pub in pubs:
+      expire(pub)
+      expired = expired + 1
+      insert_to_db(pub)
+      count = count + 1
+      if count % 20 == 0:
+        log('OK', str(count) + ' / ' + str(total) + ' updated')
+  log('OK', str(expired) + ' pubs expired')
