@@ -2,7 +2,7 @@ Cette documentation explique comment configurer un nouveau site pour la récupé
 
 Pour cela, on explique d'abord comment modifier la configuration d'un site existant avant d'expliquer comment ajouter un nouveau site.
 
-Avant cela, vous devez considérer votre travail comme une contribution à risno. Consultez le [guide de contribution](../Contribute.md).
+Avant cela, vous devez considérer votre travail comme une contribution à risno. Consultez le [guide de contribution](../CONTRIBUTING.md).
 
 Si vous avez besoin d'aide, n'hésitez pas [ouvrir une issue sur le projet github de risno](https://github.com/pgrange/risno/issues/new) pour obtenir de l'aide.
 
@@ -10,7 +10,7 @@ Bon courage !
 
 # Prérequis
 
-Consultez le [guide de contribution](../Contribute.md). Pour la version naïve, obtenez une copie de risno et effectuez vos changement dans la branche develop :
+Consultez le [guide de contribution](../CONTRIBUTING.md). Pour la version naïve, obtenez une copie de risno et effectuez vos changement dans la branche develop :
 
     # git clone https://github.com/pgrange/risno.git
     # cd risno
@@ -232,7 +232,7 @@ Sélectionnez le site que vous venez d'initialisez et renseignez les information
 
 # Soumettre votre contribution
 
-Consultez le [guide de contribution](../Contribute.md).
+Consultez le [guide de contribution](../CONTRIBUTING.md).
 
 Lorsque vous êtes satisfait de votre configuration, commitez le fichier *config.json* et soumettez cette nouvelle version sur le projet github de risno, le plus pratique étant de soumettre une *pull-request*.
 
