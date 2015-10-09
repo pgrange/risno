@@ -28,9 +28,9 @@ Lorsque l'interface est prête, un message s'affiche dans la console pour vous i
 
 Rendez-vous sur cette page et sélectionnez le site dont vous souhaitez modifier la configuration.
 
-Un formulaire affichant un certain nombre de champs (les valeurs de la configuration actuelle s'affiche. Dessous, vous pouvez voir un aperçu de la première page d'annonce du site ainsi que les annonces détectées sur la page. Si aucune annonce n'est détectée sur la page, c'est que la configuration est erronnée. C'est sûrement une bonne idée de vouloir la corriger.
+Un formulaire affiche un certain nombre de champs correspondant aux différents paramètres de configuration du site (les valeurs de la configuration actuelle s'affichent). Dessous, vous pouvez voir un aperçu de la deuxième page d'annonce du site ainsi que les annonces détectées sur la page. Si aucune annonce n'est détectée sur la page, c'est que la configuration est erronnée. Vous faites bien de la modifier...
 
-Effectuez vos modifications. Si vous constatez que les annonces sont détectées comme vous le souhaitez, vous pouvez sauvegarder vos modifications en cliquant sur le bouton save. Les différents champs du formulaire sont décrits ci-dessous.
+Effectuez vos modifications. Si vous constatez que les annonces sont détectées comme vous le souhaitez, vous pouvez sauvegarder vos modifications en cliquant sur le bouton *save*. Les différents champs du formulaire sont décrits ci-dessous.
 
 ## url sequence
 
