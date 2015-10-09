@@ -16,7 +16,7 @@ Consultez le [guide de contribution](../CONTRIBUTING.md). Pour la version naïve
     # cd risno/slurp
     # git checkout develop
 
-Vous aurez besoin de GNU [make](https://www.gnu.org/software/make/) et [nodejs](https://nodejs.org/).
+Vous aurez besoin de [GNU make](https://www.gnu.org/software/make/) et [nodejs](https://nodejs.org/).
 
 # Modifier une configuration
 
