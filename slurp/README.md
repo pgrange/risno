@@ -244,7 +244,7 @@ En cas de problème de syntaxe dans le fichier, une erreur s'affichera immédiat
 
 Si tout s'est bien passé, connectez-vous sur l'interface de configuration en vous rendant à l'adresse [http://localhost:12045](http://localhost:12045).
 
-Sélectionnez le site que vous venez d'initialiser et renseignez les informations de ce site en suivant les indications de la section précédente.
+Sélectionnez le site que vous venez d'initialiser et renseignez les informations de ce site en suivant les indications de la section précédente [Modifier une configuration](#Modifier une configuration).
 
 # Soumettre votre contribution
 
