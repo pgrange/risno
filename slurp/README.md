@@ -10,13 +10,13 @@ Bon courage !
 
 # Prérequis
 
-Consultez le [guide de contribution](../CONTRIBUTING.md). Pour la version naïve, obtenez une copie de risno et effectuez vos changement dans la branche develop :
+Consultez le [guide de contribution](../CONTRIBUTING.md). Pour la version naïve, obtenez une copie de risno et effectuez vos changements dans la branche *develop* :
 
     # git clone https://github.com/pgrange/risno.git
     # cd risno
     # git checkout develop
 
-Vous aurez besoin de GNU make et nodejs.
+Vous aurez besoin de GNU [make](https://www.gnu.org/software/make/) et [nodejs](https://nodejs.org/).
 
 # Modifier une configuration
 
