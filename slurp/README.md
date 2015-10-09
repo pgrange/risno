@@ -1,10 +1,10 @@
 Cette documentation explique comment configurer un nouveau site pour la récupération d'annonces.
 
-Pour cela, on explique d'abord comment modifier la configuration d'un site existant avant d'expliquer comment ajouter un nouveau site.
+On explique d'abord comment modifier la configuration d'un site existant avant d'expliquer comment ajouter un nouveau site.
 
-Avant cela, vous devez considérer votre travail comme une contribution à risno. Consultez le [guide de contribution](../CONTRIBUTING.md).
+Vous devez considérer votre travail comme une contribution à risno. Consultez le [guide de contribution](../CONTRIBUTING.md).
 
-Si vous avez besoin d'aide, n'hésitez pas [ouvrir une issue sur le projet github de risno](https://github.com/pgrange/risno/issues/new) pour obtenir de l'aide.
+Cette procédure est complexe et sa documentation pas forcément limpide. Si vous avez besoin d'aide, [ouvrez une issue sur le projet github de risno](https://github.com/pgrange/risno/issues/new).
 
 Bon courage !
 
