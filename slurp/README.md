@@ -34,33 +34,35 @@ Effectuez vos modifications. Si vous constatez que les annonces sont détectées
 
 ## url sequence
 
-Il s'agit du champs le plus difficile à paramétrer et qui vous demandera le plus d'efforts. Il désigne l'URL du site cible à laquelle se trouvent les annonces. Si la page affichée ne correspond pas à ce que vous attendez, c'est-à-dire s'il ne s'agit pas d'une page affichant la liste des annonces du site, vous devez modifier ce paramètre.
+Il s'agit du champs le plus difficile à paramétrer et qui vous demandera le plus d'efforts. Il désigne l'URL du site cible à laquelle se trouvent les annonces. Si l'aperçu affiché ne correspond pas à ce que vous attendez, c'est-à-dire s'il ne s'agit pas d'une page affichant la liste des annonces du site cible, vous devez modifier ce paramètre.
 
 Avec votre navigateur, commencez par vous rendre sur le site d'annonces cible puis effectuez une recherche d'annonces immobilières. Votre recherche doit satisfaire les critères suivants :
 - ne concerner que l'immobilier (risno ne gère rien d'autre) ;
 - ne concerner que des ventes (risno ne gère rien d'autre) ;
-- ne concerner qu'une seule région : l'Aquitaine.
+- concerner toute la région et exclusivement la région Aquitaine.
 
-Pour le moment, risno ne gère que les régions Aquitaine et Midi-pyrénées. La page de configuration affiche, par défaut, la région Aquitaine. Ainsi, si vous choisissez cette région dans votre recherche de base, vous pourrez directement comparer le site cible avec l'aperçu afficher dans la page de configuration de risno et ainsi vous assurer que vous n'avez pas commis d'erreur.
+Pour le moment, risno ne gère que les régions Aquitaine et Midi-pyrénées. La page de configuration affiche, par défaut, la région Aquitaine. Ainsi, si vous choisissez cette région dans votre recherche de base, vous pourrez directement comparer le site cible avec l'aperçu affiché dans la page de configuration de risno et ainsi vous assurer que vous n'avez pas commis d'erreur.
 
 Sur certains sites, le choix d'une région (Aquitaine dans cet exemple) n'est pas directement possible. Dans ce cas, débrouillez-vous pour sélectionner la région Aquitaine d'une autre façon. Par exemple en sélectionnant manuellement tous les départements de la région si le site permet la recherche par département...
 
-Suite à votre recherche, le site cible devrait vous afficher une liste d'annonces correspondant à vos critère : toutes les ventes immobilières en Aquitaine référencées sur ce site. Vu le nombre, logiquement, cette liste devrait être paginée et vous devriez être sur la première page. Pour préparer la configuration risno, rendez-vous sur la deuxième page.
+Suite à votre recherche, le site cible devrait vous afficher une liste d'annonces correspondant à vos critère : toutes les ventes immobilières en Aquitaine référencées sur ce site. Vu le nombre, logiquement, cette liste devrait être paginée et vous devriez être sur la première page. Pour préparer la configuration risno, rendez-vous sur la deuxième page, en cliquant sur le bouton *suivant* du site, par exemple.
 
-Vous consultez maintenant la deuxième page des ventes immoblières en Aquitaine sur le site cible. Copiez l'URL affichée dans votre navigateur et collez-la dans le champ url sequance de la page de configuration de risno.
+Vous consultez maintenant la deuxième page des ventes immoblières en Aquitaine sur le site cible. Copiez l'URL affichée dans votre navigateur et collez-la dans le champ *url sequence* de la page de configuration de risno.
 
 Le travail n'est pas terminé.
 
-Vous devez maintenant repérer différentes portions de l'URL que vous devrez rendre paramétrable pour risno. Pour cela, vous allez remplacer ces portions d'URL par des mots clés interprétables par rison. Ces différents mots clés sont décrits ci-dessous.
+Vous devez maintenant repérer différentes portions de l'URL que vous devrez rendre paramétrable pour risno. Pour cela, vous allez remplacer ces portions d'URL par des mots clés interprétables par risno. Ces différents mots clés sont décrits ci-dessous.
 
 ### HOST
 
-Remplacez le nom d'hôte de l'url par le mot clé 'HOST'.
+Remplacez le nom d'hôte de l'url par le mot clé *HOST*.
 
 Par exemple si votre url ressemble à :
+
     http://immo.com/aquitaine/2
 
 Remplacez-la par l'url suivante :
+
     http://HOST/aquitaine/2
 
 ### REGION
@@ -68,9 +70,11 @@ Remplacez-la par l'url suivante :
 Remplacez la portion de l'url qui précise la région de votre recherche par le mot clé 'REGION'.
 
 Par exemple, si votre url ressemble maintenant à :
+
     http://HOST/aquitaine/2
 
 Remplacez-la par :
+
     http://HOST/REGION/2
 
 Sur le site cible, la région s'appelle rarement par son nom dans l'url. Dans vontre exemple, vous ne trouverez probablement pas la chaîne *aquitaine* dans votre url. A vous de trouver quelle partie représente la région. Il pourra s'agir d'un identifiant, comme par exemple *2-72* ou encore de la liste des départements que vous avez sélectionnés, par exemple *24,33,40,47,64*.
@@ -82,9 +86,11 @@ Quoiqu'il en soit, vous devrez trouver cet identifiant et le noter précieusemen
 Remplacez la portion de l'url qui précise le numéro de la page par le mot clé *PAGE*.
 
 Par exemple, si votre url ressemble maintenant à :
+
     http://HOST/REGION/2
 
 Remplacez-la par :
+
     http://HOST/REGION/PAGE
 
 Le mot clé PAGE supporte quelques opérations arithmétiques.
@@ -94,9 +100,11 @@ Il peut arriver que la numérotation des pages du site cible commence à 0 au li
     (PAGE-1)
 
 Ainsi, si l'url de la deuxième page du site était :
+
     http://HOST/REGION/1
 
 Remplacez-la par :
+
     http://HOST/REGION/(PAGE-1)
 
 De même, certains sites ne numérotent pas leur page mais précisent l'index de la première annonce à afficher sur la page. Par exemple pour un site qui afficherait 10 annonces par page, dans l'url de la deuxième page, vous devriez trouver 20 (s'il numérote les annonces à partir de 0) au lieu de 2. De la même façon, utilisez un peu d'arithmétique :
@@ -104,9 +112,11 @@ De même, certains sites ne numérotent pas leur page mais précisent l'index de
     ((PAGE-1)*20)
 
 Ainsi, si l'url de la deuxième page du site était :
+
     http://HOST/REGION/20
 
 Remplacez-la par :
+
     http://HOST/REGION/((PAGE-1)*20)
 
 ### Correspondance région / identifiant url
