@@ -13,14 +13,14 @@ Bon courage !
 Consultez le [guide de contribution](../CONTRIBUTING.md). Pour la version naïve, obtenez une copie de risno et effectuez vos changements dans la branche *develop* :
 
     # git clone https://github.com/pgrange/risno.git
-    # cd risno
+    # cd risno/slurp
     # git checkout develop
 
 Vous aurez besoin de GNU [make](https://www.gnu.org/software/make/) et [nodejs](https://nodejs.org/).
 
 # Modifier une configuration
 
-Une interface web rudimentaire vous permet de modifier la configuration d'un site existant. Pour la démarrer, lancez la commande :
+Une interface web rudimentaire vous permet de modifier la configuration d'un site existant. Pour la démarrer, lancez la commande (dans le répertoire *risno/slurp*) :
 
     # make config
 
