@@ -67,7 +67,7 @@ Remplacez-la par l'url suivante :
 
 ### REGION
 
-Remplacez la portion de l'url qui précise la région de votre recherche par le mot clé 'REGION'.
+Remplacez la portion de l'url qui précise la région de votre recherche par le mot clé *REGION*.
 
 Par exemple, si votre url ressemble maintenant à :
 
@@ -77,9 +77,11 @@ Remplacez-la par :
 
     http://HOST/REGION/2
 
-Sur le site cible, la région s'appelle rarement par son nom dans l'url. Dans vontre exemple, vous ne trouverez probablement pas la chaîne *aquitaine* dans votre url. A vous de trouver quelle partie représente la région. Il pourra s'agir d'un identifiant, comme par exemple *2-72* ou encore de la liste des départements que vous avez sélectionnés, par exemple *24,33,40,47,64*.
+Sur le site cible, la région s'appelle rarement par son nom dans l'url. Dans votre exemple, vous ne trouverez probablement pas la chaîne *aquitaine* dans votre url. A vous de trouver quelle partie représente la région. Il pourra s'agir d'un identifiant, comme par exemple *2-72* ou encore de la liste des départements que vous avez sélectionnés, par exemple *24,33,40,47,64*.
 
 Quoiqu'il en soit, vous devrez trouver cet identifiant et le noter précieusement. Nous verrons plus loin quoi en faire.
+
+Il existe des sites spécialisés sur une région ou une zone géographique très restreinte. Dans ce cas, la sélection de la région n'a pas de sens et rien ne désigne la région dans l'URL. *souston-immo.com* ne va probablement proposer des annonces que pour les alentours de Souston. Si c'est le cas du site dont vous mettez la configuration à jour, vous pouvez ignorer cette section et laisser le champs *REGION* vide.
 
 ### PAGE
 
@@ -95,7 +97,7 @@ Remplacez-la par :
 
 Le mot clé PAGE supporte quelques opérations arithmétiques.
 
-Il peut arriver que la numérotation des pages du site cible commence à 0 au lieu de 1. Dans ce cas, la deuxième page porte le numéro 1 au lieu de 2. Dans ce cas, remplacez le numéro de la page par l'expression :
+Il peut arriver que la numérotation des pages du site cible commence à 0 au lieu de 1. Dans ce cas, la deuxième page porte le numéro 1 au lieu de 2. Remplacez alors le numéro de la page par l'expression (les parenthèses sont importantes) :
 
     (PAGE-1)
 
@@ -107,7 +109,7 @@ Remplacez-la par :
 
     http://HOST/REGION/(PAGE-1)
 
-De même, certains sites ne numérotent pas leur page mais précisent l'index de la première annonce à afficher sur la page. Par exemple pour un site qui afficherait 10 annonces par page, dans l'url de la deuxième page, vous devriez trouver 20 (s'il numérote les annonces à partir de 0) au lieu de 2. De la même façon, utilisez un peu d'arithmétique :
+De même, certains sites ne numérotent pas leurs pages mais précisent l'index de la première annonce à afficher sur la page. Par exemple pour un site qui afficherait 10 annonces par page, dans l'url de la deuxième page, vous devriez trouver 20 (s'il numérote les annonces à partir de 0) au lieu de 2. De la même façon, utilisez un peu d'arithmétique :
 
     ((PAGE-1)*20)
 
@@ -127,7 +129,7 @@ Vous pouvez constater que le fichier de configuration *config.json* a été mis 
 
 Abordons maintenant la partie la plus complexe (si, si) : la correspondance région / identifiant de région dans l'url. Cette partie n'est malheureusement pas gérée par l'interface pour le moment et il va vous falloir éditer manuellement le fichier de configuration.
 
-Arrêtez l'outil de configuration que vous avez lancé précédemment après vous être assuré d'avoir bien sauvegarder.
+Arrêtez l'outil de configuration que vous avez lancé précédemment après vous être assuré d'avoir bien sauvegardé.
 
 Ouvrez le fichier de configuration *config.json* avec l'éditeur de votre choix et recherchez la configuration du site que vous souhaitez modifier.
 
@@ -147,9 +149,9 @@ Ouvrez le fichier de configuration *config.json* avec l'éditeur de votre choix 
       }
     }
 
-Si la partie *region_id* n'existe pas déjà vous l'ajouterez avec les informations pour les régions Aquitaine et Midi-Pyrénées qui sont les seuls supportés par risno pour le moment.
+Si la partie *region_id* n'existe pas déjà vous l'ajouterez avec les informations pour les régions Aquitaine et Midi-Pyrénées qui sont les seules supportées par risno pour le moment.
 
-Reprenez l'URL que vous avez décortiquée précédemment. Dans cette url, vous avez réussi à reconnaître la partie qui permet d'identifier spécifiquement la région sélectionner. Il peut s'agit d'un identifiant (par exemple *2-72*) ou de la suite des départements de la région (par exemple *24,33,40,47,64*) ou encore d'autre chose comme *Aquitaine* (notez la majuscule).
+Reprenez l'URL que vous avez décortiquée précédemment. Dans cette url, vous avez réussi à reconnaître la partie qui permet d'identifier spécifiquement la région sélectionnée. Il peut s'agit d'un identifiant (par exemple *2-72*) ou de la suite des départements de la région (par exemple *24,33,40,47,64*) ou encore d'autre chose comme *Aquitaine* (remarquez la majuscule).
 
 A priori, à cette étape, vous n'avez repéré cet identifiant que pour la région Aquitaine. Débrouillez-vous pour trouver l'équivalent pour la région Midi-Pyrénées.
 
@@ -173,9 +175,13 @@ Insérez maintenant cette information dans le fichier de configuration dans la p
       }
     }
 
-Sauvegardez le fichier de configuration et quittez votre éditeur.
+Sauvegardez le fichier de configuration et quittez votre éditeur puis relancez l'outil de configuration :
 
-Retournez maintenant sur l'outil de configuration (relancez l'outil et ouvrez à nouveau la page avec votre navigateur.
+    make config
+
+En cas de problème de syntaxe dans le fichier, une erreur s'affichera immédiatement. Corrigez le fichier et recommencez.
+
+Si tout s'est bien passé, connectez-vous à nouveau sur l'interface de configuration en vous rendant à l'adresse [http://localhost:12045](http://localhost:12045).
 
 Vérifiez que la page du site cible affichée dans l'aperçu correspond bien à la deuxième page des annonces immobilières en Aquitaine du site cible. Il est possible que le style de la page soit un peu détraqué mais n'en tenez pas compte. Ce qui est important c'est que vous retrouviez bien la même liste d'annonces que sur le site cible.
 
@@ -185,15 +191,15 @@ Si tout correspond, félicitations ! vous pouvez passer à l'étape suivante.
 
 ## Ad selector
 
-Le plus dur étant passé (quoique) passons maintenant au champs suivant dans l'interface de configuration.
+Le plus dur étant passé (quoique) attaquons-nous maintenant au champs suivant dans l'interface de configuration.
 
 Le deuxième champs à renseigner s'intitule *Ad selector*. Vous devez préciser ici le [sélecteur CSS](http://www.w3schools.com/cssref/css_selectors.asp) qui permettra à risno d'identifier toutes les annonces (et uniquement les annonces) présentes sur la page.
 
 Modifiez la valeur du champs puis quittez la zone de saisie afin que la détection d'annonces se mette à jour sur la page.
 
-A coté de ce champs, vous pouvez constater le nombre d'annonces détectés avec ce sélecteur CSS sur la page.
+A coté de ce champs, vous pouvez constater le nombre d'annonces détectées avec ce sélecteur CSS sur la page.
 
-Par exemple si les annonces sont dans des block de type *article* dont la classe css est *listing*, saisissez *article.listing* dans le champs *Ad selector* et vérifiez si elles sont bien détectées.
+Par exemple, si les annonces sont dans des blocs de type *div* dont la classe css est *listing*, saisissez *div.listing* dans le champs *Ad selector* et vérifiez si elles sont bien détectées.
 
 Vous pouvez vous aidez des fonctions d'inspection de votre navigateur pour consulter le source des annonces et ainsi trouver le bon sélecteur css.
 
@@ -209,9 +215,9 @@ De la même façon, renseignez le sélecteur css, dans une annonce, permettant d
 
 ## location selector
 
-De la même façon, renseignez le sélecteur css, dans une annonce, permettant d'identifier l'emplacement du bien dans l'annonce.
+De la même façon, renseignez le sélecteur css, dans une annonce, permettant d'identifier l'emplacement du bien (ville) dans l'annonce.
 
-Ce champs est optionnel. Si l'emplacement n'est pas précisé ailleurs que dans la description précédemment identifiée, ne remplissez pas ce champs.
+Ce champs est optionnel. Si le site cible ne précise pas l'emplacement du bien ailleurs que dans la description identifiée ci-dessus, ne remplissez pas ce champs.
 
 Lorsque vous avez positionné toutes les valeurs des champs et que vous constatez que la détection s'opère bien sur l'aperçu, sauvegardez vos modifications en cliquant sur le bouton *save*.
 
@@ -238,7 +244,7 @@ En cas de problème de syntaxe dans le fichier, une erreur s'affichera immédiat
 
 Si tout s'est bien passé, connectez-vous sur l'interface de configuration en vous rendant à l'adresse [http://localhost:12045](http://localhost:12045).
 
-Sélectionnez le site que vous venez d'initialisez et renseignez les informations de ce site en suivant les indications de la section précédente.
+Sélectionnez le site que vous venez d'initialiser et renseignez les informations de ce site en suivant les indications de la section précédente.
 
 # Soumettre votre contribution
 
