@@ -3,11 +3,11 @@ risno
 
 Master :
 * [![MELPA Stable](http://stable.melpa.org/packages/risno-badge.svg)](http://stable.melpa.org/#/risno)
-* [![Circle CI](https://circleci.com/gh/nlamirault/risno.el/tree/master.svg?style=svg)](https://circleci.com/gh/nlamirault/risno.el/tree/master)
+* [![Circle CI](https://circleci.com/gh/pgrange/risno/tree/master.svg?style=svg)](https://circleci.com/gh/pgrange/risno/tree/master)
 
 Develop:
 * [![Melpa Status](http://melpa.milkbox.net/packages/risno-badge.svg)](http://melpa.milkbox.net/#/risno)
-* [![Circle CI](https://circleci.com/gh/nlamirault/risno.el/tree/develop.svg?style=svg)](https://circleci.com/gh/nlamirault/risno.el/tree/develop)
+* [![Circle CI](https://circleci.com/gh/pgrange/risno/tree/develop.svg?style=svg)](https://circleci.com/gh/pgrange/risno/tree/develop)
 
 
 Real-estate search engine. You can try it here : http://risno.org
