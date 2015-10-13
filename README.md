@@ -1,6 +1,16 @@
 risno
 =====
 
+[![GPL 3][badge-license]](LICENSE)
+[![GitHub version](https://badge.fury.io/gh/pgrange%2Frisno.svg)](https://badge.fury.io/gh/pgrange%2Frisno)
+
+Master :
+* [![Circle CI](https://circleci.com/gh/pgrange/risno/tree/master.svg?style=svg)](https://circleci.com/gh/pgrange/risno/tree/master)
+
+Develop:
+* [![Circle CI](https://circleci.com/gh/pgrange/risno/tree/develop.svg?style=svg)](https://circleci.com/gh/pgrange/risno/tree/develop)
+
+
 Real-estate search engine. You can try it here : http://risno.org
 *risno* stack is based on :
 
@@ -70,6 +80,8 @@ See [CONTRIBUTING](CONTRIBUTING.md).
 
 See [LICENSE](LICENSE) for the complete license.
 
+
+[badge-license]: https://img.shields.io/badge/license-GPL3-green.svg?style=flat
 
 [elasticsearch]: https://www.elastic.co/products/elasticsearch
 [nodejs]: https://nodejs.org
