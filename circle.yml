@@ -14,14 +14,15 @@ dependencies:
     - "~/docker"
   override:
     - docker info
-    # - docker build -t risno/elasticsearch:1.0 elasticsearch
-    - cd slurp && make compile && node fetch_sites aquitaine
+      #- docker build -t risno/elasticsearch:1.0 elasticsearch
+      #- cd slurp && make compile && node fetch_sites aquitaine
     - sudo pip install --upgrade docker-compose==1.4.2
 
 test:
   override:
     - docker-compose pull
     - docker-compose up -d
+    - cd slurp && node fetch_sites aquitaine
     - curl --retry 10 --retry-delay 5 -v http://localhost:12043
 
 #deployment:
