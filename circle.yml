@@ -16,7 +16,7 @@ dependencies:
     - docker info
       #- docker build -t risno/elasticsearch:1.0 elasticsearch
       #- cd slurp && make compile && node fetch_sites aquitaine
-    - sudo pip install --upgrade docker-compose==1.4.2
+    - sudo pip install docker-compose
 
 test:
   override:
