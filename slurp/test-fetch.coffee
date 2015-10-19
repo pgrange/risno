@@ -143,6 +143,7 @@ exports.fetching = nodeunit.testCase
         test.equal "http://test.com/img1", ad.img
         test.equal "http://test.com/pub", ad.url
         test.equal "test", ad.site_name
+        test.equal "test.com", ad.site_host
         test.done()
       .catch (err) ->
         test.fail "elastic request failed", err
@@ -166,6 +167,7 @@ exports.fetching = nodeunit.testCase
         img: "http://test.com/img1"
         url: "http://test.com/pub"
         site_name: "test"
+        site_host: "test.com"
     .then () ->
       fetch.fetch_store_ads test_site, 'aquitaine', 2,
         (err, ads, replaced_ads) ->

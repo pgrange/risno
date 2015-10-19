@@ -28,6 +28,7 @@ exports.parse_ad = (ad, site) ->
   img: find_image ad, site.host
   url: find_url ad, site.host
   site_name: site.name
+  site_host: site.host
 
 find_image = (ad, host) ->
   img = ad.find('img[original]')

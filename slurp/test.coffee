@@ -72,10 +72,19 @@ exports.testShouldNotFailIfSelectorsAreMissing = (test) ->
   
   test.done()
 
+# We should remove this in next versions.
+# No more used.
 exports.testShouldSetSiteNameInAds = (test) ->
   ad = parse_ad_from_src ''
 
   test.equals ad.site_name, 'test'
+  test.done()
+
+# This one is used instead of site_name
+exports.testShouldSetSiteHostInAds = (test) ->
+  ad = parse_ad_from_src ''
+
+  test.equals ad.site_host, 'site'
   test.done()
 
 exports.testShouldParseAdImage = (test) ->
