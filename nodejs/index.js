@@ -5,6 +5,7 @@ var ejs = require('elastic.js')
 var crypto = require('crypto')
 var nconf = require('nconf')
 var nodemailer = require('nodemailer')
+var moment = require('moment')
 
 nconf.argv()
      .env()
@@ -28,9 +29,12 @@ app.get('/', function(req, res) {
   if (user_code) res.redirect(user_code)
   else { 
     user_code = crypto.randomBytes(10).toString('hex')
-    res.render('welcome.jade', {user_code: user_code})
+    get_statistics(function(stats) {
+      res.render('welcome.jade', {user_code: user_code, stats: stats, moment: moment})
+    })
   }
 })
+
 app.get('/:user_code/new', function(req, res) {
   var user_code = req.param('user_code')
   with_criteria(req, user_code, function(filter) {
@@ -430,6 +434,57 @@ function prepare_send_id_mail(mail, user_codes) {
     subject: "Rappel de vos identifiants Risno",
     text: text
   }
+}
+
+function get_statistics(callback) {
+  elastic_client.search({
+    index: "ads",
+    searchType: "count",
+    body: {
+      aggregations: {
+        not_expired: {
+          filter: {
+            missing: {
+              field: "expired"
+            }
+          },
+          aggregations: {
+            nb_per_site: {
+              terms: {
+                field: "site_host"
+              },
+              aggregations: {
+                older: {
+                  min: {
+                    field: "_timestamp"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  function(error, response) {
+    if (error) { 
+      console.log(error)
+      return callback()
+    }
+    var aggregations = response.aggregations.not_expired.nb_per_site.buckets
+    var results = [] 
+    for(var i = 0; i < aggregations.length; i++) {
+      var aggregation = aggregations[i]
+      if (aggregation.key) {
+        results.push({
+          host: aggregation.key,
+          nb: aggregation.doc_count,
+          older: aggregation.older.value
+        })
+      }
+    }
+    callback(results)
+  })
 }
 
 var smtp_config = nconf.get('smtp')

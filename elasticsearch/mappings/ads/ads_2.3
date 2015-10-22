@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -e
 
 install_dir=$(cd $(dirname $0) && pwd)
 
@@ -84,7 +84,7 @@ total=$2
 echo "$total documents to update to new index" >&2
 
 i=0
-while scroll ${scroll_id} | update_site_host | object2bulk ${new_index} | bulk_insert >/dev/null
+while scroll ${scroll_id} | update_site_host | object2bulk ${new_index} | bulk_insert > /dev/null
 do
   echo "$i bulk updated" >&2
   i=$((i+1))

@@ -11,6 +11,19 @@ html
      .col-lg-6.col-md-6.box
       h2 Toutes les annonces
       p Risno recherche sur les principaux sites d'annonces immobilières mais aussi sur les sites des principales enseignes d'agences et même peut-être celui de la petite agence près de chez vous.
+        if stats
+          span En ce moment, risno référence&nbsp;:
+      if stats
+        ul
+          each stat in stats
+            li
+              span= stat.nb 
+              span  annonces du site 
+              a(href="http://" + stat.host) 
+                = stat.host
+              span  mises à jour 
+              span= moment(stat.older, '', 'fr').fromNow()
+
 
      .col-lg-6.col-md-6.box
       h2 Classer mes annonces
