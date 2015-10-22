@@ -1,10 +1,13 @@
 set -o pipefail
 
+curl_opt="-fs"
+#curl_opt=" "
+
 [[ -z $ELASTIC_DB ]] && ELASTIC_DB='localhost:9200'
 
 function init_scroll() {
   local index=$1
-  curl -fs -XGET "${ELASTIC_DB}/${index}/_search?search_type=scan&pretty&size=1000&scroll=10m" -d '
+  curl "$curl_opt" -XGET "${ELASTIC_DB}/${index}/_search?search_type=scan&pretty&size=1000&scroll=10m" -d '
   {
    "fields": ["_parent", "_source", "_timestamp"],
    "query": {"match_all" : {}}
@@ -14,7 +17,7 @@ function init_scroll() {
 
 function scroll() {
   local scroll_id=$1
-  curl -fs -XGET "${ELASTIC_DB}/_search/scroll?scroll=10m" -d ${scroll_id} \
+  curl "$curl_opt" -XGET "${ELASTIC_DB}/_search/scroll?scroll=10m" -d ${scroll_id} \
   | jq ".hits.hits | .[]"
 }
 
@@ -29,12 +32,12 @@ function object2bulk() {
 }
 
 function bulk_insert() {
-  curl -fs -XPOST ${ELASTIC_DB}/_bulk --data-binary @-
+  curl "$curl_opt" -XPOST ${ELASTIC_DB}/_bulk --data-binary @-
 }
 
 function index_size() {
   local index=$1
-  curl -fs -XGET "${ELASTIC_DB}/${index}/_search?search_type=scan&pretty&scroll=1" -d '
+  curl "$curl_opt" -XGET "${ELASTIC_DB}/${index}/_search?search_type=scan&pretty&scroll=1" -d '
   {
    "query": {"match_all" : {}}
   }' \
