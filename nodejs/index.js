@@ -24,6 +24,19 @@ function price_filter(req) {
   return ejs.NumericRangeFilter("price").lte(parseInt(req.param('max_price')))
 }
 
+app.get('/monitoring', function(req, res) {
+  get_statistics(function(stats) {
+    if (stats) {
+      for (var i = 0; i < stats.length; i++) {
+        var stat = stats[i]
+        console.log(stat.older)
+        stat.human = moment(stat.older).fromNow()
+      }
+      res.send(stats)
+    } else res.send(500)
+  })
+})
+
 app.get('/', function(req, res) {
   var user_code = req.param('user_code')
   if (user_code) res.redirect(user_code)
