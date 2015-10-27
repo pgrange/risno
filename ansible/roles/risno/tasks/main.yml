@@ -45,8 +45,8 @@
         job="python /opt/risno/tools/update_type.py >>/var/opt/risno/upd_types.log 2>&1" 
 - name: crontab to check for expired pubs
   cron: name="expire pubs" cron_file=risno user=risno
-        hour=1 minute=1
-        job="python /opt/risno/tools/expire_pubs.py >>/var/opt/risno/expire.log 2>&1"
+        hour=14 minute=1
+        job="/opt/risno/tools/expire_pubs.sh >>/var/opt/risno/expire.log 2>&1"
 - name: crontab to purge expired pubs
   cron: name="purge expired pubs" cron_file=risno user=risno
         hour=2 minute=1
