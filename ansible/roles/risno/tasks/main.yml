@@ -43,10 +43,12 @@
   cron: name="update types" cron_file=risno user=risno
         hour=15 minute=1
         job="python /opt/risno/tools/update_type.py >>/var/opt/risno/upd_types.log 2>&1" 
+- name: install moreutils for ts in following cron
+  apt: pkg=moreutils
 - name: crontab to check for expired pubs
   cron: name="expire pubs" cron_file=risno user=risno
-        hour=14 minute=1
-        job="/opt/risno/tools/expire_pubs.sh >>/var/opt/risno/expire.log 2>&1"
+        hour="14,16,18,23" minute=35
+        job="/opt/risno/tools/expire_pubs.sh 2>&1 | ts >>/var/opt/risno/expire.log 2>&1"
 - name: crontab to purge expired pubs
   cron: name="purge expired pubs" cron_file=risno user=risno
         hour=2 minute=1
