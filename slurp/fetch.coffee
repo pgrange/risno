@@ -95,6 +95,7 @@ exports.fetch_store_ads = (site, region, page, handler) ->
 
         insert_ad = (ad, old_ad, handler) ->
           #TODO reset expire field ??
+          ad.first_seen = if old_ad then old_ad._source.first_seen else Date.now()
           elastic_client.index
             index: "ads"
             type: "immo"

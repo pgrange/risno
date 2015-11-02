@@ -70,9 +70,17 @@ test_http_client = (client) ->
 test_http_response = (body, status) ->
   test_http_client (url, handler) ->
     handler null, {statusCode: status ? 200}, body
+
+original_now = Date.now()
+set_test_now = (date) ->
+  Date.now = () ->
+    return date
+restore_now = () ->
+  Date.now = original_now
    
 exports.fetching = nodeunit.testCase
   setUp: (done) ->
+    set_test_now "right now !"
     test_http_client (url, handler) ->
       response = fake_pages[url]
       response ?= {statusCode: 500, body: ''}
@@ -98,6 +106,7 @@ exports.fetching = nodeunit.testCase
         .finally () ->
           done()
   tearDown: (done) ->
+    restore_now()
     restore_http_client()
     this.elastic_client.close()
     done()
@@ -179,3 +188,51 @@ exports.fetching = nodeunit.testCase
     .catch (err) ->
       test.fail err
       test.done()
+
+  testFetchAndStoreAdsShouldSetFirstSeenDateTheFirstTimeAnAdIsSeen: (test) ->
+    elastic_client = this.elastic_client
+    fetch.fetch_store_ads test_site, 'aquitaine', 2, (err, ads) ->
+      test.equal null, err
+      elastic_client.get
+        index: 'ads'
+        type: 'immo'
+        id: hash('1')
+      .then (result) ->
+        ad = result._source
+        test.notEqual null, ad.first_seen
+        test.equal "right now !", ad.first_seen
+        test.done()
+      .catch (err) ->
+        test.fail "elastic request failed", err
+        test.done()
+
+  testFetchAndStoreAdsShouldNotSetFirstSeenDateIfItIsNotTheFirstTimeAnAdIsSeen: (test) ->
+    elastic_client = this.elastic_client
+    elastic_client.index
+      index: "ads"
+      type: "immo"
+      id: hash("1")
+      body:
+        first_seen: "long time ago"
+        description: "old description"
+        location: "old location"
+        price: 12043
+        img: "http://test.com/img1"
+        url: "http://test.com/pub"
+        site_name: "test"
+        site_host: "test.com"
+    .then () ->
+      fetch.fetch_store_ads test_site, 'aquitaine', 2, (err, ads) ->
+        test.equal null, err
+        elastic_client.get
+          index: 'ads'
+          type: 'immo'
+          id: hash('1')
+        .then (result) ->
+          ad = result._source
+          test.equal "long time ago", ad.first_seen
+          test.done()
+        .catch (err) ->
+          test.fail "elastic request failed", err
+          test.done()
+ 

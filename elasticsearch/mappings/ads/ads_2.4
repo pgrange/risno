@@ -1,0 +1,65 @@
+#!/bin/bash -e
+
+install_dir=$(cd $(dirname $0) && pwd)
+
+#load util functions
+source ${install_dir}/../tools/utils.sh
+
+old_index="ads_2.3"
+new_index="ads_2.4"
+alias="ads"
+
+curl -XPUT localhost:9200/${new_index} -d '
+{
+ "mappings": {
+  "immo": {
+   "_timestamp" : { 
+    "enabled" : true,
+    "store": true
+   },
+   "properties": {
+    "url": {"index": "not_analyzed", "type": "string"},
+    "img": {"index": "not_analyzed", "type": "string"},
+    "location": {"type": "string"},
+    "description": {"type": "string"},
+    "cities": {"type": "string"},
+    "price": {"type": "integer"},
+    "date": {"type": "date"},
+    "site_name": {"index": "not_analyzed", "type": "string"},
+    "site_host": {"index": "not_analyzed", "type": "string"},
+    "first_seen": {"type": "date"}
+   }
+  },
+  "opinion" : {
+   "_parent": {"type": "immo"},
+   "properties": {
+    "user_code" : { "type" : "string"},
+    "opinion": {"type": "string"}
+   }
+  }
+ }
+}'
+
+set $(init_scroll ${old_index})
+scroll_id=$1
+total=$2
+
+echo "$total documents to update to new index" >&2
+
+i=0
+while scroll ${scroll_id}| object2bulk ${new_index} | bulk_insert > /dev/null
+do
+  echo "$i bulk updated" >&2
+  i=$((i+1))
+done
+
+echo size of original index ${old_index}   : $(index_size ${old_index}) >&2
+echo size of destination index ${new_index}: $(index_size ${new_index}) >&2
+
+curl -XPOST 'http://localhost:9200/_aliases' -d "
+{
+    \"actions\" : [
+        { \"remove\" : { \"index\" : \"${old_index}\", \"alias\" : \"${alias}\" } },
+        { \"add\" : { \"index\" : \"${new_index}\", \"alias\" : \"${alias}\" } }
+    ]
+}"
