@@ -28,16 +28,16 @@ exports.testShouldStripAdDescription = (test) ->
   test.equals ad.description, 'Talence / Gironde'
   test.done()
 
-exports.testShouldStripAdLocation = (test) ->
-  ad = parse_ad_from_src '<location>\n                                    \n                                            \n                                        \n                                        \n                                        \n                                            Talence\n                                            \n                                                /\n                                            \n                                        \n                                        Gironde\n                                    \n                                </location>'
-
-  test.equals ad.location, 'Talence / Gironde'
-  test.done()
-
 exports.testShouldParseAdLocation = (test) ->
   ad = parse_ad_from_src '<location>Location</location>'
 
   test.equals ad.location, 'Location'
+  test.done()
+
+exports.testShouldStripAdLocation = (test) ->
+  ad = parse_ad_from_src '<location>\n                                    \n                                            \n                                        \n                                        \n                                        \n                                            Talence\n                                            \n                                                /\n                                            \n                                        \n                                        Gironde\n                                    \n                                </location>'
+
+  test.equals ad.location, 'Talence / Gironde'
   test.done()
 
 exports.testShouldParseAdPrice = (test) ->
@@ -46,12 +46,11 @@ exports.testShouldParseAdPrice = (test) ->
   test.strictEqual ad.price, 12043
   test.done()
 
-exports.testShouldExtractPriceDotForThousandFormated = (test) ->
+exports.testShouldHandleDotInThousandFormatedPrices = (test) ->
   ad = parse_ad_from_src '<price>310.000&nbsp;€</price>'
 
   test.equals ad.price, 310000
   test.done()
-
 
 exports.testShouldExtractPriceFromCrap = (test) ->
   ad = parse_ad_from_src '<price>only 12 043 595euro</price>'
@@ -117,7 +116,6 @@ exports.testShouldNotGuessImageIfNoneFound = (test) ->
   test.equal undefined, ad.img
   test.done()
 
-
 exports.testShouldParseAdUrl = (test) ->
   dom = cheerio.load('<a href="http://site/ad"><ad></ad></a>')
 
@@ -147,7 +145,7 @@ exports.testShouldExtractUrlFromStrangePagesJaunesMethod = (test) ->
   test.equals ad.url, 'http://www.pagesjaunes.fr/verticales/immo/afficherFicheDetaillee.do?idAnnonce=2d7ff5b1-1165-e211-86f2-5cf3fc6a23ca'
   test.done()
 
-exports.testShouldExtractUrlFromParuVenduMethod = (test) ->
+exports.testShouldExtractUrlFromStrangeParuVenduMethod = (test) ->
   ad = parse_ad_from_src '<li>
                             <a class="picCntr" href="#goFD">not this one</a>
                             <div class="details">
@@ -161,10 +159,10 @@ exports.testShouldExtractUrlFromParuVenduMethod = (test) ->
 
 parse_ad_from_src = (src) ->
   ad = cheerio.load('<ad>' + src + '</ad>')('ad')
-  slurp.parse_ad ad, 
+  slurp.parse_ad ad,
     host: 'site'
     name: 'test'
-    selectors: 
+    selectors:
       price: 'price'
       location: 'location'
       description: 'description',
@@ -223,5 +221,3 @@ exports.testShouldReturnArrayOfUrlsWhenComplexScenario = (test) ->
     'http://www.exemple.com/ads/2',
   ]
   test.done()
-
-

@@ -20,11 +20,10 @@ exports.find_ads = (context, site) ->
 exports.parse_ad = (ad, site) ->
   site = {} unless site
   selectors = site.selectors || {}
-  price = clear_price ad.find(selectors.price).text()
 
   description: strip ad.find(selectors.description).text()
   location: strip ad.find(selectors.location).text()
-  price: price
+  price: clear_price ad.find(selectors.price).text()
   img: find_image ad, site.host
   url: find_url ad, site.host
   site_name: site.name
