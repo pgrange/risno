@@ -56,6 +56,20 @@ app.get('/:user_code/new', function(req, res) {
     }, new_query(user_code), filter)
   }, new_filter(user_code))
 })
+app.get('/:user_code/newnew', function(req, res) {
+  var user_code = req.param('user_code')
+  var _filter = new_filter(user_code)
+  _filter = ejs.AndFilter([
+    _filter,
+    ejs.RangeFilter('first_seen').gt('now-1d')
+  ])
+
+  with_criteria(req, user_code, function(filter) {
+    get_pubs(function(results) {
+      render(res, user_code, results, "new")
+    }, new_query(user_code), filter)
+  }, _filter)
+})
 app.get('/:user_code/like', function(req, res) {
   var user_code = req.param('user_code')
   with_criteria(req, user_code, function(filter) {
