@@ -19,7 +19,7 @@ function old_ads_init_scroll() {
         },
         \"filter\": {
           \"range\": {
-            \"_timestamp\": {\"lt\": \"$older_than\"}
+            \"last_seen\": {\"lt\": \"$older_than\"}
           }
         }
       }

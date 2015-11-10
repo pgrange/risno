@@ -90,6 +90,16 @@ exports.storing = nodeunit.testCase
       assert_ad_in_db test, already_known_ad.id, (ad) ->
         test.equal already_known_ad.first_seen, ad.first_seen
 
+  # We used _timestamp to check for old ads in db.
+  # However, _timestamp is updated to often (for instance
+  # when location or type is updated).
+  # We are going to use this explicit field instead.
+  testFetchAndStoreAdsShouldSetLastSeenTimeToNow: (test) ->
+    fetch.fetch_store_ads site, 'aquitaine', 2, (err, ads) ->
+      assert_ad_in_db test, '1', (ad) ->
+        test.equal fake_now, ad.last_seen
+
+
 ############
 # Fixtures #
 ############
