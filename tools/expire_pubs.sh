@@ -15,7 +15,7 @@ function old_ads_init_scroll() {
     \"query\": {
       \"filtered\": {
         \"filter\": {  
-          \"missing\": {\"field\": \"expire\"}
+          \"missing\": {\"field\": \"expired\"}
         },
         \"filter\": {
           \"range\": {
@@ -49,7 +49,7 @@ function bulk_insert() {
 }
 
 function expire() {
-  jq -c ". + {__extra: {expire: true}}"
+  jq -c ". + {__extra: {expired: true}}"
 }
 
 set $(old_ads_init_scroll ${index})
