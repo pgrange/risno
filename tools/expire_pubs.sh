@@ -15,12 +15,10 @@ function old_ads_init_scroll() {
     \"query\": {
       \"filtered\": {
         \"filter\": {  
-          \"missing\": {\"field\": \"expired\"}
-        },
-        \"filter\": {
-          \"range\": {
-            \"last_seen\": {\"lt\": \"$older_than\"}
-          }
+          \"and\": [
+            { \"missing\": {\"field\": \"expired\"} },
+            { \"range\": { \"last_seen\": {\"lt\": \"$older_than\"} } }
+          ]
         }
       }
     }
