@@ -136,6 +136,106 @@ app.post('/:user_code/pub/:id', function(req, res) {
     })
   }
 })
+app.post('/:user_code/forget_me/:forget_me_code', function(req, res) {
+  var user_code = req.param('user_code')
+  var forget_me_code = req.param('forget_me_code')
+
+  var query = ejs.TermQuery('user_code', user_code)
+  ejs.Request({indices: 'users', types: 'user'})
+  .query(query).size(1000)
+  .doSearch(function(result) {
+    if (result.error) {
+      console.log(result)
+      res.send(500, '')
+    } else if (result.hits.hits.length <= 0) {
+      console.log("unknown user_code " + user_code)
+      res.send(404, '')
+    } else if (result.hits.hits.length > 1){
+      console.log("error: more than one mail for user_code" + user_code)
+      console.log(JSON.stringify(result.hits.hits))
+      res.send(500, '')
+    } else {
+      var user = result.hits.hits[0]._source
+      var id   = result.hits.hits[0]._id
+      if (forget_me_code != user.forget_me_code) {
+        console.log("unauthorized forget_me_code to suppress user " + user_code + ": " + forget_me_code)
+        res.send(403, '')
+      } else {
+        console.log("forgetting user " + user_code)
+        ejs.Document("users", "user", id).doDelete(
+          function() {
+            console.log("forgot user: " + user_code)
+            res.redirect("/" + user_code)
+          },
+          function(e) {
+            console.log("KATASTROPH" + e)
+            res.send(500, '')
+          })
+      }
+    }
+  })
+})
+
+app.get('/:user_code/forget_me/:forget_me_code', function(req, res) {
+  var user_code = req.param('user_code')
+  var forget_me_code = req.param('forget_me_code')
+  res.render('forget_me.jade', {user_code: user_code,
+                                forget_me_code: forget_me_code})
+})
+app.post('/:user_code/forget_me', function(req, res) {
+  var user_code = req.param('user_code')
+  console.log("have to forget " + user_code)
+
+  var query = ejs.TermQuery('user_code', user_code)
+  ejs.Request({indices: 'users', types: 'user'})
+  .query(query).size(1000)
+  .doSearch(function(result) {
+    if (result.error) {
+      console.log(result)
+      res.send(500, '')
+    }
+    else if (result.hits.hits.length <= 0) {
+      console.log("unknown user_code " + user_code)
+      res.send(404, '')
+    } else if (result.hits.hits.length > 1){
+      console.log("error: more than one mail for user_code" + user_code)
+      console.log(JSON.stringify(result.hits.hits))
+    } else {
+      console.log(JSON.stringify(result.hits.hits))
+      var id = result.hits.hits[0]._id
+      var mail = result.hits.hits[0]._source.mail
+      var forget_me_code = crypto.randomBytes(10).toString('hex')
+      ejs.Document("users", "user", id)
+        .source({user_code: user_code,
+                 mail: mail,
+                 forget_me_code: forget_me_code})
+        .doUpdate(
+          function() {
+            smtp_transport.sendMail(
+              prepare_forget_me_mail(mail, user_code, forget_me_code),
+              function(error, response) {
+                if (error) {
+                  console.log("Unable to send forget me code " +
+                              "[" + mail + "]" + 
+                              " " + error)
+                  res.send(500, '')
+                } else {
+                  console.log("forget me code sent " +
+                              "[" + mail + "]" + 
+                              " " + response.message);
+                  res.send(200, '')
+                }
+              }
+            )
+          },
+          function(e) {
+            console.log("KATASTROPH" + e)
+          })
+   }
+  },function(error) {
+    console.log(error)
+  })
+})
 app.get('/suggest', function(req, res) {
   var prefix = req.param('prefix')
   elastic_client.suggest({
@@ -459,6 +559,20 @@ function prepare_send_id_mail(mail, user_codes) {
     from: "contact@risno.org",
     to: mail,
     subject: "Rappel de vos identifiants Risno",
+    text: text
+  }
+}
+
+function prepare_forget_me_mail(mail, user_code, forget_me_code) {
+  var text= "Bonjour,\n" +
+        "\n" +
+        "Quelqu'un a demandé à supprimer votre email de Risno. S'il s'agit bien de vous, cliquez sur le lien ci-dessous pour effectuer cette opération :\n" +
+        "\n"
+    text += "http://risno.org/" + user_code + "/forget_me/" + forget_me_code + "\n"
+  return {
+    from: "contact@risno.org",
+    to: mail,
+    subject: "Suppression de votre email sur Risno",
     text: text
   }
 }

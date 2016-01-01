@@ -1,0 +1,22 @@
+!!! 5
+
+html
+ include head
+ body
+  include jumbo
+
+  .promote
+   .container
+    h2 Vous vous apprêtez à effacer votre email de risno.
+    p Attention cependant, cette opération est irréversible. Si vous êtes certain de vouloir supprimer votre email de votre compte risno, confirmez en cliquant sur le bouton ci-desssous.
+    p Si vous confirmez cette opération, nous allons effacer votre email associé à ce compte risno. Vous ne serez plus en mesure de retrouver votre compte à partir de votre email. Si vous avez d'autres comptes risno, cette action n'aura aucun effet sur ces derniers et votre email sera toujours associé à vos autres comptes. Par ailleurs, nous n'effaçons pas votre compte lui-même et tant que vous vous souviendrez de votre identifiant de compte risno, vous pourrez continuer à l'utiliser.
+    p Si vous annulez, vous pourrez recommencer cette opération à tout moment.
+
+    form(id="forget-me", role="form", method="POST",
+         action="/"+user_code+"/forget_me/"+forget_me_code)
+     p
+      button.btn.btn-danger(type="submit") Oubliez moi !
+      &nbsp;
+      a.btn.btn-primary(type="button", href="/"+user_code) Non, ne m'oubliez pas tout de suite
+
+  include foot

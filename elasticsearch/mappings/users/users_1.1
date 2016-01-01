@@ -1,0 +1,54 @@
+#!/bin/bash -e
+
+install_dir=$(cd $(dirname $0) && pwd)
+
+#load util functions
+source ${install_dir}/../tools/utils.sh
+
+old_index="users"
+new_index="users_1.1"
+alias="users"
+
+curl -XPUT localhost:9200/${new_index} -d '{
+ "mappings": {
+  "user": {
+   "properties": {
+    "mail": {
+     "index": "not_analyzed",
+     "type": "string"
+    },
+    "user_code": {
+     "index": "not_analyzed",
+     "type": "string"
+    }
+   }
+  }
+ }
+}'
+
+set $(init_scroll ${old_index})
+scroll_id=$1
+total=$2
+
+echo "$total documents to update to new index" >&2
+
+i=0
+while scroll ${scroll_id}| object2bulk ${new_index} | bulk_insert > /dev/null
+do
+  echo "$i bulk updated" >&2
+  i=$((i+1))
+done
+
+echo size of original index ${old_index}   : $(index_size ${old_index}) >&2
+echo size of destination index ${new_index}: $(index_size ${new_index}) >&2
+
+#Danger ! but no alternative :(
+curl -XDELETE localhost:9200/${old_index}
+
+curl -XPOST 'http://localhost:9200/_aliases' -d "
+{
+    \"actions\" : [
+        { \"add\" : { \"index\" : \"${new_index}\", \"alias\" : \"${alias}\" } }
+    ]
+}"
+
