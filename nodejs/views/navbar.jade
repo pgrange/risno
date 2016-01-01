@@ -21,7 +21,6 @@ case active
     span.icon-bar
     span.icon-bar
 
-  - var email_registered=true
   .collapse.navbar-collapse(role="navigation")
    if email_registered
     ul.nav.navbar-nav.navbar-left
@@ -57,5 +56,6 @@ script.
         type: 'POST'
       })
       $('#forget_me').modal('show')
+      return false
     })
   }

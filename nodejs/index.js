@@ -52,7 +52,9 @@ app.get('/:user_code/new', function(req, res) {
   var user_code = req.param('user_code')
   with_criteria(req, user_code, function(filter) {
     get_pubs(function(results) {
-      render(res, user_code, results, "new")
+      is_email_registered(user_code, function(email_registered) {
+        render(res, user_code, email_registered, results, "new")
+      })
     }, new_query(user_code), filter)
   }, new_filter(user_code))
 })
@@ -66,7 +68,9 @@ app.get('/:user_code/newnew', function(req, res) {
 
   with_criteria(req, user_code, function(filter) {
     get_pubs(function(results) {
-      render(res, user_code, results, "new")
+      is_email_registered(user_code, function(email_registered) {
+        render(res, user_code, email_registered, results, "new")
+      })
     }, new_query(user_code), filter)
   }, _filter)
 })
@@ -74,7 +78,9 @@ app.get('/:user_code/like', function(req, res) {
   var user_code = req.param('user_code')
   with_criteria(req, user_code, function(filter) {
     get_pubs(function(results) {
-      render(res, user_code, results, "like")
+      is_email_registered(user_code, function(email_registered) {
+        render(res, user_code, email_registered, results, "like")
+      })
     }, like_query(user_code), filter)
   }, like_filter(user_code))
 })
@@ -82,7 +88,9 @@ app.get('/:user_code/dislike', function(req, res) {
   var user_code = req.param('user_code')
   with_criteria(req, user_code, function(filter) {
     get_pubs(function(results) {
-      render(res, user_code, results, "dislike")
+      is_email_registered(user_code, function(email_registered) {
+        render(res, user_code, email_registered, results, "dislike")
+      })
     }, dislike_query(user_code), filter)
   }, dislike_filter(user_code))
 })
@@ -162,7 +170,10 @@ app.post('/:user_code/forget_me/:forget_me_code', function(req, res) {
         res.send(403, '')
       } else {
         console.log("forgetting user " + user_code)
-        ejs.Document("users", "user", id).doDelete(
+        //WARNING performance issue risk with refresh here
+        ejs.Document("users", "user", id)
+        .refresh(true)
+        .doDelete(
           function() {
             console.log("forgot user: " + user_code)
             res.redirect("/" + user_code)
@@ -410,6 +421,22 @@ function get_pubs(handle_results, query, filter) {
     })
 }
 
+function is_email_registered(user_code, handle) {
+  var query = ejs.TermQuery('user_code', user_code)
+  ejs.Request({indices: 'users', types: 'user'})
+  .query(query).size(1)
+  .doSearch(function(result) {
+    if (result.error) {
+      console.log(result)
+      handle(false)
+    } else if (result.hits.hits.length == 0){
+      handle(false)
+    } else {
+      handle(true)
+    }
+  })
+}
+
 function vote(user_code, id, opinion, handle_update) {
   ejs.Document(e_index, 'opinion', user_code + '_' + id)
     .parent(id)
@@ -428,10 +455,10 @@ function extract_pubs(results, opinion) {
   return pubs
 }
 
-function render(res, user_code, results, active) {
+function render(res, user_code, email_registered, results, active) {
     if (results.error) console.log(results)
     var pubs = extract_pubs(results, active)
-    res.render('pubs.jade', {user_code: user_code, pubs: pubs, active: active})
+    res.render('pubs.jade', {user_code: user_code, email_registered: email_registered, pubs: pubs, active: active})
 }
 
 function get_criteria(user_code, handle_results) {
