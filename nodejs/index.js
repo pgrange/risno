@@ -24,6 +24,10 @@ function price_filter(req) {
   return ejs.NumericRangeFilter("price").lte(parseInt(req.param('max_price')))
 }
 
+app.get('/robots.txt', function(req, res) {
+  res.send(404) //no robots.txt to permit indexation
+})
+
 app.get('/monitoring', function(req, res) {
   get_statistics(function(stats) {
     if (stats) {
