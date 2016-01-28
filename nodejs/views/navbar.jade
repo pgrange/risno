@@ -28,13 +28,13 @@ case active
        a(id="forget_me_btn",href="#forget_me") oubliez moi
    ul.nav.navbar-nav.navbar-right
     li(class=criteria_class)
-     a(href="/" + user_code + "/criteria/") Filtre
+     a(href="/_/" + user_code + "/criteria/") Filtre
     li(class=new_class)
-     a(href="/" + user_code + "/new/") Nouveautés
+     a(href="/_/" + user_code + "/new/") Nouveautés
     li(class=like_class)
-     a(href="/" + user_code + "/like/") Bien
+     a(href="/_/" + user_code + "/like/") Bien
     li(class=dislike_class)
-     a(href="/" + user_code + "/dislike/") Bof
+     a(href="/_/" + user_code + "/dislike/") Bof
 
 .modal.fade(id="forget_me",role="dialog")
  .modal-dialog
@@ -52,7 +52,7 @@ case active
 script.
   function init_navbar() {
     $('#forget_me_btn').click(function() {
-      $.ajax("/" + user_code + "/forget_me", {
+      $.ajax("/_/" + user_code + "/forget_me", {
         type: 'POST'
       })
       $('#forget_me').modal('show')
