@@ -7,7 +7,7 @@ function init_vote() {
     var pub = $(this).parents(".pub")
     var id = pub.attr('id')
   
-    $.post("/" + user_code + "/pub/" + id, {opinion: opinion}, function(data) {
+    $.post("/_/" + user_code + "/pub/" + id, {opinion: opinion}, function(data) {
       pub.removeClass("like")
       pub.removeClass("dislike")
       pub.addClass(data.opinion)

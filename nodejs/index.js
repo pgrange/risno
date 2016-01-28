@@ -43,7 +43,7 @@ app.get('/monitoring', function(req, res) {
 
 app.get('/', function(req, res) {
   var user_code = req.param('user_code')
-  if (user_code) res.redirect(user_code)
+  if (user_code) res.redirect('_/' + user_code)
   else { 
     user_code = crypto.randomBytes(10).toString('hex')
     get_statistics(function(stats) {
@@ -52,7 +52,7 @@ app.get('/', function(req, res) {
   }
 })
 
-app.get('/:user_code/new', function(req, res) {
+app.get('/_/:user_code/new', function(req, res) {
   var user_code = req.param('user_code')
   with_criteria(req, user_code, function(filter) {
     get_pubs(function(results) {
@@ -62,7 +62,7 @@ app.get('/:user_code/new', function(req, res) {
     }, new_query(user_code), filter)
   }, new_filter(user_code))
 })
-app.get('/:user_code/newnew', function(req, res) {
+app.get('/_/:user_code/newnew', function(req, res) {
   var user_code = req.param('user_code')
   var _filter = new_filter(user_code)
   _filter = ejs.AndFilter([
@@ -78,7 +78,7 @@ app.get('/:user_code/newnew', function(req, res) {
     }, new_query(user_code), filter)
   }, _filter)
 })
-app.get('/:user_code/like', function(req, res) {
+app.get('/_/:user_code/like', function(req, res) {
   var user_code = req.param('user_code')
   with_criteria(req, user_code, function(filter) {
     get_pubs(function(results) {
@@ -88,7 +88,7 @@ app.get('/:user_code/like', function(req, res) {
     }, like_query(user_code), filter)
   }, like_filter(user_code))
 })
-app.get('/:user_code/dislike', function(req, res) {
+app.get('/_/:user_code/dislike', function(req, res) {
   var user_code = req.param('user_code')
   with_criteria(req, user_code, function(filter) {
     get_pubs(function(results) {
@@ -98,13 +98,13 @@ app.get('/:user_code/dislike', function(req, res) {
     }, dislike_query(user_code), filter)
   }, dislike_filter(user_code))
 })
-app.get('/:user_code/criteria', function(req, res) {
+app.get('/_/:user_code/criteria', function(req, res) {
   var user_code = req.param('user_code')
   get_criteria(user_code, function(criteria) {
     render_criteria(res, user_code, criteria)
   })
 })
-app.post('/:user_code/criteria', function(req, res) {
+app.post('/_/:user_code/criteria', function(req, res) {
   var user_code = req.param('user_code')
   var criteria = {
     max_price: parseInt(req.param('max_price')),
@@ -125,12 +125,12 @@ app.post('/:user_code/criteria', function(req, res) {
   doc = ejs.Document(e_index, "criteria", "criteria_" + user_code)
   doc.source(criteria).upsert(criteria)
   doc.doUpdate(function() {
-    res.redirect("/" + user_code + "/new")
+    res.redirect("/_/" + user_code + "/new")
   }, function(e) {
     console.log("KATASTROPH" + e)
   })
 })
-app.post('/:user_code/pub/:id', function(req, res) {
+app.post('/_/:user_code/pub/:id', function(req, res) {
   var user_code = req.param('user_code')
   var id = req.param('id')
   var opinion = req.param('opinion')
@@ -148,7 +148,7 @@ app.post('/:user_code/pub/:id', function(req, res) {
     })
   }
 })
-app.post('/:user_code/forget_me/:forget_me_code', function(req, res) {
+app.post('/_/:user_code/forget_me/:forget_me_code', function(req, res) {
   var user_code = req.param('user_code')
   var forget_me_code = req.param('forget_me_code')
 
@@ -180,7 +180,7 @@ app.post('/:user_code/forget_me/:forget_me_code', function(req, res) {
         .doDelete(
           function() {
             console.log("forgot user: " + user_code)
-            res.redirect("/" + user_code)
+            res.redirect("/_/" + user_code)
           },
           function(e) {
             console.log("KATASTROPH" + e)
@@ -191,13 +191,13 @@ app.post('/:user_code/forget_me/:forget_me_code', function(req, res) {
   })
 })
 
-app.get('/:user_code/forget_me/:forget_me_code', function(req, res) {
+app.get('/_/:user_code/forget_me/:forget_me_code', function(req, res) {
   var user_code = req.param('user_code')
   var forget_me_code = req.param('forget_me_code')
   res.render('forget_me.jade', {user_code: user_code,
                                 forget_me_code: forget_me_code})
 })
-app.post('/:user_code/forget_me', function(req, res) {
+app.post('/_/:user_code/forget_me', function(req, res) {
   var user_code = req.param('user_code')
   console.log("have to forget " + user_code)
 
@@ -360,9 +360,13 @@ app.post('/send_id', function(req, res) {
     console.log(error)
   })
 })
+app.get('/_/:user_code', function(req, res) {
+  var user_code = req.param('user_code')
+  res.redirect('/_/' + user_code + '/new')
+})
 app.get('/:user_code', function(req, res) {
   var user_code = req.param('user_code')
-  res.redirect(user_code + '/new')
+  res.redirect('/_/' + user_code)
 })
 
 
@@ -584,7 +588,7 @@ function prepare_send_id_mail(mail, user_codes) {
         "Retrouvez vos nouvelles annonces immobilières sur Risno :\n" +
         "\n"
   for(var i = 0; i < user_codes.length; i++) {
-    text += "http://risno.org/" + user_codes[i] + "\n"
+    text += "http://risno.org/_/" + user_codes[i] + "\n"
   }
   return {
     from: "contact@risno.org",
@@ -599,7 +603,7 @@ function prepare_forget_me_mail(mail, user_code, forget_me_code) {
         "\n" +
         "Quelqu'un a demandé à supprimer votre email de Risno. S'il s'agit bien de vous, cliquez sur le lien ci-dessous pour effectuer cette opération :\n" +
         "\n"
-    text += "http://risno.org/" + user_code + "/forget_me/" + forget_me_code + "\n"
+    text += "http://risno.org/_/" + user_code + "/forget_me/" + forget_me_code + "\n"
   return {
     from: "contact@risno.org",
     to: mail,
