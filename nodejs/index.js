@@ -364,6 +364,11 @@ app.get('/:user_code', function(req, res) {
   var user_code = req.param('user_code')
   res.redirect('/_/' + user_code)
 })
+app.get('/:user_code/:action', function(req, res) {
+  var user_code = req.param('user_code')
+  var action = req.param('action')
+  res.redirect('/_/' + user_code + '/' + action)
+})
 
 
 //new elasticsearch client part
