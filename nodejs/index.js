@@ -362,11 +362,13 @@ app.get('/_/:user_code', function(req, res) {
 })
 app.get('/:user_code', function(req, res) {
   var user_code = req.param('user_code')
+  console.log('old url for user ' + user_code)
   res.redirect('/_/' + user_code)
 })
 app.get('/:user_code/:action', function(req, res) {
   var user_code = req.param('user_code')
   var action = req.param('action')
+  console.log('old url for user ' + user_code + ' and action ' + action)
   res.redirect('/_/' + user_code + '/' + action)
 })
 
