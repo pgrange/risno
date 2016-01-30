@@ -60,6 +60,16 @@ img.pub {
  color: #FFFFFF;
 }
 
+.help {
+ background-attachment: fixed;
+ background-image: url("../images/annonces-darker.jpg");
+ background-position: center bottom;
+ background-size: cover;
+ position: relative;
+ width: 100%;
+ color: #FFFFFF;
+}
+
 .navbar {
  background: #FFF;
  overflow: hidden;
