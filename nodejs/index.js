@@ -6,6 +6,7 @@ var crypto = require('crypto')
 var nconf = require('nconf')
 var nodemailer = require('nodemailer')
 var moment = require('moment')
+var bunyan = require('bunyan')
 
 nconf.argv()
      .env()
@@ -20,6 +21,21 @@ app.locals.pretty = true
 app.use(express.bodyParser());
 app.use(express.static(path.join(__dirname, 'public')))
 
+function reqSerializer(req) {
+  return {
+    method: req.method,
+    url: req.url,
+    headers: req.headers
+  }
+}
+var log = bunyan.createLogger({name: 'risno', serializers: {req: reqSerializer}})
+app.use(function(req, res, next) {
+  req.log = log.child({reqId: crypto.randomBytes(6).toString('hex')})
+  res.log = req.log
+  req.log.info({req: req})
+  next()
+})
+
 function price_filter(req) {
   return ejs.NumericRangeFilter("price").lte(parseInt(req.param('max_price')))
 }
@@ -29,12 +45,11 @@ app.get('/monitoring', function(req, res) {
     if (stats) {
       for (var i = 0; i < stats.length; i++) {
         var stat = stats[i]
-        console.log(stat.older)
         stat.human = moment(stat.older).fromNow()
       }
       res.send(stats)
     } else res.send(500)
-  })
+  }, req)
 })
 
 app.get('/', function(req, res) {
@@ -44,7 +59,7 @@ app.get('/', function(req, res) {
     user_code = crypto.randomBytes(10).toString('hex')
     get_statistics(function(stats) {
       res.render('welcome.jade', {user_code: user_code, stats: stats, moment: moment})
-    })
+    }, req)
   }
 })
 
@@ -54,8 +69,8 @@ app.get('/_/:user_code/new', function(req, res) {
     get_pubs(function(results) {
       is_email_registered(user_code, function(email_registered) {
         render(res, user_code, email_registered, results, "new")
-      })
-    }, new_query(user_code), filter)
+      }, req)
+    }, new_query(user_code), filter, req)
   }, new_filter(user_code))
 })
 app.get('/_/:user_code/newnew', function(req, res) {
@@ -70,8 +85,8 @@ app.get('/_/:user_code/newnew', function(req, res) {
     get_pubs(function(results) {
       is_email_registered(user_code, function(email_registered) {
         render(res, user_code, email_registered, results, "new")
-      })
-    }, new_query(user_code), filter)
+      }, req)
+    }, new_query(user_code), filter, req)
   }, _filter)
 })
 app.get('/_/:user_code/like', function(req, res) {
@@ -80,8 +95,8 @@ app.get('/_/:user_code/like', function(req, res) {
     get_pubs(function(results) {
       is_email_registered(user_code, function(email_registered) {
         render(res, user_code, email_registered, results, "like")
-      })
-    }, like_query(user_code), filter)
+      }, req)
+    }, like_query(user_code), filter, req)
   }, like_filter(user_code))
 })
 app.get('/_/:user_code/dislike', function(req, res) {
@@ -90,15 +105,15 @@ app.get('/_/:user_code/dislike', function(req, res) {
     get_pubs(function(results) {
       is_email_registered(user_code, function(email_registered) {
         render(res, user_code, email_registered, results, "dislike")
-      })
-    }, dislike_query(user_code), filter)
+      }, req)
+    }, dislike_query(user_code), filter, req)
   }, dislike_filter(user_code))
 })
 app.get('/_/:user_code/criteria', function(req, res) {
   var user_code = req.param('user_code')
   get_criteria(user_code, function(criteria) {
     render_criteria(res, user_code, criteria)
-  })
+  }, req)
 })
 app.post('/_/:user_code/criteria', function(req, res) {
   var user_code = req.param('user_code')
@@ -117,26 +132,20 @@ app.post('/_/:user_code/criteria', function(req, res) {
       criteria.cities[i] = city
     }
   }
-  console.log(criteria)
   doc = ejs.Document(e_index, "criteria", "criteria_" + user_code)
   doc.source(criteria).upsert(criteria)
   doc.doUpdate(function() {
     res.redirect("/_/" + user_code + "/new")
   }, function(e) {
-    console.log("KATASTROPH" + e)
+    req.log.error("KATASTROPH" + e)
   })
 })
 app.post('/_/:user_code/pub/:id', function(req, res) {
   var user_code = req.param('user_code')
   var id = req.param('id')
   var opinion = req.param('opinion')
-  console.log("vote for " + 
-              id + ": " + 
-              opinion + 
-              " by user_code: " + user_code)
   if (opinion != "like" && opinion != "dislike") {
     var msg = "That's not an opinion: " + opinion
-    console.log(msg)
     res.send(400, msg)
   } else {
     vote(user_code, id, opinion, function() {
@@ -153,33 +162,30 @@ app.post('/_/:user_code/forget_me/:forget_me_code', function(req, res) {
   .query(query).size(1000)
   .doSearch(function(result) {
     if (result.error) {
-      console.log(result)
+      req.log.error({result: result}, "error while searching for user " + user_code)
       res.send(500, '')
     } else if (result.hits.hits.length <= 0) {
-      console.log("unknown user_code " + user_code)
+      req.log.warn("unknown user_code " + user_code)
       res.send(404, '')
     } else if (result.hits.hits.length > 1){
-      console.log("error: more than one mail for user_code" + user_code)
-      console.log(JSON.stringify(result.hits.hits))
+      req.log.error({result: result}, "more than one mail for user_code" + user_code)
       res.send(500, '')
     } else {
       var user = result.hits.hits[0]._source
       var id   = result.hits.hits[0]._id
       if (forget_me_code != user.forget_me_code) {
-        console.log("unauthorized forget_me_code to suppress user " + user_code + ": " + forget_me_code)
+        req.log.warn("unauthorized forget_me_code to suppress user " + user_code + ": " + forget_me_code)
         res.send(403, '')
       } else {
-        console.log("forgetting user " + user_code)
         //WARNING performance issue risk with refresh here
         ejs.Document("users", "user", id)
         .refresh(true)
         .doDelete(
           function() {
-            console.log("forgot user: " + user_code)
             res.redirect("/_/" + user_code)
           },
           function(e) {
-            console.log("KATASTROPH" + e)
+            req.log.error("KATASTROPH" + e)
             res.send(500, '')
           })
       }
@@ -195,24 +201,22 @@ app.get('/_/:user_code/forget_me/:forget_me_code', function(req, res) {
 })
 app.post('/_/:user_code/forget_me', function(req, res) {
   var user_code = req.param('user_code')
-  console.log("have to forget " + user_code)
 
   var query = ejs.TermQuery('user_code', user_code)
   ejs.Request({indices: 'users', types: 'user'})
   .query(query).size(1000)
   .doSearch(function(result) {
     if (result.error) {
-      console.log(result)
+      req.log.error({result: result}, "error while searching for user " + user_code)
       res.send(500, '')
     }
     else if (result.hits.hits.length <= 0) {
-      console.log("unknown user_code " + user_code)
+      req.log.warn("unknown user_code " + user_code)
       res.send(404, '')
     } else if (result.hits.hits.length > 1){
-      console.log("error: more than one mail for user_code" + user_code)
-      console.log(JSON.stringify(result.hits.hits))
+      req.log.error({result: result}, "more than one mail for user_code" + user_code)
+      res.send(500, '')
     } else {
-      console.log(JSON.stringify(result.hits.hits))
       var id = result.hits.hits[0]._id
       var mail = result.hits.hits[0]._source.mail
       var forget_me_code = crypto.randomBytes(10).toString('hex')
@@ -226,25 +230,22 @@ app.post('/_/:user_code/forget_me', function(req, res) {
               prepare_forget_me_mail(mail, user_code, forget_me_code),
               function(error, response) {
                 if (error) {
-                  console.log("Unable to send forget me code " +
+                  req.log.error("Unable to send forget me code " +
                               "[" + mail + "]" + 
                               " " + error)
                   res.send(500, '')
                 } else {
-                  console.log("forget me code sent " +
-                              "[" + mail + "]" + 
-                              " " + response.message);
                   res.send(200, '')
                 }
               }
             )
           },
           function(e) {
-            console.log("KATASTROPH" + e)
+            req.log.error("KATASTROPH" + e)
           })
    }
   },function(error) {
-    console.log(error)
+    req.log.error({error: error})
   })
 })
 app.get('/suggest', function(req, res) {
@@ -293,11 +294,11 @@ app.post('/send_new_id', function(req, res) {
     .source({user_code: user_code, mail: mail})
     .doIndex(
       function() {
-        send_new_id(mail, user_code)
+        send_new_id(mail, user_code, req)
         res.redirect(user_code + '/criteria')
       },
       function(e) {
-        console.log("KATASTROPH" + e)
+        req.log.error("KATASTROPH" + e)
       })
 })
 app.get('/check_mail', function(req, res) {
@@ -307,12 +308,12 @@ app.get('/check_mail', function(req, res) {
   .query(query).size(1000)
   .doSearch(function(result) {
     if (result.error) {
-      console.log(result)
+      req.log.error({result: result}, "error while searching for user by mail")
       res.send(false)
     } else if (result.hits.hits.length > 0) {
       res.send(true)
     } else {
-      console.log("unknown email " + mail)
+      req.log.warn("unknown email " + mail)
       res.send(false)
     }
   })
@@ -324,11 +325,11 @@ app.post('/send_id', function(req, res) {
   .query(query).size(1000)
   .doSearch(function(result) {
     if (result.error) {
-      console.log(result)
+      req.log.error({result: result}, "error while searching for user by mail")
       res.send(500, '')
     }
     else if (result.hits.hits.length <= 0) {
-      console.log("unknown email " + mail)
+      req.log.warn("unknown email ")
       res.send(404, '')
     } else {
       var user_codes = []
@@ -339,12 +340,12 @@ app.post('/send_id', function(req, res) {
         prepare_send_id_mail(mail, user_codes),
         function(error, response) {
           if (error) {
-            console.log("Unable to send ids " +
+            req.log.error("Unable to send ids " +
                         "[" + mail + "]" + 
                         " " + error)
             res.send(500, '')
           } else {
-            console.log("ids sent " +
+            req.log.info("ids sent " +
                         "[" + mail + "]" + 
                         " " + response.message);
             res.send(200, '')
@@ -353,7 +354,8 @@ app.post('/send_id', function(req, res) {
       )
     }
   },function(error) {
-    console.log(error)
+    req.log.error({error: error}, "Unable to send id")
+    req.send(500)
   })
 })
 app.get('/_/:user_code', function(req, res) {
@@ -362,13 +364,11 @@ app.get('/_/:user_code', function(req, res) {
 })
 app.get('/:user_code', function(req, res) {
   var user_code = req.param('user_code')
-  console.log('old url for user ' + user_code)
   res.redirect('/_/' + user_code)
 })
 app.get('/:user_code/:action', function(req, res) {
   var user_code = req.param('user_code')
   var action = req.param('action')
-  console.log('old url for user ' + user_code + ' and action ' + action)
   res.redirect('/_/' + user_code + '/' + action)
 })
 
@@ -420,7 +420,7 @@ function dislike_query(user_code) {
     'opinion')
 }
 
-function get_pubs(handle_results, query, filter) {
+function get_pubs(handle_results, query, filter, req) {
   if (! query) query = ejs.QueryStringQuery('*')
   if (! filter) filter = ejs.TypeFilter(e_type)
   
@@ -428,17 +428,17 @@ function get_pubs(handle_results, query, filter) {
   ejs.Request({indices: e_index, types: e_type})
     .query(query).size(100).filter(filter)
     .doSearch(handle_results,function(error) {
-      console.log(error)
+      req.log.error(error)
     })
 }
 
-function is_email_registered(user_code, handle) {
+function is_email_registered(user_code, handle, req) {
   var query = ejs.TermQuery('user_code', user_code)
   ejs.Request({indices: 'users', types: 'user'})
   .query(query).size(1)
   .doSearch(function(result) {
     if (result.error) {
-      console.log(result)
+      req.log.error({result: result})
       handle(false)
     } else if (result.hits.hits.length == 0){
       handle(false)
@@ -457,7 +457,6 @@ function vote(user_code, id, opinion, handle_update) {
 
 function extract_pubs(results, opinion) {
   var pubs = []
-  console.log("nb results: " + results.hits.total)
   for(var i = 0; i < results.hits.hits.length; i++) {
     pubs[i] = results.hits.hits[i]._source
     pubs[i].id = results.hits.hits[i]._id
@@ -467,20 +466,18 @@ function extract_pubs(results, opinion) {
 }
 
 function render(res, user_code, email_registered, results, active) {
-    if (results.error) console.log(results)
+    if (results.error) res.log.error({result: results})
     var pubs = extract_pubs(results, active)
     res.render('pubs.jade', {user_code: user_code, email_registered: email_registered, pubs: pubs, active: active})
 }
 
-function get_criteria(user_code, handle_results) {
+function get_criteria(user_code, handle_results, req) {
   var criteria_id = "criteria_" + user_code
   doc = ejs.Document(e_index, "criteria", criteria_id)
-  console.log('user_code: ' + user_code)
-  console.log('criteria: ' + criteria_id)
   doc.doGet(function(result) {
     handle_results(result._source)
   }, function(e) {
-    console.log("KATASTROPH" + e)
+    req.log.error("KATASTROPH" + e)
   })
 }
 
@@ -501,7 +498,7 @@ function with_criteria(req, user_code, handle, filter) {
         filter.filters(types_filter(criteria.types))
     }
     handle(filter)
-  })
+  }, req)
 }
 
 function types_filter(types) {
@@ -559,7 +556,7 @@ app.locals.tr_type = function(type) {
   return tr
 }
 
-function send_new_id(to, id) {
+function send_new_id(to, id, req) {
 smtp_transport.sendMail(
  {
   from: "contact@risno.org",
@@ -574,11 +571,11 @@ smtp_transport.sendMail(
  },
  function(error, response) {
    if (error) {
-     console.log("Unable to send new id " +
+     req.log.error("Unable to send new id " +
                  "[" + id + "]" + "[" + to + "]" + 
                  " " + error)
    } else {
-     console.log("New id sent " +
+     req.log.info("New id sent " +
                  "[" + id + "]" + "[" + to + "]" + 
                  " " + response.message);
    }
@@ -615,7 +612,7 @@ function prepare_forget_me_mail(mail, user_code, forget_me_code) {
   }
 }
 
-function get_statistics(callback) {
+function get_statistics(callback, req) {
   elastic_client.search({
     index: "ads",
     searchType: "count",
@@ -647,7 +644,7 @@ function get_statistics(callback) {
   },
   function(error, response) {
     if (error) { 
-      console.log(error)
+      req.log.error({error: error})
       return callback()
     }
     var aggregations = response.aggregations.not_expired.nb_per_site.buckets
