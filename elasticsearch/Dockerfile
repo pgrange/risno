@@ -10,10 +10,13 @@ MAINTAINER Pascal Grange
 #elasticsearch base image. This way we can persist
 #test data between containers.
 RUN mkdir /usr/share/elasticsearch/data2
+RUN chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data2
 COPY elasticsearch.yml /usr/share/elasticsearch/config/
 
-RUN mkdir /src
-RUN mkdir /src/mappings
+RUN mkdir -p /src/mappings
+RUN chown -R elasticsearch:elasticsearch /src
+
+USER elasticsearch
 
 COPY ensure_elastic_running /src/
 COPY mappings/tools /src/mappings/tools
@@ -44,16 +47,3 @@ RUN /src/ensure_elastic_running &&\
 COPY mappings/utils /src/mappings/utils
 RUN /src/ensure_elastic_running &&\
     /bin/bash utils/utils_0.1
-
-RUN chown -R elasticsearch:elasticsearch /usr/share/elasticsearch/data2
-
-# Define default command.
-CMD ["/docker-entrypoint.sh"]
-
-# Expose ports.
-#   - 9200: HTTP
-#   - 9300: transport
-EXPOSE 9200
-EXPOSE 9300
-
-CMD ["elasticsearch"]

@@ -40,8 +40,17 @@ function bulk_insert() {
   curl -XPOST $ELASTIC_URL/_bulk --data-binary @-
 }
 
-curl -X DELETE $ELASTIC_URL/cities
+if curl $ELASTIC_URL/_cat/indices | grep cities
+then
+  curl -X DELETE $ELASTIC_URL/cities
+fi
 
+# _boost has been removed from 2.0 so removing tihs line:
+#   "_boost": {"name" : "city_boost", "null_value" : "1.0"},
+#
+# See the following page for details and solution if we need
+# to reactivate some kind of boosting:
+#https://www.elastic.co/guide/en/elasticsearch/reference/1.4/mapping-boost-field.html#function-score-instead-of-boost
 curl -X PUT $ELASTIC_URL/cities -d '
 {
  "settings" : {
@@ -76,14 +85,12 @@ curl -X PUT $ELASTIC_URL/cities -d '
  },
  "mappings" : {
   "city" : {
-   "_boost": {"name" : "city_boost", "null_value" : "1.0"},
    "properties" : {
     "name" : { "type" : "string", "analyzer" : "city_name"},
     "zipcode": {"type": "string", "boost": 2.0},
     "name_suggest" : {
      "type" : "completion", "payloads" : true,
-     "index_analyzer" :  "city_name",
-     "search_analyzer" : "city_name",
+     "analyzer": "city_name",
      "preserve_position_increments": false,
      "preserve_separators": false
     }
