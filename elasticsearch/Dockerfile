@@ -47,3 +47,5 @@ RUN /src/ensure_elastic_running &&\
 COPY mappings/utils /src/mappings/utils
 RUN /src/ensure_elastic_running &&\
     /bin/bash utils/utils_0.1
+
+CMD ["elasticsearch", "--network.host", "0.0.0.0"]
