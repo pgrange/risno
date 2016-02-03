@@ -2,6 +2,7 @@
   sudo: yes
   roles:
     - common
+    - docker
     - elastic
     - risno
     - web

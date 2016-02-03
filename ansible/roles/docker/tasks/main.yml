@@ -1,0 +1,9 @@
+- apt_key: keyserver=hkp://p80.pool.sks-keyservers.net:80 id=58118E89F3A912897C070ADBF76221572C52609D
+
+- apt_repository: repo='deb https://apt.dockerproject.org/repo debian-jessie main'
+
+- apt: name=docker-engine
+
+- user: name=pascal append=yes groups=docker
+
+- pip: name=docker-py
