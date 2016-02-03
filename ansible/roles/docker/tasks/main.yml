@@ -4,6 +4,13 @@
 
 - apt: name=docker-engine
 
+- file: path=/etc/systemd/system/docker.service.d/ state=directory
+
+- copy: src={{ item }} dest=/{{ item }} owner=root group=root mode=644
+  with_items:
+  - etc/systemd/system/docker.service.d/docker.conf
+  notify: restart docker
+
 - user: name=pascal append=yes groups=docker
 
 - pip: name=docker-py
