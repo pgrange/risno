@@ -98,6 +98,12 @@ exports.testShouldParseAdImageStartingWithTwoSlashes = (test) ->
   test.equals ad.img, 'http://site/image'
   test.done()
 
+exports.testShouldParseAdImageStartingWithHTTPS = (test) ->
+  ad = parse_ad_from_src '<img src="https://site/image"></img>'
+
+  test.equals ad.img, 'https://site/image'
+  test.done()
+
 exports.testShouldExtractImageWithOriginalAttributeIfAny = (test) ->
   ad = parse_ad_from_src '<img src="http://no"></img><img original="http://site/image"></img>'
 
