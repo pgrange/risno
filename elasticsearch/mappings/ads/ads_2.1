@@ -1,5 +1,7 @@
 #!/bin/bash
 
+[[ -z $ELASTIC_URL ]] && ELASTIC_URL="localhost:9200"
+
 install_dir=$(cd $(dirname $0) && pwd)
 
 #load util functions
@@ -9,7 +11,7 @@ old_index="ads_2.0"
 new_index="ads_2.1"
 alias="ads"
 
-curl -XPUT localhost:9200/${new_index} -d '
+curl -XPUT $ELASTIC_URL/${new_index} -d '
 {
  "mappings": {
   "immo": {
@@ -89,7 +91,7 @@ do
   i=$((i+1))
 done
 
-curl -XPOST 'http://localhost:9200/_aliases' -d "
+curl -XPOST "http://$ELASTIC_URL/_aliases" -d "
 {
     \"actions\" : [
         { \"remove\" : { \"index\" : \"${old_index}\", \"alias\" : \"${alias}\" } },

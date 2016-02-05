@@ -1,12 +1,14 @@
 #!/bin/bash
 
+[[ -z $ELASTIC_URL ]] && ELASTIC_URL="localhost:9200"
+
 install_dir=$(cd $(dirname $0) && cd .. && pwd)
 
 old_index="immo"
 new_index="ads_1.0"
 alias="ads"
 
-curl -XPUT localhost:9200/${new_index} -d '
+curl -XPUT $ELASTIC_URL/${new_index} -d '
 {
  "mappings": {
   "immo": {
@@ -25,4 +27,4 @@ curl -XPUT localhost:9200/${new_index} -d '
 
 ${install_dir}/tools/copy_index.sh ${old_index} ${new_index}
 
-curl -XPUT localhost:9200/${new_index}/_alias/${alias}
+curl -XPUT $ELASTIC_URL/${new_index}/_alias/${alias}
