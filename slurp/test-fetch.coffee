@@ -76,7 +76,6 @@ exports.storing = nodeunit.testCase
       (err, ads, replaced_ads) ->
         test.equal 1, replaced_ads.length
         test.equal already_known_ad.description, replaced_ads[0]._source.description
-        test.notEqual null, replaced_ads[0].fields._timestamp
         test.done()
 
   testFetchAndStoreAdsShouldSetFirstSeenDateTheFirstTimeAnAdIsSeen: (test) ->
@@ -207,12 +206,6 @@ setup_test_elastic_db = (handler) ->
   .finally () ->
     elastic_client.indices.create
       index: 'ads'
-      body:
-        mappings:
-          immo:
-            _timestamp:
-              enabled: true
-              store: true
       refresh: true
     .finally () ->
       elastic_client.index
