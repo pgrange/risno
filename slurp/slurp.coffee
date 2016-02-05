@@ -53,6 +53,8 @@ find_url = (ad, host) ->
 absolutize = (url, host) ->
   if /^http:/.test(url)
     url
+  else if /^\/\//.test(url)
+    'http:' + url
   else
     'http://' + host + (if /^\//.test(url) then '' else '/') + url
 
