@@ -7,6 +7,12 @@ var nconf = require('nconf')
 var nodemailer = require('nodemailer')
 var moment = require('moment')
 var bunyan = require('bunyan')
+var crypto = require('crypto')
+var hash = function(value) {
+  md5 = crypto.createHash('md5')
+  md5.update(value)
+  return md5.digest('hex')
+}
 
 nconf.argv()
      .env()
@@ -17,14 +23,16 @@ nconf.argv()
 var app = express()
 app.locals.pretty = true
 
-
 app.use(express.bodyParser());
 app.use(express.static(path.join(__dirname, 'public')))
 
 function reqSerializer(req) {
+  url = req.url.replace(/(\/_\/)(.*)(\/.*)/, function(match, p1, p2, p3, offset, string) {
+    return p1+hash(p2)+p3
+  })
   return {
     method: req.method,
-    url: req.url,
+    url: url,
     headers: req.headers
   }
 }
