@@ -2,7 +2,6 @@ var path = require('path');
 var express = require('express')
 //TODO get rid of ejs, replace it with elasticsearch
 var ejs = require('elastic.js')
-var crypto = require('crypto')
 var nconf = require('nconf')
 var nodemailer = require('nodemailer')
 var moment = require('moment')
@@ -170,19 +169,19 @@ app.post('/_/:user_code/forget_me/:forget_me_code', function(req, res) {
   .query(query).size(1000)
   .doSearch(function(result) {
     if (result.error) {
-      req.log.error({result: result}, "error while searching for user " + user_code)
+      req.log.error({result: result}, "error while searching for user(hashed) " + hash(user_code))
       res.send(500, '')
     } else if (result.hits.hits.length <= 0) {
-      req.log.warn("unknown user_code " + user_code)
+      req.log.warn("unknown user_code(hashed) " + hash(user_code))
       res.send(404, '')
     } else if (result.hits.hits.length > 1){
-      req.log.error({result: result}, "more than one mail for user_code" + user_code)
+      req.log.error({result: result}, "more than one mail for user_code(hashed) " + hash(user_code))
       res.send(500, '')
     } else {
       var user = result.hits.hits[0]._source
       var id   = result.hits.hits[0]._id
       if (forget_me_code != user.forget_me_code) {
-        req.log.warn("unauthorized forget_me_code to suppress user " + user_code + ": " + forget_me_code)
+        req.log.warn("unauthorized forget_me_code to suppress user(hashed) " + hash(user_code) + ": " + forget_me_code)
         res.send(403, '')
       } else {
         //WARNING performance issue risk with refresh here
@@ -215,14 +214,14 @@ app.post('/_/:user_code/forget_me', function(req, res) {
   .query(query).size(1000)
   .doSearch(function(result) {
     if (result.error) {
-      req.log.error({result: result}, "error while searching for user " + user_code)
+      req.log.error({result: result}, "error while searching for user(hashed) " + hash(user_code))
       res.send(500, '')
     }
     else if (result.hits.hits.length <= 0) {
-      req.log.warn("unknown user_code " + user_code)
+      req.log.warn("unknown user_code(hashed) " + hash(user_code))
       res.send(404, '')
     } else if (result.hits.hits.length > 1){
-      req.log.error({result: result}, "more than one mail for user_code" + user_code)
+      req.log.error({result: result}, "more than one mail for user_code(hashed) " + hash(user_code))
       res.send(500, '')
     } else {
       var id = result.hits.hits[0]._id
@@ -239,7 +238,7 @@ app.post('/_/:user_code/forget_me', function(req, res) {
               function(error, response) {
                 if (error) {
                   req.log.error("Unable to send forget me code " +
-                              "[" + mail + "]" + 
+                              "[" + hash(mail) + "]" + 
                               " " + error)
                   res.send(500, '')
                 } else {
@@ -371,10 +370,12 @@ app.get('/_/:user_code', function(req, res) {
   res.redirect('/_/' + user_code + '/new')
 })
 app.get('/:user_code', function(req, res) {
+  //Compatibility for deprecated /:user_code urls
   var user_code = req.param('user_code')
   res.redirect('/_/' + user_code)
 })
 app.get('/:user_code/:action', function(req, res) {
+  //Compatibility for deprecated /:user_code/:action urls
   var user_code = req.param('user_code')
   var action = req.param('action')
   res.redirect('/_/' + user_code + '/' + action)
