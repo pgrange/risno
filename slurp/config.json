@@ -77,13 +77,13 @@
       "name": "belle-immobilier",
       "host": "www.belle-immobilier.fr",
       "url_sequence": [
-        "http://HOST/fr/biens-immobiliers/?order_by=created_at&order_direction=DESC&page=PAGE"
+        "http://HOST/listing.php?for_sale=1&offset=((PAGE-1)*9)"
       ],
-      "ads": ".item",
+      "ads": "div.item-bien",
       "selectors": {
-        "price": ".price",
-        "description": ".item-text",
-        "location": ".item-title"
+        "price": "span[itemprop=price]",
+        "description": "div.list-desc",
+        "location": "h2[itemprop=name]"
       }
     },
     "se_loger": {
