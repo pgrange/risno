@@ -435,7 +435,8 @@ function get_pubs(handle_results, query, filter, req) {
   
   // generates the elastic.js query and executes the search
   ejs.Request({indices: e_index, types: e_type})
-    .query(query).size(100).filter(filter)
+    .query(query).sort("first_seen", "desc" )
+    .size(100).filter(filter)
     .doSearch(handle_results,function(error) {
       req.log.error(error)
     })
