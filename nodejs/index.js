@@ -569,7 +569,7 @@ app.locals.tr_type = function(type) {
 function send_new_id(to, id, req) {
 smtp_transport.sendMail(
  {
-  from: "contact@risno.org",
+  from: "Risno <contact@risno.org>",
   to: to,
   subject: "Bienvenue sur Risno",
   text: "Bonjour,\n" +
@@ -601,7 +601,7 @@ function prepare_send_id_mail(mail, user_codes) {
     text += "http://risno.org/_/" + user_codes[i] + "\n"
   }
   return {
-    from: "contact@risno.org",
+    from: "Risno <contact@risno.org>",
     to: mail,
     subject: "Rappel de vos identifiants Risno",
     text: text
@@ -615,7 +615,7 @@ function prepare_forget_me_mail(mail, user_code, forget_me_code) {
         "\n"
     text += "http://risno.org/_/" + user_code + "/forget_me/" + forget_me_code + "\n"
   return {
-    from: "contact@risno.org",
+    from: "Risno <contact@risno.org>",
     to: mail,
     subject: "Suppression de votre email sur Risno",
     text: text
