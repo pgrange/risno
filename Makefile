@@ -1,10 +1,15 @@
 APP=risno
 VERSION=0.1.0
 
+
+SHELL = /bin/bash
+
 NO_COLOR=\033[0m
 OK_COLOR=\033[32;01m
 ERROR_COLOR=\033[31;01m
 WARN_COLOR=\033[33;01m
+
+MAKE_COLOR=\033[33;01m%-20s\033[0m
 
 DOCKER_MACHINE_URI=https://github.com/docker/machine/releases/download
 DOCKER_MACHINE_VERSION=v0.2.0
@@ -29,12 +34,11 @@ else
 OS=windows
 endif
 
-all: help
+.DEFAULT_GOAL := help
 
+.PHONY: help
 help:
-	@echo "$(OK_COLOR)==== $(APP) [$(VERSION)] ====$(NO_COLOR)"
-	@echo "$(WARN_COLOR)- init               : Download dependencies used by Risno"
-	@echo "$(WARN_COLOR)- clean              : Cleanup environment$(NO_COLOR)"
+	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "$(MAKE_COLOR) : %s\n", $$1, $$2}'
 
 machine-linux:
 	@echo "$(OK_COLOR)[$(APP)] Installation Docker machine Linux $(NO_COLOR)"
@@ -62,8 +66,8 @@ compose-darwin:
 	@chmod +x ./docker-compose
 
 .PHONY: init
-init: machine-$(OS) compose-$(OS)
+init: machine-$(OS) compose-$(OS) ## Install Docker tools
 
 .PHONY: clean
-clean:
+clean: ## Cleanup repository
 	@rm ./docker-compose ./docker-machine
