@@ -123,11 +123,11 @@
       "url_sequence": [
         "http://HOST/ventes_immobilieres/offres/REGION/?o=PAGE"
       ],
-      "ads": ".lbc",
+      "ads": "section.list ul li",
       "selectors": {
-        "price": ".price",
-        "location": ".placement",
-        "description": ".title"
+        "price": ".item_price",
+        "location": "section > p.item_supp",
+        "description": ".item_title"
       }
     },
     "pap": {
