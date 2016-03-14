@@ -8,9 +8,9 @@ html
   .promote
    .container
       h2 Toutes les annonces
-      p Risno recherche sur les principaux sites d'annonces immobilières mais aussi sur les sites des principales enseignes d'agences et même peut-être celui de la petite agence près de chez vous.
+      p Risno recherche sur les principaux sites d'annonces immobilières et se souvient de celles que vous avez déjà vues.
         if stats
-          span En ce moment, risno référence&nbsp;:
+          span  En ce moment, risno référence&nbsp;:
       if stats
         ul
           each stat in stats
@@ -24,6 +24,7 @@ html
 
 
       h2 Classez vos annonces
+      p Gagnez du temps sans rater aucune annonce. Risno vous aide à faire le tri dans la montagne d'annonces disponibles.
       p Une annonce vous plaît ? Mettez là de côté dans les 
        span.label.label-success biens
       p Encore une annonce pas terrible ? Oubliez la dans les 
@@ -54,6 +55,8 @@ html
       h4.modal-title Recevez votre identifiant par email : 
        span.label.label-primary= user_code
      .modal-body
+      p Si vous nous confiez votre email, nous pourrons vous renvoyer votre identifiant en cas de perte. Nous ne ferons aucun autre usage de votre email.
+      p Rassurez-vous, cette étape est totalement optionelle. Si vous n'êtes pas à l'aise à l'idée de nous confier votre email, ne le faites pas.
       form(method="POST",action="/send_new_id",id="send_new_id_form",role="form")
        input(type="hidden",name="user_code",value=user_code)
        .form-group
@@ -67,7 +70,7 @@ html
         button.btn.btn-success.pull-right(type=submit) Envoyer
      .modal-footer
       .pull-left
-       p(style="text-align: left;") Attention ! si vous choisissez de ne pas recevoir votre identifiant par email, nous ne pourrions rien pour vous si jamais vous le perdiez.
+       p(style="text-align: left;") Attention ! si vous choisissez de ne pas recevoir votre identifiant par email, nous ne pourrions rien pour vous si jamais vous le perdiez. Mais vous êtes quand même bienvenu.
       .form-group
        a.button.btn.btn-danger(href='/_/' + user_code + '/criteria') Je prends le risque
 
