@@ -7,36 +7,19 @@ html
 
   .promote
    .container
-      h2 Toutes les annonces
       p Risno recherche sur les principaux sites d'annonces immobilières et se souvient de celles que vous avez déjà vues.
-        if stats
-          span  En ce moment, risno référence&nbsp;:
-      if stats
-        ul
-          each stat in stats
-            li
-              span= stat.nb 
-              span  annonces du site 
-              a(href="http://" + stat.host) 
-                = stat.host
-              span  mises à jour 
-              span= moment(stat.older, '', 'fr').fromNow()
-
-
-      h2 Classez vos annonces
       p Gagnez du temps sans rater aucune annonce. Risno vous aide à faire le tri dans la montagne d'annonces disponibles.
       p Une annonce vous plaît ? Mettez là de côté dans les 
        span.label.label-success biens
       p Encore une annonce pas terrible ? Oubliez la dans les 
        span.label.label-danger bofs 
 
+
   .promote
    .container.help
      .col-lg-6.col-md-6.box
       h2 Nouveau venu
-      p Votre compte Risno est déjà prêt. Votre identifiant est 
-       span.label.label-primary= user_code
-      p Conservez-le précieusement, il vous permettra de retrouver vos annonces et vos filtres à chaque visite.
+      p Risno vous a déjà préparé une petite place pour se souvenir des annonces que vous aurez déjà vues et que vous ne voudrez plus voir à chacune de vos visites.
       p
        button.btn.btn-success(data-toggle="modal",data-target="#send_new_id") Consulter les annonces
 
@@ -47,12 +30,27 @@ html
        button.btn.btn-primary(data-toggle="modal",data-target="#enter_id") Ah oui, je m'en souviens !
        button.btn.btn-danger(data-toggle="modal",data-target='#send_id') Ah... ben j'ai oublié :(
 
+  .promote
+   .container
+      if stats
+        span  En ce moment, risno référence&nbsp;:
+      if stats
+        ul
+          each stat in stats
+            li
+              span= stat.nb
+              span  annonces du site
+              a(href="http://" + stat.host)
+                = stat.host
+              span  mises à jour
+              span= moment(stat.older, '', 'fr').fromNow()
+
   .modal.fade(id="send_new_id",role="dialog")
    .modal-dialog
     .modal-content
      .modal-header
       button.close(type="button",data-dismiss="modal") &times;
-      h4.modal-title Recevez votre identifiant par email : 
+      h4.modal-title Votre identifiant Risno&nbsp;:
        span.label.label-primary= user_code
      .modal-body
       p Si vous nous confiez votre email, nous pourrons vous renvoyer votre identifiant en cas de perte. Nous ne ferons aucun autre usage de votre email.
@@ -70,7 +68,7 @@ html
         button.btn.btn-success.pull-right(type=submit) Envoyer
      .modal-footer
       .pull-left
-       p(style="text-align: left;") Attention ! si vous choisissez de ne pas recevoir votre identifiant par email, nous ne pourrions rien pour vous si jamais vous le perdiez. Mais vous êtes quand même bienvenu.
+       p(style="text-align: left;") Attention ! si vous choisissez de ne pas renseigner votre email, nous ne pourrons rien pour vous si jamais vous perdez votre identifiant. Alors conservez le précieusement. Mais vous êtes quand même bienvenu.
       .form-group
        a.button.btn.btn-danger(href='/_/' + user_code + '/criteria') Je prends le risque
 
