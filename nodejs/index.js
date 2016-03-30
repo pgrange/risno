@@ -122,6 +122,7 @@ app.post('/_/:user_code/criteria', function(req, res) {
   var user_code = req.param('user_code')
   var criteria = {
     max_price: parseInt(req.param('max_price')),
+    min_price: parseInt(req.param('min_price')),
     cities: req.param('cities').split(','),
     types: [].concat(req.param('types'))
   }
@@ -498,6 +499,8 @@ function with_criteria(req, user_code, handle, filter) {
     if (criteria) {
       if (criteria.max_price)
         filter.filters(ejs.RangeFilter("price").lte(criteria.max_price))
+      if (criteria.min_price)
+        filter.filters(ejs.RangeFilter("price").gte(criteria.min_price))
       if (criteria.cities)
         filter.filters(cities_filter(criteria.cities))
       if (criteria.types)

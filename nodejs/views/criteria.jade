@@ -10,6 +10,10 @@ if criteria
     max_price = criteria.max_price
   else
     max_price = ""
+  if criteria.min_price > 0
+    min_price = criteria.min_price
+  else
+    min_price = ""
   if criteria.cities
     cities = criteria.cities
   else
@@ -27,11 +31,19 @@ html
   include jumbo
   .container
    form(action="/_/" + user_code + "/criteria", method="post")
-    .form-group
-     label(for="max_price") Prix maximum
-     .input-group
-      span.input-group-addon &euro;
-      input.form-control(type="text", name="max_price", placeholder="prix max", value=max_price)
+    .row
+     .col-md-6 
+      .form-group
+       label(for="max_price") Prix maximum
+       .input-group
+        span.input-group-addon &euro;
+        input.form-control(type="text", name="max_price", placeholder="prix max", value=max_price)
+     .col-md-6 
+      .form-group
+       label(for="min_price") Prix minimum
+       .input-group
+        span.input-group-addon &euro;
+        input.form-control(type="text", name="min_price", placeholder="prix min", value=min_price)
     .form-group
      label(for="types") Type de bien
       .checkbox
