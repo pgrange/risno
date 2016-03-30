@@ -497,7 +497,7 @@ function with_criteria(req, user_code, handle, filter) {
   get_criteria(user_code, function(criteria) {
     if (criteria) {
       if (criteria.max_price)
-        filter.filters(ejs.NumericRangeFilter("price").lte(criteria.max_price))
+        filter.filters(ejs.RangeFilter("price").lte(criteria.max_price))
       if (criteria.cities)
         filter.filters(cities_filter(criteria.cities))
       if (criteria.types)
