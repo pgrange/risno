@@ -43,10 +43,6 @@ app.use(function(req, res, next) {
   next()
 })
 
-function price_filter(req) {
-  return ejs.NumericRangeFilter("price").lte(parseInt(req.param('max_price')))
-}
-
 app.get('/monitoring', function(req, res) {
   get_statistics(function(stats) {
     if (stats) {
