@@ -55,6 +55,17 @@ app.get('/monitoring', function(req, res) {
   }, req)
 })
 
+app.get('/data', function(req, res) {
+  var page = req.param('p')
+  if (page) page = parseInt(page)
+  else page=1
+  get_raw_data(page, function(data) {
+    if (data) {
+      res.render('data.jade', {data: data, next_page: page+1})
+    } else res.send(500)
+  }, req)
+})
+
 app.get('/', function(req, res) {
   var user_code = req.param('user_code')
   if (user_code) res.redirect('_/' + user_code)
@@ -619,6 +630,30 @@ function prepare_forget_me_mail(mail, user_code, forget_me_code) {
     subject: "Suppression de votre email sur Risno",
     text: text
   }
+}
+
+function get_raw_data(page, callback, req) {
+  elastic_client.search({
+    index: "ads",
+    type: "immo",
+    size: 100,
+    from: 100*(page-1)
+  },
+  function(error, response) {
+    if (error) { 
+      req.log.error({error: error})
+      return callback()
+    }
+    console.log(response)
+    var results=[]
+    for(var i = 0; i < response.hits.hits.length; i++) {
+      var pub = response.hits.hits[i]._source
+      if (pub.cities && pub.cities.length > 0) pub.city = pub.cities[0]
+      if (pub.types  && pub.types.length  > 0) pub.type = pub.types[0]
+      results.push(pub)
+    }
+    callback(results)
+  })
 }
 
 function get_statistics(callback, req) {

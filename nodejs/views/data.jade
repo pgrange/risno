@@ -1,0 +1,14 @@
+!!! 5
+
+html
+ body
+  each pub in data
+   a.ad(href=pub.url)
+    .city= pub.city
+    .type= pub.type
+    .description= pub.description
+    .location= pub.location
+    .price= pub.price
+    .site_name= pub.site_name
+    img(src=pub.img)
+  a(href="/data?p=" + next_page) Suivant
