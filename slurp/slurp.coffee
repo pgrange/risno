@@ -30,8 +30,14 @@ exports.parse_ad = (ad, site) ->
   site_host: site.host
 
 find_image = (ad, host) ->
-  img = ad.find('img[original]')
-  src = if img.length > 0 then img.attr('original') else ad.find('img').attr('src')
+  img_original = ad.find('img[original]')
+  img_lazy     = ad.find('.lazyload[data-imgsrc]')
+  if img_original.length > 0
+    src = img_original.attr('original')
+  else if img_lazy.length > 0
+    src = img_lazy.attr('data-imgsrc')
+  else
+    src = ad.find('img').attr('src')
 
   absolutize src, host if src
   

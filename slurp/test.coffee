@@ -110,6 +110,12 @@ exports.testShouldExtractImageWithOriginalAttributeIfAny = (test) ->
   test.equals ad.img, 'http://site/image'
   test.done()
 
+exports.testShouldExtractImageFromLazyLoadingCrap = (test) ->
+  ad = parse_ad_from_src '<span class="lazyload" data-imgsrc="//site/image"></span>'
+
+  test.equals ad.img, 'http://site/image'
+  test.done()
+
 exports.testShouldConvertImageRelativeURIToAbsolute = (test) ->
   ad = parse_ad_from_src '<img src="/image"></img>'
 
