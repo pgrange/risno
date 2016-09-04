@@ -1,3 +1,11 @@
+div.social_links {
+  text-align: right;
+}
+
+div.social_links img {
+    height: 25px;
+}
+
 .row {
   margin-bottom: 15px;
   background-color: #FEFEFE;
